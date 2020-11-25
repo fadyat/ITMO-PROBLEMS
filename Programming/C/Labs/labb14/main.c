@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include <mm_malloc.h>
+#include <stdlib.h>
 
 /*          Struct of BMP file
  *  Name        Length (bytes)      Description
@@ -83,15 +83,15 @@ void image(unsigned char **Colors, struct pall Palette[], int h, int w, char* ou
     for(int i = 0; i < 54; i++) {
         fprintf(output, "%c", header[i]);
     }
-    for(int i = 0; i < (size_Palette - 1) / 4; i++) {
+    for(int i = 0; i < size_Palette; i++) {
         fprintf(output, "%c%c%c%c", Palette[i].R, Palette[i].G, Palette[i].B, Palette[i].A);
     }
     for(int i = h - 1; i >= 0; i--) {
         for(int j = 0; j < w; j += 8) {
             int sum = 0;
-            for(int q = 0; q <= 8; q++) {
+            for(int q = 0; q < 8; q++) {
                 int tmp = (Colors[i][j + q] == '1') ? (1) : (0);
-                sum += (int) tmp * (int) pow(2, 7 - q);
+                sum += tmp * (int) pow(2, 7 - q);
             }
             unsigned char xx = sum;
             fprintf(output, "%c", xx);
@@ -102,6 +102,15 @@ void image(unsigned char **Colors, struct pall Palette[], int h, int w, char* ou
 
 int main(/*int argc, char *argv[]*/) {
     
+    
+    
+    
+    // Still in process
+    
+
+
+
+
     FILE *my_picture;
     my_picture = fopen("picture.bmp", "r");
 
@@ -116,7 +125,7 @@ int main(/*int argc, char *argv[]*/) {
      *  to header[sizeof(BitMapFileHeader + BitMapInfoHeader) = 54]
      */
     unsigned char header[54];
-    fread(header, sizeof(unsigned char), sizeof(header),  my_picture);
+    fread(header, 1, 54,  my_picture);
     int width;
     width = (int) (header[21] * pow(256, 3) +
             header[20] * pow(256, 2) +
@@ -127,13 +136,6 @@ int main(/*int argc, char *argv[]*/) {
             header[24] * pow(256, 2) +
             header[23] * pow(256, 1) +
             header[22] * pow(256, 0));
-
-    /*
-     * I want to save my colors in my array
-     * But in image we have HEX codes and we need binary code
-     * In [0] - [7] I will save: ((int) (HEX)) % 2 -> ((int) (HEX)) / 2 -> ((int) (HEX)) % 2 -> ... -> 0
-     */
-    width *= 8;
     /*
      * My Image starts from 63 byte
      * Let's fill 54 - 63 bytes in Palette
@@ -144,10 +146,10 @@ int main(/*int argc, char *argv[]*/) {
            header[11] * pow(256, 1) +
            header[10] * pow(256, 0));
     
-    struct pall Palette[(OffsetBits - 54) + 1];
-    for(int i = 0; i < (sizeof(Palette) - 1) / 4; i++) {
+    struct pall Palette[OffsetBits - 54];
+    for(int i = 0; i < (OffsetBits - 54) / 4; i++) {
         unsigned char bytes[4];
-        fread(bytes, sizeof(unsigned char), sizeof(bytes), my_picture);
+        fread(bytes, 1, 4, my_picture);
         Palette[i].R = bytes[0];
         Palette[i].G = bytes[1];
         Palette[i].B = bytes[2];
@@ -161,22 +163,22 @@ int main(/*int argc, char *argv[]*/) {
     unsigned char **Colors;
     Colors = (unsigned char **) malloc(height * sizeof(unsigned char*));
     for(int i = 0; i < height; i++) {
-        Colors[i] = (unsigned char *)malloc(width * sizeof(unsigned char));
+        Colors[i] = (unsigned char *)malloc(width * sizeof(unsigned char*));
     }
-    
-    
+    // * Width should be % 4 == 0
+    width += 32 - width % 32;
     // * Filling
     for(int i = height - 1; i >= 0; i--) {
         for (int j = 0; j < width; j += 8) {
             unsigned char byte[1];
-            fread(byte, sizeof(unsigned char), sizeof(byte), my_picture);
+            fread(byte, 1, 1, my_picture);
             int byte_ = byte[0];
-            int move = 7;
+            int step = 7;
             // * Saving colors
-            while(move >= 0) {
-                Colors[i][j + move] = ((byte_ % 2) ? ('1') : ('0'));
+            while(step >= 0) {
+                Colors[i][j + step] = ((byte_ % 2) ? ('1') : ('0'));
                 byte_ /= 2;
-                move--;
+                step--;
             }
         }
     }
@@ -184,16 +186,10 @@ int main(/*int argc, char *argv[]*/) {
     /*
      * New generations
      */
-//    for(int i = height - 1; i >= 0; i--) {
-//        for(int j = 0; j < width; j++) {
-//            printf("%c", Colors[i][j]);
-//        }
-//        printf("\n");
-//    }
     int gen = 0;
     for(int i = 0; i < gen; i++) {
         next(height, width, Colors);
     }
-    image(Colors, Palette, height, width, "kek.bmp", header, (int) sizeof(Palette));
+    image(Colors, Palette, height, width, "kek.bmp", header, (OffsetBits - 54) / 4);
     fclose(my_picture);
 }
