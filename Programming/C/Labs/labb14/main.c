@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
                         header[11] * pow(256, 1) +
                         header[10] * pow(256, 0));
 
-    struct pall Palette[OffsetBits - 54];
+    struct pall Palette[(OffsetBits - 54) / 4];
     for (int i = 0; i < (OffsetBits - 54) / 4; i++) {
         unsigned char bytes[4];
         fread(bytes, 1, 4, my_picture);
