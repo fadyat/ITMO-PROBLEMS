@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h> // library for Linux / MacOS; in Windows #include <direct.h>
 
 /*          Struct of BMP file
  *  Name        Length (bytes)      Description
@@ -102,9 +104,25 @@ void image(unsigned char **Colors, struct pall Palette[],
 
 int main(int argc, char *argv[]) {
     FILE *my_picture;
-    my_picture = fopen("picture.bmp", "r");
-
-    // * Check my File
+    char *directory;
+    int gen = 0, freq = 1;
+    for (int i = 1; i < argc; i += 2) {
+        if (!strcmp(argv[i], "--input")) {        // --input picture.bmp
+            my_picture = fopen(argv[i + 1], "r");
+        }
+        else if (!strcmp(argv[i], "--max_iter")) {   // --max_iter gen
+            char *end;
+            gen = (int) strtol(argv[i + 1], &end, 10);
+        }
+        else if (!strcmp(argv[i], "--dump_freq")) {   // --dump_freq N
+            char *end;
+            freq = (int) strtol(argv[i + 1], &end, 10);
+        }
+        else if (!strcmp(argv[i], "--output")) {   // --output directory_name
+            directory = argv[i + 1];
+            mkdir(directory, 0777); // 0777 - is a parameter (I have right to read, write, etc)
+        }
+    }
     if (my_picture == NULL) {
         printf("Not such file in directory\n");
         return 0;
@@ -113,12 +131,6 @@ int main(int argc, char *argv[]) {
      * Take BitMapFileHeader + BitMapInfoHeader and add this info
      *  to header[sizeof(BitMapFileHeader + BitMapInfoHeader) = 54]
      */
-    for (int i = 1; i < argc; i++) {
-        if (argv[i] == "--input") {
-            printf("%s", argv[i + 1]);
-            i++;
-        }
-    }
     unsigned char header[54];
     fread(header, 1, 54, my_picture);
     int width;
@@ -178,14 +190,21 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-
     /*
      * New generations
      */
-    int gen = 0;
-    for (int i = 0; i < gen; i++) {
+    for (int i = 1; i <= gen; i++) {
         next(height, width, realWidth, Colors);
+        if (i % freq == 0) {
+            char out[100];
+            strcpy(out, directory);
+            char num[17];
+            strcat(out, "//kek");          // direction of slashes depends from your OS
+            sprintf(num, "%d", i);         // int to char
+            strcat(out, num);
+            strcat(out, ".bmp");
+            image(Colors, Palette, height, width, out, header, (OffsetBits - 54) / 4);
+        }
     }
-    image(Colors, Palette, height, width, "kek.bmp", header, (OffsetBits - 54) / 4);
     fclose(my_picture);
 }
