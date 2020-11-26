@@ -56,9 +56,11 @@ void next(int h, int w, int realWidth, unsigned char **Colors) {
             int live = friends(i, j, Colors, h, realWidth);
             if (Colors[i][j] == '1' && !(live == 2 || live == 3)) {
                 new_area[i][j] = '0';
-            } else if (Colors[i][j] == '0' && live == 3) {
+            }
+            else if (Colors[i][j] == '0' && live == 3) {
                 new_area[i][j] = '1';
-            } else {
+            }
+            else {
                 new_area[i][j] = Colors[i][j];
             }
         }
