@@ -137,7 +137,6 @@ int main(int argc, char *argv[]) {
             fread(byte, 1, 1, my_picture);
             int byte_ = byte[0];
             int step = 7;
-            // * Saving colors
             while (step >= 0) {
                 Colors[i][j + step] = ((byte_ % 2) ? ('1') : ('0'));
                 byte_ /= 2;
