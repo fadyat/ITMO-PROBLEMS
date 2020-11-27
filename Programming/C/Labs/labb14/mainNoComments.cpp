@@ -24,9 +24,11 @@ void next(int h, int w, int realWidth, unsigned char **Colors) {
             int live = friends(i, j, Colors, h, realWidth);
             if (Colors[i][j] == '1' && !(live == 2 || live == 3)) {
                 new_area[i][j] = '0';
-            } else if (Colors[i][j] == '0' && live == 3) {
+            }
+            else if (Colors[i][j] == '0' && live == 3) {
                 new_area[i][j] = '1';
-            } else {
+            }
+            else {
                 new_area[i][j] = Colors[i][j];
             }
         }
@@ -113,7 +115,7 @@ int main(int argc, char *argv[]) {
                         header[11] * pow(256, 1) +
                         header[10] * pow(256, 0));
 
-    struct pall Palette[OffsetBits - 54];
+    struct pall Palette[(OffsetBits - 54) / 4];
     for (int i = 0; i < (OffsetBits - 54) / 4; i++) {
         unsigned char bytes[4];
         fread(bytes, 1, 4, my_picture);
@@ -135,7 +137,6 @@ int main(int argc, char *argv[]) {
             fread(byte, 1, 1, my_picture);
             int byte_ = byte[0];
             int step = 7;
-            // * Saving colors
             while (step >= 0) {
                 Colors[i][j + step] = ((byte_ % 2) ? ('1') : ('0'));
                 byte_ /= 2;
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
             char out[100];
             strcpy(out, directory);
             char num[17];
-            strcat(out, "//kek");        
+            strcat(out, "//kek");
             sprintf(num, "%d", i);
             strcat(out, num);
             strcat(out, ".bmp");
