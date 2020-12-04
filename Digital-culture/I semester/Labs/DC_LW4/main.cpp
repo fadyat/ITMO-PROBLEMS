@@ -4,9 +4,10 @@
 #include <map>
 
 using namespace std;
+// wrong
 
 vector<char> bad = {'!', '.', ',', '?', '!',
- ';', ':', '"','(', ')', '«', '»'};
+ ';', ':', '"','(', ')', 'Â«', 'Â»'};
 
 bool is_it_good(char x) {
     for(int i = 0; i < (int)bad.size(); i++) {
@@ -19,12 +20,12 @@ bool is_it_good(char x) {
 
 string check(string &s) {
     string new_s;
-    if(s == "—") { // not hyphen, it's dash
+    if(s == "â€”") { // not hyphen, it's dash
         return "-";
     }
     for(int i = 0; i < (int)s.size(); i++) {
         if(is_it_good(s[i])) {
-            if(s[i] >= 'À' && s[i] <= 'ß') {
+            if(s[i] >= 'Ã€' && s[i] <= 'ÃŸ') {
                 s[i] = s[i] - 'A' + 'a';
             }
             else if(s[i] >= 'A' && s[i] <= 'Z') {
