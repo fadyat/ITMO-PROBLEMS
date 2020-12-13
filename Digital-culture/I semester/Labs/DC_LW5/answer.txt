@@ -1,0 +1,12 @@
+{\rtf1\ansi\ansicpg1251\cocoartf2576
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue0;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c1\c1;\cssrgb\c100000\c100000\c99985;\cssrgb\c0\c0\c0;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\li80\fi-80\ri460\sa80\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 \expnd0\expndtw0\kerning0
+1. Edges in graph: 2427 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 2. Insulators: \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 12 | 84 114 181 213 228 257 299 395 438 465 498 700 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 3. Max degree of vertex is: 12 \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 224 | 154 298 448 565 587 610 705 787 937 948 956 979 \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 712 | 39 58 131 195 326 372 405 495 526 553 727 900 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 4. Diameter of the biggest component: 9 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 5. Path: [455 : 521] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 4 | 455 223 13 478 521 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 6. Path: [311 : 638] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 5 | 311 63 189 862 977 638 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 7. Path: [406 : 681] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 5 | 406 26 459 869 932 681 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 8. Edges in graph(2): 2871 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 9. Insulators(2): \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 77 | 0 13 17 26 34 51 68 84 85 102 114 119 136 153 170 181 187 204 213 221 224 228 238 255 257 272 289 299 306 323 340 357 374 391 395 408 425 438 442 459 465 476 478 493 498 510 527 544 561 578 595 612 629 646 663 680 697 700 714 731 748 765 782 799 816 833 850 862 867 884 901 918 932 935 952 969 986 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 10. Max degree of vertex is(2): 25 \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 948 | 92 106 135 154 165 298 308 406 448 461 489 565 581 587 602 610 638 705 787 869 877 937 956 965 979 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 11. Diameter of the biggest component(2): 8 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 12. Path: [455 : 521] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 2 | 455 223 521 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 13. Path: [311 : 638] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 4 | 311 1 554 135 638 \cf2 \cb1 \uc0\u8232 \u8232 \cf2 \cb3 14. Path: [406 : 681] \cf2 \cb1 \uc0\u8232 \cf2 \cb3 - 2 | 406 869 681}
