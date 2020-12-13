@@ -151,11 +151,6 @@ void delete_ (int v) {
         elem.push_back(*i);
     }
     g[v].clear();
-    /*
-        + удаление самой вершины // completed
-        + добавление всех вершин, связнанных с v к каждой вершине v
-        + удаление v из каждой связанной вершины
-    */
     for (int i = 0; i < (int)elem.size(); i++) {
         g[elem[i]].erase(v);
         for (int j = 0; j < (int)elem.size(); j++) {
@@ -164,10 +159,13 @@ void delete_ (int v) {
             }
         }
     }
-    // ...
 }
 
 void erase_() {
+    /*
+        Delete all vertexes % 17
+        + [224, 932, 478, 459, 13, 26, 862]
+    */
     for (int v = 0; v < 1000; v += 17) {
         delete_(v);
     }
@@ -178,10 +176,6 @@ void erase_() {
 }
 
 void print() {
-    /*
-        Delete all vertexes % 17
-        + [224, 932, 478, 459, 13, 26, 862]
-    */
     for (int i = 0; i < (int) g.size(); i++) {
         cout << i << " | ";
         for (auto j = g[i].begin(); j != g[i].end(); j++) {
