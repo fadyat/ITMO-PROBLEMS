@@ -77,7 +77,7 @@ void bfs (int s) {
 }
 
 
-vector<int> longest;
+
 int diameter () {
     // Counting components
     int n = (int) g.size();
@@ -99,13 +99,16 @@ int diameter () {
             score = components[i].second;
         }
     }
+    used.assign(n, false);
+    d.assign(n, 0);
+    p.assign(n, 0);
+    vector<int> longest;
     bfs(start);
     for (int i = 0; i < n; i++) {
         if (used[i]) {
             longest.push_back(i);
         }
     }
-
     int h_max = 0;
     for (int i = 0; i < (int)longest.size(); i++) {
         total = 1;
