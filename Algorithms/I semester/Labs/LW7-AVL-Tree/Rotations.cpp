@@ -8,16 +8,31 @@ struct node {
     int value;
     int left;
     int right;
+    int parent;
 };
 
 int n;
-vector<node> tree;
-vector<int> balance;
-vector<int> height;
 int top = 0;
 int position = 0;
 
-void dfs_balance(int root);
+vector<node> tree;
+vector<int> balance;
+vector<int> height;
+
+void dfs_balance(int root) {
+    int hl = 0, hr = 0;
+    if (tree[root].left != -1) {
+        dfs_balance(tree[root].left);
+        height[root] = max(height[root], height[tree[root].left] + 1);
+        hl = height[tree[root].left];
+    }
+    if (tree[root].right != -1) {
+        dfs_balance(tree[root].right);
+        height[root] = max(height[root], height[tree[root].right] + 1);
+        hr = height[tree[root].right];
+    }
+    balance[root] = hr - hl;
+}
 
 void count_balance() {
     height.assign(n, 1);
@@ -25,63 +40,103 @@ void count_balance() {
     dfs_balance(0);
 }
 
-void dfs_balance (int root) {
-    int left_height = 0, right_height = 0;
-    if (tree[root].left != -1) {
-        dfs_balance(tree[root].left);
-        height[root] = max(height[root], height[tree[root].left] + 1);
-        left_height = height[tree[root].left];
+void LL(int knot) {
+    int par = tree[knot].parent;
+    int hl, hrl;
+    hl = ((tree[knot].left != -1) ? (height[tree[knot].left]) : (0));
+    hrl = ((tree[tree[knot].right].left != -1) ? (height[tree[tree[knot].right].left]) : (0));
+    height[knot] = max(hl, hrl) + 1;
+    balance[knot] = hrl - hl;
+
+    int hrr, my_h;
+    hrr = ((tree[tree[knot].right].right != -1) ? (height[tree[tree[knot].right].right]) : (0));
+    my_h = height[knot];
+    height[tree[knot].right] = max(hrr, my_h) + 1;
+    balance[tree[knot].right] = hrr - my_h;
+
+    char check = 'n';
+    if (par != -1) {
+        if (tree[tree[knot].parent].right == knot) {
+            check = 'r';
+        }
+        else if (tree[tree[knot].parent].left == knot) {
+            check = 'l';
+        }
     }
-    if (tree[root].right != -1) {
-        dfs_balance(tree[root].right);
-        height[root] = max(height[root], height[tree[root].right] + 1);
-        right_height = height[tree[root].right];
+
+    int tmp = tree[knot].right;
+    if (tree[tree[knot].right].left != -1) {
+        tree[tree[tree[knot].right].left].parent = knot;
     }
-    balance[root] = right_height - left_height;
+    tree[knot].right = tree[tree[knot].right].left;
+    tree[tmp].left = knot;
+
+    tree[knot].parent = tmp;
+    tree[tmp].parent = par;
+
+    if (check == 'l') {
+        tree[par].left = tmp;
+    }
+    else if (check == 'r') {
+        tree[par].right = tmp;
+    }
+    top = ((top == knot) ? (tmp) : (top));
 }
 
+void RR(int knot) {
+    int par = tree[knot].parent;
+    int hr, hlr;
+    hr = ((tree[knot].right != -1) ? (height[tree[knot].right]) : (0));
+    hlr = ((tree[tree[knot].left].right != -1) ? (height[tree[tree[knot].left].right]) : (0));
+    height[knot] = max(hr, hlr) + 1;
+    balance[knot] = hr - hlr;
 
-void LL (int knot) {
-    int tmp = tree[tree[knot].right].left;
-    top =  tree[knot].right;
-    tree[tree[knot].right].left = knot;
-    tree[knot].right = tmp;
+    int hll, my_h;
+    hll = ((tree[tree[knot].left].left != -1) ? (height[tree[tree[knot].left].left]) : (0));
+    my_h = height[knot];
+    height[tree[knot].left] = max(hll, my_h) + 1;
+    balance[tree[knot].left] = my_h - hll;
+
+    char check = 'n';
+    if (par != -1) {
+        if (tree[tree[knot].parent].right == knot) {
+            check = 'r';
+        }
+        else if (tree[tree[knot].parent].left == knot) {
+            check = 'l';
+        }
+    }
+
+    int tmp = tree[knot].left;
+    if (tree[tree[knot].left].right != -1) {
+        tree[tree[tree[knot].left].right].parent = knot;
+    }
+    tree[knot].left = tree[tree[knot].left].right;
+    tree[tmp].right = knot;
+
+    tree[knot].parent = tmp;
+    tree[tmp].parent = par;
+
+    if (check == 'l') {
+        tree[par].left = tmp;
+    }
+    else if (check == 'r') {
+        tree[par].right = tmp;
+    }
+    top = ((top == knot) ? (tmp) : (top));
 }
 
-void RR (int knot) {
-    int tmp = tree[tree[knot].left].right;
-    top =  tree[knot].left;
-    tree[tree[knot].left].right = knot;
-    tree[knot].left = tmp;
-}
-
-void LR (int knot) {
-    int tmp = tree[tree[knot].left].right;
+void LR(int knot) {
     LL(tree[knot].left);
-    tree[knot].left = tmp;
-    if (knot != 0) {
-        tmp = tree[tree[knot].right].left;
-    }
     RR(knot);
-    if (knot != 0) {
-        tree[knot].right = tmp;
-    }
 }
 
-void RL (int knot) {
-    int tmp = tree[tree[knot].right].left;
+void RL(int knot) {
     RR(tree[knot].right);
-    tree[knot].right = tmp;
-    if (knot != 0) {
-        tmp = tree[tree[knot].left].right;
-    }
     LL(knot);
-    if (knot != 0) {
-        tree[knot].left = tmp;
-    }
 }
 
-void rotate (int knot) {
+void rotate(int knot) {
     if (balance[knot] == 2 && balance[tree[knot].right] == -1) {
         RL(knot);
     }
@@ -98,7 +153,8 @@ void rotate (int knot) {
 }
 
 vector<node> new_tree;
-void dfs (int t) {
+
+void dfs(int t) {
     int v = position;
     new_tree[v].value = tree[t].value;
     if (tree[t].left != -1) {
@@ -120,7 +176,7 @@ void dfs (int t) {
     }
 }
 
-void dfs_on_tree () {
+void rebuild() {
     new_tree.resize(n);
     position = 0;
     dfs(top);
@@ -134,17 +190,25 @@ int main() {
     freopen("rotation.in", "r", stdin);
     freopen("rotation.out", "w", stdout);
     cin >> n;
-    tree.resize(n);
-    for (int i = 0; i < n; i++) {
-        cin >> tree[i].value >> tree[i].left >> tree[i].right;
-        --tree[i].left;
-        --tree[i].right;
+    if (n) {
+        tree.resize(n);
+        for (int i = 0; i < n; i++) {
+            cin >> tree[i].value >> tree[i].left >> tree[i].right;
+            --tree[i].left;
+            --tree[i].right;
+            if (tree[i].left != -1) {
+                tree[tree[i].left].parent = i;
+            }
+            if (tree[i].right != -1) {
+                tree[tree[i].right].parent = i;
+            }
+        }
+        count_balance();
+        rotate(0);
     }
-    count_balance();
-    rotate(0);
-    dfs_on_tree();
-    cout << n << endl;
+    rebuild();
+    cout << (int) tree.size() << endl;
     for (int i = 0; i < n; ++i) {
-        cout << tree[i].value << " " << tree[i].left + 1<< " " << tree[i].right + 1 << endl;
+        cout << tree[i].value << " " << tree[i].left + 1 << " " << tree[i].right + 1 << endl;
     }
 }
