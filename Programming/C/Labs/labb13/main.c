@@ -18,43 +18,10 @@ typedef unsigned char byte;
  *
  */
 
-void show (const byte *arr, int n);
-void showValue (const byte*, char* value, int n);
-
-int main() {
-    FILE *song = fopen("kek.mp3", "r");
-    if (song == NULL) {
-        printf("%s", "No such file!");
-        return 0;
-    }
-    byte headerID3[10];
-    fread(headerID3,  1, 10, song);
-
-    byte totalSize[28] = {0};
-    for (int i = 9; i >= 6; i--) {
-        byte tmp = headerID3[i];
-        int t = 6;
-        while (tmp) {
-            totalSize[(i - 6) * 7 + t] = tmp % 2;
-            tmp = tmp >> 1;
-            t--;
-        }
-    }
-
-    int framesSize = 0, p = 1;
-    for (int i = 27; i >= 0; i--) {
-        framesSize += totalSize[i] * p;
-        p *= 2;
-    }
-    byte *frames = (byte*) malloc(framesSize);
-    fread(frames, 1, framesSize, song);
-
-    show(frames, framesSize);
-
-    showValue(frames, "TPE1", framesSize);
-
-    fclose(song);
-}
+struct pair {
+    int first;
+    int second;
+};
 
 void show (const byte *arr, int n) {
     printf("\n");
@@ -121,4 +88,126 @@ void showValue (const byte* arr, char* value, int n) {
         free(name);
     }
     printf("Tag with name: < %s > doesn't exist", value);
+}
+
+struct pair check (const byte* arr, char* value, int n) {
+    int i = 0;
+    while (i < n) {
+        byte* frame = (byte*) malloc(10);
+        for (int j = 0; j < 10; j++) {
+            frame[j] = arr[i + j];
+        }
+        i += 10;
+        int p = 1, tmpSize = 0;
+        for (int j = 7; j > 3; j--) {
+            tmpSize += frame[j] * p;
+            p *= 256;
+        }
+        char* name = (char*) malloc(5);
+        for (int j = 0; j < 5; j++) {
+            name[j] = frame[j];
+        }
+        if (tmpSize != 0) {
+            if (!strcmp(name, value)) {
+                struct pair fr = {i - 10, tmpSize};
+                return fr;
+            }
+            i += tmpSize;
+        }
+        free(frame);
+        free(name);
+    }
+    struct pair none = {0, 0};
+    return none;
+}
+
+byte* edit (byte* header, byte* arr, char* tag, char* value, int n) {
+    struct pair exist = check(arr, tag, n);
+    if (exist.second) {
+        int newFramesSize = n - exist.second + (int) strlen(value);
+        byte* newArr = (byte*) malloc (newFramesSize);
+
+        // updateHeader().size
+        byte binary[32] = {0};
+        int t = 31, tmp = newFramesSize;
+        while (tmp) {
+            binary[t] = tmp % 2;
+            tmp = tmp>>1;
+            t--;
+        }
+        t = 31;
+        for (int i = 7; i >= 4; i++) {
+            int hex = 0, p = 1;
+            for (int j = 0; j < 7; j++) {
+                hex += binary[t] * p;
+                p *= 2;
+                t--;
+            }
+            header[i] = hex;
+        }
+        
+        for (int i = 0; i < exist.first; i++) {
+            // rewrite tags before
+            newArr[i] = arr[i];
+        }
+        // update frameHeader
+        for (int i = exist.first; i < 4 + exist.first; i++) {
+            // rewrite name
+            newArr[i] = arr[i];
+        }
+        int newLen = (int) strlen(value);
+        for (int i = exist.first + 4; i < exist.first + 8; i++) {
+            // new len of frame
+            newArr[i] = newLen % 256;
+            newLen /= 256;
+        }
+        for (int i = exist.first + 8; i < exist.first + 10; i++) {
+            // rewrite flags
+            newArr[i] = arr[i];
+        }
+        for (int i = exist.first + 10; i < exist.first + 10 + strlen(value); i++) {
+            // rewrite value
+            newArr[i] = value[i - exist.first - 10];
+        }
+        
+        // rewrite other tags
+        // ...
+        // ...
+        
+        return newArr;
+    }
+    else {
+        return arr;
+    }
+}
+
+int main() {
+    FILE *song = fopen("kek.mp3", "r");
+    if (song == NULL) {
+        printf("%s", "No such file!");
+        return 0;
+    }
+    byte* headerID3 = (byte*) malloc(10);
+    fread(headerID3,  1, 10, song);
+
+    byte totalSize[28] = {0};
+    for (int i = 9; i >= 6; i--) {
+        byte tmp = headerID3[i];
+        int t = 6;
+        while (tmp) {
+            totalSize[(i - 6) * 7 + t] = tmp % 2;
+            tmp = tmp >> 1;
+            t--;
+        }
+    }
+
+    int framesSize = 0, p = 1;
+    for (int i = 27; i >= 0; i--) {
+        framesSize += totalSize[i] * p;
+        p *= 2;
+    }
+
+    byte *frames = (byte*) malloc(framesSize);
+    fread(frames, 1, framesSize, song);
+    fclose(song);
 }
