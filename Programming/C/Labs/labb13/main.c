@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <mm_malloc.h>
 #include <string.h>
 
 typedef unsigned char byte;
@@ -50,11 +50,11 @@ void show(const byte *arr, int n) {
             i += tmpSize;
         } else {
             free(frame);
+            printf("\n");
             return;
         }
         free(frame);
     }
-    printf("\n");
 }
 
 void showValue(const byte *arr, char *value, int n) {
@@ -141,7 +141,7 @@ int updateSize(const byte *headerID3) {
         int t = 6;
         while (tmp) {
             totalSize[(i - 6) * 7 + t] = tmp % 2;
-            tmp = tmp >> 1;
+            tmp /= 2;
             t--;
         }
     }
@@ -165,7 +165,7 @@ byte *edit(byte *header, byte *arr, char *tag, char *value, int n) {
         int t = 31, tmp = newFramesSize;
         while (tmp) {
             binary[t] = tmp % 2;
-            tmp = tmp >> 1;
+            tmp /= 2;
             t--;
         }
         t = 31;
@@ -221,8 +221,6 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < strlen(argv[1]) - 11; i++) {
         name[i] = argv[1][i + 11];
     }
-    printf("%s", name);
-    return 0;
     FILE *song = fopen(name, "r");
     if (song == NULL) {
         printf("%s", "No such file!");
@@ -235,11 +233,46 @@ int main(int argc, char* argv[]) {
     int framesSize = updateSize(headerID3);
     byte *frames = (byte *) malloc(framesSize);
     fread(frames, 1, framesSize, song);
-
-
     for (int i = 2; i < argc; i++) {
-
+        if (argv[i][2] == 'g') {
+            char* tag = (char*) malloc(100);
+            for (int j = 0; j < strlen(argv[i]) - 6; j++) {
+                tag[j] = argv[i][j + 6];
+            }
+            showValue(frames, tag, framesSize);
+            free(tag);
+        }
+        else if (argv[i][2] == 's' && strlen(argv[i]) == 6) {
+            show (frames, framesSize);
+        }
+        else if (argv[i][2] == 's') {
+            char* tag = (char*) malloc(100);
+            for (int j = 0; j < strlen(argv[i]) - 6; j++) {
+                tag[j] = argv[i][j + 6];
+            }
+            i++;
+            char* value = (char*) malloc(100);
+            for (int j = 0; j < strlen(argv[i]) - 8; j++) {
+                value[j] = argv[i][j + 8];
+            }
+            frames = edit(headerID3, frames, tag, value, framesSize);
+            framesSize = updateSize(headerID3);
+            free(tag);
+            free(value);
+        }
     }
-
+    FILE *output = fopen("out.mp3", "w");
+    for (int i = 0; i < 10; i++) {
+        fprintf(output, "%c", headerID3[i]);
+    }
+    for (int i = 0; i < framesSize; i++) {
+        fprintf(output, "%c", frames[i]);
+    }
+    int tmp;
+    while ((tmp = getc(song)) != EOF) {
+        putc(tmp, output);
+    }
     fclose(song);
+    free(name);
+    free(frames);
 }
