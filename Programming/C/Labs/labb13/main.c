@@ -145,7 +145,7 @@ byte* edit (byte* header, byte* arr, char* tag, char* value, int n) {
             }
             header[i] = hex;
         }
-        
+
         for (int i = 0; i < exist.first; i++) {
             // rewrite tags before
             newArr[i] = arr[i];
@@ -156,7 +156,7 @@ byte* edit (byte* header, byte* arr, char* tag, char* value, int n) {
             newArr[i] = arr[i];
         }
         int newLen = (int) strlen(value);
-        for (int i = exist.first + 4; i < exist.first + 8; i++) {
+        for (int i = exist.first + 7; i >= exist.first + 4; i--) {
             // new len of frame
             newArr[i] = newLen % 256;
             newLen /= 256;
@@ -169,11 +169,11 @@ byte* edit (byte* header, byte* arr, char* tag, char* value, int n) {
             // rewrite value
             newArr[i] = value[i - exist.first - 10];
         }
-        
+
         // rewrite other tags
         // ...
         // ...
-        
+
         return newArr;
     }
     else {
