@@ -1,0 +1,40 @@
+CMD CK 016
+00A 0010 // link to my numbers
+
+00B 0000
+00C 0000
+00D 0000
+00E 0000
+00F 0000
+
+/* numbers */
+010 CEBA 
+011 0848
+012 3476
+013 AE05 
+
+014 FFFC // loop counter
+
+015 0000 // answer
+
+/* new number */
+016 F200 // clear
+017 480A // 80A --> 00A -> A += (00A), (00A)++
+018 A01A // if (A < 0) -> 01A, 019
+
+019 2045 // to subprogram
+
+/* increment or end*/
+01A 0014 // ((01A))++, if ( ((01A)) >= 0) -> CK++
+01B C016 // to 016
+01C F000 // end
+
+01D 0000 
+
+/* subprogram */
+045 0000 // nothing
+046 F200 // clear
+047 F800 // A++
+048 4015 // A += (015)
+049 3015 // (015) = A
+04A C845 // to (045) <-> 01A
