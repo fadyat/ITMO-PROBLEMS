@@ -27,7 +27,7 @@ void show(const byte *arr, int n) {
     printf("\n");
     int i = 0;
     while (i < n) {
-        byte *frame = (byte *) malloc(9);
+        byte *frame = (byte *) malloc(10);
         for (int j = 0; j < 10; j++) {
             frame[j] = arr[i + j];
         }
@@ -37,7 +37,6 @@ void show(const byte *arr, int n) {
             tmpSize += frame[j] * p;
             p *= 256;
         }
-
         if (tmpSize && i + tmpSize < n) {
             for (int j = 0; j < 4; j++) {
                 printf("%c", frame[j]);
