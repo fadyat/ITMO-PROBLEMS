@@ -105,7 +105,7 @@ protected:
             s += x1 * y2;
             s -= x2 * y1;
         }
-        return s / 2;
+        return abs(s / 2);
     }
     bool itsConvex () {
         int n = points.size();
@@ -169,10 +169,10 @@ int main() {
     cout << line2.itsP() << endl;
     line2.show(); */
     vector<Point> all1;
-    all1.emplace_back(0, 0);
-    all1.emplace_back(3, 0);
+    all1.emplace_back(1, 2);
     all1.emplace_back(3, 3);
-    all1.emplace_back(2, 1);
+    all1.emplace_back(3, 0);
+    all1.emplace_back(0, 0);
     /*
     LockedLine line1 (all1);
     cout << line1.itsP() << endl;
