@@ -60,7 +60,7 @@ public:
 };
 
 class LockedLine : public Line {
-protected:
+private:
     double P = -1;
     double countP() {
         int n = points.size();
@@ -93,7 +93,7 @@ public:
 };
 
 class Polygon : public LockedLine {
-protected:
+private:
     double S = -1;
     double countS () {
         double s = 0;
@@ -121,7 +121,10 @@ protected:
             Point ab (x2 - x1, y2 - y1);
             Point bc (x3 - x2, y3 - y2);
             double cnt = ab.getX() * bc.getY() - ab.getY() * bc.getX();
-            sign = (cnt >= 0);
+            if (cnt == 0) {
+                continue;
+            }
+            sign = (cnt > 0);
             if (i == 0) {
                 sign1 = (cnt >= 0);
             }
@@ -131,13 +134,30 @@ protected:
         }
         return true;
     }
+    bool itsOneLine () {
+        int n = points.size();
+        if (n < 3) {
+            return true;
+        }
+        int x1 = points[0].getX(), y1 = points[0].getY();
+        int x2 = points[1].getX(), y2 = points[1].getY();
+        for (int i = 2; i < n; i++) {
+            int x = points[i].getX(), y = points[i].getY();
+            if ((y1 - y2) * x + (x2 - x1) * y + x1 * y2 - x2 * y1 != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 public:
     explicit Polygon (vector<Point> &points_) : LockedLine(points_) {
         if (!itsConvex()) {
-            cout << "Incorrect data" << endl;
+            cout << "Incorrect data: polygon isn't convex" << endl;
+        }
+        else if (itsOneLine()) {
+            cout << "Incorrect data: all points on the same line" << endl;
         }
         else {
-            cout << "Data is correct" << endl;
             S = countS();
         }
     }
@@ -158,6 +178,23 @@ public:
     }
 };
 
+class Triangle : public Polygon {
+private:
+    bool itsTriangle() {
+        if (points.size() != 3) {
+            return false;
+        }
+        return true;
+    }
+public:
+    explicit Triangle (vector<Point> &points_) : Polygon(points_) {
+        if (!itsTriangle()) {
+            cout << "Incorrect data: not 3 vertices" << endl;
+        }
+    }
+    Triangle () = default;
+};
+
 int main() {
     /*
     vector<Point> all;
@@ -169,10 +206,10 @@ int main() {
     cout << line2.itsP() << endl;
     line2.show(); */
     vector<Point> all1;
-    all1.emplace_back(1, 2);
-    all1.emplace_back(3, 3);
-    all1.emplace_back(3, 0);
     all1.emplace_back(0, 0);
+    all1.emplace_back(1, 1);
+    all1.emplace_back(3, 3);
+    all1.emplace_back(5, 3);
     /*
     LockedLine line1 (all1);
     cout << line1.itsP() << endl;
@@ -186,10 +223,23 @@ int main() {
     line3 = line2;
     cout << line3.itsP() << endl;
     line3.show();*/
-    Polygon x (all1);
-    cout << x.itsS() << endl;
-    cout << x.itsP() << endl;
+    Triangle x (all1);
+//    cout << x.itsS() << endl;
+//    cout << x.itsP() << endl;
+//    x.show();
+    Triangle tr = x;
+//    cout << tr.itsS() << endl;
+//    cout << tr.itsP() << endl;
+    tr.show();
+    reverse(all1.begin(), all1.end());
+    Triangle x1 (all1);
+//    cout << x1.itsS() << endl;
+//    cout << x1.itsP() << endl;
     x.show();
+    tr = x1;
+//    cout << tr.itsS() << endl;
+//    cout << tr.itsP() << endl;
+    tr.show();
     /*    Polygon yy;
     cout << yy.itsS() << endl;
     cout << yy.itsP() << endl;
