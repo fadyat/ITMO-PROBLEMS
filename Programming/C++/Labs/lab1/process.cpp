@@ -244,4 +244,5 @@ int main() {
     cout << yy.itsS() << endl;
     cout << yy.itsP() << endl;
     yy.show();*/
+    // ogo
 }
