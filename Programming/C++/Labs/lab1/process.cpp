@@ -7,10 +7,10 @@ using namespace std;
 
 class Point {
 private:
-    int x;
-    int y;
+    double x;
+    double y;
 public:
-    explicit Point (int x_ = 0, int y_ = 0) : x(x_), y(y_) {}
+    explicit Point (double x_ = 0, double y_ = 0) : x(x_), y(y_) {}
     Point (const Point &other) {
         x = other.x;
         y = other.y;
@@ -26,13 +26,22 @@ public:
     void show () const {
         cout << x << " " << y << endl;
     }
-    [[nodiscard]] int getX () const {
+    [[nodiscard]] double getX () const {
         return x;
     }
-    [[nodiscard]] int getY () const {
+    [[nodiscard]] double getY () const {
         return y;
     }
 };
+
+void build (vector<Point> &tmp, int n) {
+    for (int i = 0; i < n; i++) {
+        int x, y;
+        cin >> x >> y;
+        tmp.emplace_back(Point(x, y));
+    }
+    cout << endl;
+}
 
 class Line {
 protected:
@@ -51,7 +60,7 @@ public:
         return *this;
     }
     void show ()  {
-        cout << "Have " << points.size() << " points: " << endl;
+        cout << "\nHave " << points.size() << " points:\n";
         for (Point &point : points) {
             point.show();
         }
@@ -64,14 +73,18 @@ private:
     double P = -1;
     double countP() {
         int n = points.size();
-        double s = 0;
+        double p = 0;
         for (int i = 0; i < n; i++) {
             int j = (i + 1) % n;
-            double x1 = points[i].getX(), y1 = points[i].getY();
-            double x2 = points[j].getX(), y2 = points[j].getY();
-            s += sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            p += dist(i, j);
         }
-        return s;
+        return p;
+    }
+protected:
+    double dist (int i, int j) {
+        double x1 = points[i].getX(), y1 = points[i].getY();
+        double x2 = points[j].getX(), y2 = points[j].getY();
+        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 public:
     explicit LockedLine (vector<Point> &points_) : Line(points_), P(countP()) {}
@@ -87,8 +100,8 @@ public:
         this->P = other.P;
         return *this;
     }
-    [[nodiscard]] double itsP () const {
-        return P;
+    void itsP () const {
+        cout << "P: " << P << endl;
     }
 };
 
@@ -115,9 +128,9 @@ private:
         bool sign1, sign;
         for (int i = 0; i < n; i++) {
             int j = (n + i - 1) % n, k = (n + i + 1) % n;
-            int x1 = points[j].getX(), y1 = points[j].getY();
-            int x2 = points[i].getX(), y2 = points[i].getY();
-            int x3 = points[k].getX(), y3 = points[k].getY();
+            double x1 = points[j].getX(), y1 = points[j].getY();
+            double x2 = points[i].getX(), y2 = points[i].getY();
+            double x3 = points[k].getX(), y3 = points[k].getY();
             Point ab (x2 - x1, y2 - y1);
             Point bc (x3 - x2, y3 - y2);
             double cnt = ab.getX() * bc.getY() - ab.getY() * bc.getX();
@@ -139,10 +152,10 @@ private:
         if (n < 3) {
             return true;
         }
-        int x1 = points[0].getX(), y1 = points[0].getY();
-        int x2 = points[1].getX(), y2 = points[1].getY();
+        double x1 = points[0].getX(), y1 = points[0].getY();
+        double x2 = points[1].getX(), y2 = points[1].getY();
         for (int i = 2; i < n; i++) {
-            int x = points[i].getX(), y = points[i].getY();
+            double x = points[i].getX(), y = points[i].getY();
             if ((y1 - y2) * x + (x2 - x1) * y + x1 * y2 - x2 * y1 != 0) {
                 return false;
             }
@@ -173,8 +186,8 @@ public:
         this->S = other.S;
         return *this;
     }
-    [[nodiscard]] double itsS () const {
-        return S;
+    void itsS () const {
+        cout << "S: " << S << endl;
     }
 };
 
@@ -195,54 +208,145 @@ public:
     Triangle () = default;
 };
 
+class Trapeze : public Polygon {
+private:
+    bool itsTrapeze () {
+        int n = points.size();
+        if (n != 4) {
+            return false;
+        }
+        vector<double> k(n);
+        for (int i = 0; i < n; i++) {
+            double x1 = points[i].getX(), y1 = points[i].getY();
+            double x2 = points[(i + 1) % n].getX(), y2 = points[(i + 1) % n].getY();
+            k[i] = (y2 - y1) / (x2 - x1);
+        }
+        if (!((k[0] == k[2] && k[1] != k[3]) || (k[0] != k[2] && k[1] == k[3]))) {
+            return false;
+        }
+        return true;
+    }
+public:
+    explicit Trapeze (vector<Point> &points_) : Polygon(points_) {
+        if (!itsTrapeze()) {
+            cout << "Incorrect data: not 4 vertices / not trapeze" << endl;
+        }
+    }
+    Trapeze () = default;
+};
+
+class RegularPolygon : public Polygon {
+private:
+    bool itsRegularSide () {
+        int n = points.size();
+        double last, now;
+        last = dist(0, 1);
+        for (int i = 1; i < n; i++) {
+            int j = (i + 1) % n;
+            now = dist(i, j);
+            if (last != now) {
+                return false;
+            }
+            else {
+                last = now;
+            }
+        }
+        return true;
+    }
+    static double deg (double a, double b, double c) {
+        return acos((pow(a, 2) + pow(b, 2) - pow(c, 2)) / (2 * a * b)) * 180 / M_PI;
+    }
+    bool itsRegularDeg() {
+        int n = points.size();
+        double deg1 = deg(dist(0, 1), dist(1, 2), dist(0, 2));
+        for (int i = 1; i < n; i++) {
+            int j = (i + 1) % n;
+            int k = (i + 2) % n;
+            double deg2 = deg(dist(i, j), dist(j, k), dist(i, k));
+            if (deg1 != deg2) {
+                return false;
+            }
+        }
+        return true;
+    }
+public:
+    explicit RegularPolygon (vector<Point> &points_) : Polygon(points_) {
+            if (!itsRegularSide()) {
+                cout << "Incorrect data: different sides" << endl;
+            }
+            if (!itsRegularDeg()) {
+                cout << "Incorrect data: different angles" << endl;
+            }
+    }
+    RegularPolygon () = default;
+};
+
 int main() {
-    /*
-    vector<Point> all;
-    all.emplace_back(0, 0);
-    all.emplace_back(2, 0);
-    all.emplace_back(2, 2);
-    all.emplace_back(0, 2);
-    LockedLine line2(all);
-    cout << line2.itsP() << endl;
-    line2.show(); */
-    vector<Point> all1;
-    all1.emplace_back(0, 0);
-    all1.emplace_back(1, 1);
-    all1.emplace_back(3, 3);
-    all1.emplace_back(5, 3);
-    /*
-    LockedLine line1 (all1);
-    cout << line1.itsP() << endl;
-    line1.show();
-    LockedLine line3 = line1;
-    cout << line3.itsP() << endl;
-    line3.show();
-    line3 = line1;
-    cout << line3.itsP() << endl;
-    line3.show();
-    line3 = line2;
-    cout << line3.itsP() << endl;
-    line3.show();*/
-    Triangle x (all1);
-//    cout << x.itsS() << endl;
-//    cout << x.itsP() << endl;
-//    x.show();
-    Triangle tr = x;
-//    cout << tr.itsS() << endl;
-//    cout << tr.itsP() << endl;
-    tr.show();
-    reverse(all1.begin(), all1.end());
-    Triangle x1 (all1);
-//    cout << x1.itsS() << endl;
-//    cout << x1.itsP() << endl;
-    x.show();
-    tr = x1;
-//    cout << tr.itsS() << endl;
-//    cout << tr.itsP() << endl;
-    tr.show();
-    /*    Polygon yy;
-    cout << yy.itsS() << endl;
-    cout << yy.itsP() << endl;
-    yy.show();*/
-    // ogo
+    while (true) {
+        cout << '\n';
+        for (int i = 0; i < 20; i++) {
+            cout << "#";
+        }
+        cout << "\nChoose:\n"
+                "1. Point\n"
+                "2. Line\n"
+                "3. Locked line\n"
+                "4. Polygon\n"
+                "5. Triangle\n"
+                "6. Trapeze\n"
+                "7. Regular polygon\n"
+                "0. Out\n\n";
+        int press;
+        cin >> press;
+        int n;
+        vector<Point> tmp;
+        int x, y;
+        if (press == 1) {
+            cin >> x >> y;
+            Point my(x, y);
+            my.show();
+        }
+        else if (press >= 2 && press <= 7) {
+            cout << "Number of points:\n";
+            cin >> n;
+            build(tmp, n);
+        }
+
+        if (press == 2) {
+            Line my (tmp);
+            my.show();
+        }
+        else if (press == 3) {
+            LockedLine my (tmp);
+            my.show();
+            my.itsP();
+        }
+        else if (press == 4) {
+            Polygon my (tmp);
+            my.show();
+            my.itsP();
+            my.itsS();
+        }
+        else if (press == 5) {
+            Triangle my (tmp);
+            my.show();
+            my.itsP();
+            my.itsS();
+        }
+        else if (press == 6) {
+            Trapeze my (tmp);
+            my.show();
+            my.itsP();
+            my.itsS();
+        }
+        else if (press == 7) {
+            RegularPolygon my (tmp);
+            my.show();
+            my.itsP();
+            my.itsS();
+        }
+        else if (press != 1) {
+            break;
+        }
+    }
 }
