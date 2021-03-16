@@ -59,9 +59,9 @@ public:
         this->points = other.points;
         return *this;
     }
-    void show ()  {
+    void show () const {
         cout << "\nHave " << points.size() << " points:\n";
-        for (Point &point : points) {
+        for (const auto &point : points) {
             point.show();
         }
         cout << '\n';
@@ -102,6 +102,11 @@ public:
     }
     void itsP () const {
         cout << "P: " << P << endl;
+    }
+
+    virtual void itsAll () const {
+        show();
+        itsP();
     }
 };
 
@@ -188,6 +193,10 @@ public:
     }
     void itsS () const {
         cout << "S: " << S << endl;
+    }
+    void itsAll () const override {
+        LockedLine::itsAll();
+        itsS();
     }
 };
 
@@ -318,32 +327,23 @@ int main() {
         }
         else if (press == 3) {
             LockedLine my (tmp);
-            my.show();
-            my.itsP();
+            my.itsAll();
         }
         else if (press == 4) {
             Polygon my (tmp);
-            my.show();
-            my.itsP();
-            my.itsS();
+            my.itsAll();
         }
         else if (press == 5) {
             Triangle my (tmp);
-            my.show();
-            my.itsP();
-            my.itsS();
+            my.itsAll();
         }
         else if (press == 6) {
             Trapeze my (tmp);
-            my.show();
-            my.itsP();
-            my.itsS();
+            my.itsAll();
         }
         else if (press == 7) {
             RegularPolygon my (tmp);
-            my.show();
-            my.itsP();
-            my.itsS();
+            my.itsAll();
         }
         else if (press != 1) {
             break;
