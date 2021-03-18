@@ -45,7 +45,8 @@ public:
         update();
     }
     explicit Fraction() = default;
-    Fraction& operator = (const Fraction& other) {
+    Fraction (const Fraction &other) = default;
+    Fraction& operator =  (const Fraction& other) {
         if (this == &other) {
             return *this;
         }
@@ -53,19 +54,19 @@ public:
         this->denominator = other.denominator;
         return *this;
     }
-    Fraction operator + (const Fraction& other) const {
+    Fraction  operator +  (const Fraction& other) const {
         return Fraction(this->numerator * other.denominator + this->denominator * other.numerator, this->denominator * other.denominator);
     }
-    Fraction operator - (const Fraction& other) const {
+    Fraction  operator -  (const Fraction& other) const {
         return Fraction(this->numerator * other.denominator - this->denominator * other.numerator, this->denominator * other.denominator);
     }
-    Fraction operator * (const Fraction& other) const {
+    Fraction  operator *  (const Fraction& other) const {
         if (this->numerator * other.numerator == 0) {
             return Fraction(0, 1);
         }
         return Fraction(this->numerator * other.numerator, this->denominator * other.denominator);
     }
-    Fraction operator / (const Fraction& other) const {
+    Fraction  operator /  (const Fraction& other) const {
         if (this->numerator * other.denominator == 0) {
             return Fraction(0, 1);
         }
@@ -91,29 +92,92 @@ public:
         out << other.numerator << '/' << other.denominator;
         return out;
     }
-    Fraction (const Fraction &other) {
-        this->numerator = other.numerator;
-        this->denominator = other.denominator;
-    }
 };
 
 class Polynom {
-private:
+protected:
     map<int, Fraction> total;
 public:
     explicit Polynom (map<int, Fraction> &total_) : total(total_) {}
     Polynom() = default;
+    Polynom (const Polynom &other) = default;
+    Polynom& operator =  (const Polynom &other) {
+        if (this == &other) {
+            return *this;
+        }
+        this->total = other.total;
+        return *this;
+    }
+    Polynom  operator +  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] += i.second;
+        }
+        for (const auto &i : other.total) {
+            tmp[i.first] += i.second;
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator -  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] += i.second;
+        }
+        for (const auto &i : other.total) {
+            tmp[i.first] -= i.second;
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator *  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            for (const auto &j : other.total) {
+                tmp[i.first + j.first] += i.second * j.second;
+            }
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator /  (const Fraction& other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] = i.second / other;
+        }
+        return Polynom(tmp);
+    }
+    Polynom& operator += (const Polynom& other) {
+        *this = *this + other;
+        return *this;
+    }
+    Polynom& operator -= (const Polynom& other) {
+        *this = *this - other;
+        return *this;
+    }
+    Polynom& operator *= (const Polynom& other) {
+        *this = *this * other;
+        return *this;
+    }
+    Polynom& operator /= (const Fraction& other) {
+        *this = *this / other;
+        return *this;
+    }
+    friend ostream& operator << (ostream& out, const Polynom& other) {
+        for (const auto & i : other.total) {
+            out << i.first << " " << i.second << endl;
+        }
+        return out;
+    }
 };
 
-int main() {/*
-    Fraction x (3, 3);
-    Fraction y = x;
-    y += Fraction(1, 5);
-    Fraction z;
-    z = y;
-    z -= Fraction(5, 13);
-    cout << x << " " << y << " " << z << endl;*/
-    /* map<int, Fraction> total;
+int main() {
+    /*
+    Fraction x (3, 4);
+    Fraction y (1, 2);
+    cout << x + y << endl;
+    cout << x << endl;
+    */
+    /*
+    map<int, Fraction> total;
+    map<int, Fraction> total1;
     for (int i = 0; i < 2; ++i) {
         int n;
         string s;
@@ -121,8 +185,21 @@ int main() {/*
         Fraction tmp (s);
         total[n] += tmp;
     }
-    Polynom pol1(total);*/ /*
-    for (auto i = total.begin(); i != total.end(); i++) {
-        cout << i->first << " " << i->second << endl;
-    } */
+    for (int i = 0; i < 1; ++i) {
+        int n;
+        string s;
+        cin >> n >> s;
+        Fraction tmp (s);
+        total1[n] += tmp;
+    }
+
+    Polynom pol1(total);
+    Polynom pol2 (total1);
+
+    cout << pol1 << endl;
+    cout << pol2 << endl;
+    cout << pol1 / Fraction(1, 3) << endl;
+    string s = "2";
+    cout << pol1 / Fraction(s) << endl;
+    cout << pol1 << endl; */
 }
