@@ -1,7 +1,6 @@
 #include <iostream>
 #include <numeric>
 #include <map>
-#include <vector>
 
 using namespace std;
 
@@ -204,10 +203,11 @@ public:
         return in;
     }
     Polynom operator - () {
-        for (const auto & i : total) {
-            total[i.first] = -i.second;
+        map<int, Fraction> tmp = this->total;
+        for (const auto & i : tmp) {
+            tmp[i.first] = -i.second;
         }
-        return Polynom (total);
+        return Polynom (tmp);
     }
     Polynom operator + () {
         return *this;
@@ -222,5 +222,5 @@ public:
 
 int main() {
     // operations
-    // ... 
+    // ...
 }
