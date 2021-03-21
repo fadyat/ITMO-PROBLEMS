@@ -1,13 +1,13 @@
 #include <iostream>
-#include <vector>
 #include <numeric>
+#include <map>
 
 using namespace std;
 
 class Fraction {
 private:
-    int numerator;
-    int denominator;
+    int numerator = 0;
+    int denominator = 1;
     void update () {
         int GCD = gcd(numerator, denominator);
         numerator /= GCD;
@@ -22,7 +22,70 @@ private:
         return ans;
     }
 public:
-    explicit Fraction (string &s) {
+    Fraction() = default;
+    explicit Fraction (int n, int d) : numerator(n), denominator(d) {
+        update();
+    }
+    Fraction (const Fraction &other) = default;
+    Fraction& operator =  (const Fraction& other) {
+        if (this == &other) {
+            return *this;
+        }
+        this->numerator = other.numerator;
+        this->denominator = other.denominator;
+        return *this;
+    }
+    Fraction  operator +  (const Fraction& other) const {
+        if (this->numerator * other.denominator + this->denominator * other.numerator == 0) {
+            return Fraction(0, 1);
+        }
+        return Fraction(this->numerator * other.denominator + this->denominator * other.numerator, this->denominator * other.denominator);
+    }
+    Fraction  operator -  (const Fraction& other) const {
+        if (this->numerator * other.denominator - this->denominator * other.numerator == 0) {
+            return Fraction(0, 1);
+        }
+        return Fraction(this->numerator * other.denominator - this->denominator * other.numerator, this->denominator * other.denominator);
+    }
+    Fraction  operator *  (const Fraction& other) const {
+        if (this->numerator * other.numerator == 0) {
+            return Fraction(0, 1);
+        }
+        return Fraction(this->numerator * other.numerator, this->denominator * other.denominator);
+    }
+    Fraction  operator /  (const Fraction& other) const {
+        if (this->numerator * other.denominator == 0) {
+            return Fraction(0, 1);
+        }
+        return Fraction(this->numerator * other.denominator, this->denominator * other.numerator);
+    }
+    Fraction& operator += (const Fraction& other) {
+        *this = *this + other;
+        return *this;
+    }
+    Fraction& operator -= (const Fraction& other) {
+        *this = *this - other;
+        return *this;
+    }
+    Fraction& operator *= (const Fraction& other) {
+        *this = *this * other;
+        return *this;
+    }
+    Fraction& operator /= (const Fraction& other) {
+        *this = *this / other;
+        return *this;
+    }
+    friend ostream& operator << (ostream& out, const Fraction& other) {
+        if (other.denominator == -1) {
+            out << "nope";
+            return out;
+        }
+        out << other.numerator << '/' << other.denominator;
+        return out;
+    }
+    friend istream& operator >> (istream& in, Fraction& other) {
+        string s;
+        in >> s;
         string num, den;
         int u = 0;
         while (u < s.size() && s[u] != '/') {
@@ -37,45 +100,127 @@ public:
         if (den.empty()) {
             den = "1";
         }
-        numerator = to_int(num);
-        denominator = to_int(den);
-        update();
+        other.numerator = to_int(num);
+        other.denominator = to_int(den);
+        other.update();
+        return in;
     }
-    void look () const {
-        cout << numerator << "/" << denominator << endl;
+    Fraction operator + () const {
+        return *this;
+    }
+    Fraction operator - () const {
+        return Fraction(-numerator, denominator);
+    }
+    bool operator == (const Fraction& other) const {
+        return ((this->numerator == other.numerator) && (this->denominator == other.denominator));
+    }
+    bool operator != (const Fraction& other) const {
+        return !(*this == other);
     }
 };
 
-/*
 class Polynom {
-private:
-    vector<int> deg;
+protected:
+    int n = 0;
+    map<int, Fraction> total;
 public:
-    explicit Polynom (vector<int> &deg_) {
-        deg = deg_;
-    }
-    void look () {
-        for (int &i : deg) {
-            cout << i << " ";
+    explicit Polynom (map<int, Fraction> &total_) : total(total_), n(total_.size()) {}
+    Polynom() = default;
+    Polynom (const Polynom &other) = default;
+    Polynom& operator =  (const Polynom &other) {
+        if (this == &other) {
+            return *this;
         }
-        cout << endl;
+        this->total = other.total;
+        return *this;
+    }
+    Polynom  operator +  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] += i.second;
+        }
+        for (const auto &i : other.total) {
+            tmp[i.first] += i.second;
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator -  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] += i.second;
+        }
+        for (const auto &i : other.total) {
+            tmp[i.first] -= i.second;
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator *  (const Polynom &other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            for (const auto &j : other.total) {
+                tmp[i.first + j.first] += i.second * j.second;
+            }
+        }
+        return Polynom(tmp);
+    }
+    Polynom  operator /  (const Fraction& other) {
+        map<int, Fraction> tmp;
+        for (const auto &i : this->total) {
+            tmp[i.first] = i.second / other;
+        }
+        return Polynom(tmp);
+    }
+    Polynom& operator += (const Polynom& other) {
+        *this = *this + other;
+        return *this;
+    }
+    Polynom& operator -= (const Polynom& other) {
+        *this = *this - other;
+        return *this;
+    }
+    Polynom& operator *= (const Polynom& other) {
+        *this = *this * other;
+        return *this;
+    }
+    Polynom& operator /= (const Fraction& other) {
+        *this = *this / other;
+        return *this;
+    }
+    friend ostream& operator << (ostream& out, const Polynom& other) {
+        for (const auto & i : other.total) {
+            out << i.first << " " << i.second << endl;
+        }
+        return out;
+    }
+    friend istream& operator >> (istream& in, Polynom& other) {
+        in >> other.n;
+        for (int i = 0; i < other.n; i++) {
+            int power;
+            Fraction xx;
+            cin >> power >> xx;
+            other.total[power] += xx;
+        }
+        return in;
+    }
+    Polynom operator - () {
+        map<int, Fraction> tmp = this->total;
+        for (const auto & i : tmp) {
+            tmp[i.first] = -i.second;
+        }
+        return Polynom (tmp);
+    }
+    Polynom operator + () {
+        return *this;
+    }
+    Fraction operator[] (const int &i) {
+        if (!this->total.empty() && (this->total.find(i) != this->total.end())) {
+            return this->total[i];
+        }
+        return Fraction(1, -1);
     }
 };
-*/
-int main() {/*
-    vector<int> vec = {1, 2, 3};
-    Polynom kek (vec);
-    kek.look();
-    vector<int> aa = {1, 1, 1};
-    Polynom lol (aa);
-    lol.look();*/
-    vector<Fraction> all;
-    for (int i = 0; i < 3; i++) {
-        string s;
-        cin >> s;
-        all.emplace_back(Fraction(s));
-    }
-    for (int i = 0; i < (int) all.size(); i++) {
-        all[i].look();
-    }
+
+int main() {
+    // operations
+    // ...
 }
