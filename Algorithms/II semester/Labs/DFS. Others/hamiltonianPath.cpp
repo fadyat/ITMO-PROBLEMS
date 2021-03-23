@@ -18,8 +18,6 @@ void dfs (int v) {
     sorted.push_back(v);
 }
 
-using namespace std;
-
 int main () {
     freopen("hamiltonian.in", "r", stdin);
     freopen("hamiltonian.out", "w", stdout);
