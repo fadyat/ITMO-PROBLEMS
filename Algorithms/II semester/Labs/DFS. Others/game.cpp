@@ -2,8 +2,6 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-
 vector<int> h;
 vector<vector<int>> g;
 
