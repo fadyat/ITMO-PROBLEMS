@@ -1,5 +1,7 @@
-#include <iostream>
 #include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <numeric>
 #include <vector>
 
 using namespace std;
@@ -8,6 +10,7 @@ template<typename T>
 class Rule {
 private:
     T value;
+
 public:
     explicit Rule(T value_) : value(value_) {}
 
@@ -116,8 +119,58 @@ bool is_palindrome_(const T &begin, const T &end, F func) {
     return true;
 }
 
+
+class CPoint {
+private:
+    float x;
+    float y;
+    static float dist(float x2, float y2, float x1, float y1) {
+        return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    }
+
+public:
+    CPoint(float x_, float y_) : x(x_), y(y_) {}
+    CPoint() = default;
+    bool operator>(const CPoint &other) const {
+        return (dist(this->x, this->y, 0, 0) > dist(other.x, other.y, 0, 0));
+    }
+    bool operator<(const CPoint &other) const {
+        return (dist(this->x, this->y, 0, 0) < dist(other.x, other.y, 0, 0));
+    }
+    bool operator==(const CPoint &other) const {
+        return ((this->x == other.x) && (this->y == other.y));
+    }
+};
+
+class CRational {
+private:
+    int numerator = 0;
+    int denominator = 1;
+    void update() {
+        int GCD = gcd(numerator, denominator);
+        numerator /= GCD;
+        denominator /= GCD;
+    }
+
+public:
+    CRational(int n_, int d_) : numerator(n_), denominator(d_) {
+        update();
+    }
+    CRational() = default;
+    bool operator>(const CRational &other) const {
+        return ((this->numerator * other.denominator - this->denominator * other.numerator) > 0);
+    }
+    bool operator<(const CRational &other) const {
+        return ((this->numerator * other.denominator - this->denominator * other.numerator) < 0);
+    }
+    bool operator==(const CRational &other) const {
+        return ((this->numerator == other.numerator) && (this->denominator == other.denominator));
+    }
+};
 int main() {
-    vector<int> a = {4, 6, -1, 1, 3, 4};
+//    vector<int> a = {4, 6, -1, 1, 3, 4};
+//    vector<CPoint> a = {{9, 2}, {1, 4}, {5, 6}};
+//    vector<CRational> a = {{1, 2}, {3, 4}, {5, 5}};
 //    cout << all_of_(a.begin(), a.end(), Rule(3)) << endl;
 //    cout << any_of_(a.begin(), a.end(), Rule(10)) << endl;
 //    cout << none_of_(a.begin(), a.end(), Rule(12)) << endl;
