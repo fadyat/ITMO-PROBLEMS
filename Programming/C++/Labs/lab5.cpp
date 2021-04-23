@@ -3,24 +3,25 @@
 
 using namespace std;
 
+template<typename T>
 class Ring {
-public:
-    char *buffer;
+private:
+    T *buffer;
     int buffer_size;
-    int begin;
-    int end;
+    int start;
+    int finish;
     int reserved;
 public:
-    explicit Ring(int buffer_size_) : begin(0), end(0), buffer_size(0), buffer(), reserved(0) {
+    explicit Ring(int buffer_size_ = 1) : start(0), finish(0), buffer_size(0), buffer(), reserved(0) {
         resize(buffer_size_);
     }
 
     void resize(int new_buffer_size) {
-        char *new_buffer = new char[new_buffer_size];
+        T *new_buffer = new T[new_buffer_size];
         for (int i = 0; i < new_buffer_size; i++) {
-            new_buffer[i] = '*';
+            new_buffer[i] = 0;
         }
-        int tmp_begin = begin, tmp_end = end, new_id = 0;
+        int tmp_begin = start, tmp_end = finish, new_id = 0;
         if (reserved) {
             while (new_id < min(new_buffer_size, buffer_size) && tmp_begin != tmp_end) {
                 new_buffer[new_id] = buffer[tmp_begin];
@@ -28,11 +29,11 @@ public:
                 new_id++;
             }
             new_buffer[new_id] = buffer[tmp_begin];
-            begin = 0;
-            if (new_id == min(new_buffer_size, buffer_size)) {
-                end = new_id - 1;
+            start = 0;
+            if (new_id == min(new_buffer_size, buffer_size)) { // all cell are occupied
+                finish = new_id - 1;
             } else { // have a free cell
-                end = new_id;
+                finish = new_id;
             }
         }
         delete[] buffer;
@@ -40,15 +41,15 @@ public:
         buffer_size = new_buffer_size;
     }
 
-    void push_back(char x) {
+    void push_back(T x) {
         if (!reserved) {
-            buffer[begin] = x;
+            buffer[start] = x;
             reserved++;
         } else {
-            end = ++end % buffer_size;
-            int next = end;
-            if (next == begin) {
-                begin = ++begin % buffer_size;
+            finish = ++finish % buffer_size;
+            int next = finish;
+            if (next == start) {
+                start = ++start % buffer_size;
             } else {
                 reserved++;
             }
@@ -56,55 +57,101 @@ public:
         }
     }
 
-    void push_front(char x) {
+    void push_front(T x) {
         if (!reserved) {
-            buffer[begin] = x;
+            buffer[start] = x;
             reserved++;
         } else {
-            begin = (--begin + buffer_size) % buffer_size;
-            int prev = begin;
-            if (prev == end) {
-                end = (--end + buffer_size) % buffer_size;
+            start = (--start + buffer_size) % buffer_size;
+            int prev = start;
+            if (prev == finish) {
+                finish = (--finish + buffer_size) % buffer_size;
             } else {
                 reserved++;
             }
             buffer[prev] = x;
-
         }
     }
 
     void pop_back() {
         if (reserved) {
             reserved--;
-            buffer[end] = '*';
-            end = (--end + buffer_size) % buffer_size;
+            buffer[finish] = 0;
+            finish = (--finish + buffer_size) % buffer_size;
         }
     }
 
     void pop_forward() {
         if (reserved) {
             reserved--;
-            buffer[begin] = '*';
-            begin = ++begin % buffer_size;
+            buffer[start] = 0;
+            start = ++start % buffer_size;
         }
     }
 
-    void look() const {
-        for (int i = 0; i < buffer_size; i++) {
-            cout << buffer[i] << " ";
-        }
-        cout << endl;
-    }
-
-    char operator[](int i) const {
-        if (i < buffer_size) {
+    T &operator[](int i) const {
+        if (i >= 0 && i < buffer_size) {
             return buffer[i];
         }
-        return '*';
+        return buffer[buffer_size - 1];
+    }
+
+    ~Ring() {
+        delete[] buffer;
+    }
+
+    class Iterator : public iterator<input_iterator_tag, T> {
+    private:
+        T *link;
+    public:
+        explicit Iterator(T *link_) : link(link_) {}
+
+        T &operator+(int n) {
+            return *(link + n);
+        }
+
+        T &operator-(int n) {
+            return *(link - n);
+        }
+
+        T &operator++() {
+            return *++link;
+        }
+
+        T &operator++(int) {
+            return *link++;
+        }
+
+        T &operator--() {
+            return *--link;
+        }
+
+        T &operator--(int) {
+            return *link--;
+        }
+
+        T &operator*() {
+            return *link;
+        }
+
+        bool operator==(const Iterator &other) {
+            return link == other.link;
+        }
+
+        bool operator!=(const Iterator &other) {
+            return link != other.link;
+        }
+    };
+
+    Iterator begin() {
+        return Iterator(buffer);
+    }
+
+    Iterator end() {
+        return Iterator(buffer + buffer_size);
     }
 };
 
-
 int main() {
-    
+
 }
