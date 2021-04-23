@@ -30,7 +30,7 @@ public:
             }
             new_buffer[new_id] = buffer[tmp_begin];
             start = 0;
-            if (new_id == min(new_buffer_size, buffer_size)) { // all cell are occupied
+            if (new_id == min(new_buffer_size, buffer_size)) { // all cells are occupied
                 finish = new_id - 1;
             } else { // have a free cell
                 finish = new_id;
