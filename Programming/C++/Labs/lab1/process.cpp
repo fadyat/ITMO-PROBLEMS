@@ -72,7 +72,7 @@ class LockedLine : public Line {
 private:
     double P = -1;
     double countP() {
-        int n = points.size();
+        int n = (int) points.size();
         double p = 0;
         for (int i = 0; i < n; i++) {
             int j = (i + 1) % n;
@@ -115,7 +115,7 @@ private:
     double S = -1;
     double countS () {
         double s = 0;
-        int n = points.size();
+        int n = (int) points.size();
         for (int i = 0; i < n; i++) {
             int j = (i + 1) % n;
             double x1 = points[i].getX(), y1 = points[i].getY();
@@ -126,7 +126,7 @@ private:
         return abs(s / 2);
     }
     bool itsConvex () {
-        int n = points.size();
+        int n = (int) points.size();
         if (n < 3) {
             return false;
         }
@@ -153,7 +153,7 @@ private:
         return true;
     }
     bool itsOneLine () {
-        int n = points.size();
+        int n = (int) points.size();
         if (n < 3) {
             return true;
         }
@@ -220,7 +220,7 @@ public:
 class Trapeze : public Polygon {
 private:
     bool itsTrapeze () {
-        int n = points.size();
+        int n = (int) points.size();
         if (n != 4) {
             return false;
         }
@@ -247,7 +247,7 @@ public:
 class RegularPolygon : public Polygon {
 private:
     bool itsRegularSide () {
-        int n = points.size();
+        int n = (int) points.size();
         double last, now;
         last = dist(0, 1);
         for (int i = 1; i < n; i++) {
@@ -266,7 +266,7 @@ private:
         return acos((pow(a, 2) + pow(b, 2) - pow(c, 2)) / (2 * a * b)) * 180 / M_PI;
     }
     bool itsRegularDeg() {
-        int n = points.size();
+        int n = (int) points.size();
         double deg1 = deg(dist(0, 1), dist(1, 2), dist(0, 2));
         for (int i = 1; i < n; i++) {
             int j = (i + 1) % n;
@@ -280,12 +280,12 @@ private:
     }
 public:
     explicit RegularPolygon (vector<Point> &points_) : Polygon(points_) {
-            if (!itsRegularSide()) {
-                cout << "Incorrect data: different sides" << endl;
-            }
-            if (!itsRegularDeg()) {
-                cout << "Incorrect data: different angles" << endl;
-            }
+        if (!itsRegularSide()) {
+            cout << "Incorrect data: different sides" << endl;
+        }
+        if (!itsRegularDeg()) {
+            cout << "Incorrect data: different angles" << endl;
+        }
     }
     RegularPolygon () = default;
 };
