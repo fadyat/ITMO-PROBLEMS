@@ -15,9 +15,15 @@ private:
     }
     static int to_int (string &s) {
         int ans = 0, p = 1;
-        for (int i = (int) s.size() - 1; i >= 0; i--) {
+        for (int i = (int) s.size() - 1; i >= 1; i--) {
             ans += (s[i] - '0') * p;
             p *= 10;
+        }
+        if (s[0] == '-') {
+            ans *= -1;
+        }
+        else {
+            ans += (s[0] - '0') * p;
         }
         return ans;
     }
@@ -88,6 +94,10 @@ public:
         in >> s;
         string num, den;
         int u = 0;
+        if (s[0] == '-') {
+            num.push_back('-');
+            u++;
+        }
         while (u < s.size() && s[u] != '/') {
             num.push_back(s[u]);
             u++;
@@ -221,6 +231,7 @@ public:
 };
 
 int main() {
-    // operations
-    // ...
+    Polynom ogo;
+    cin >> ogo;
+    cout << ogo;
 }
