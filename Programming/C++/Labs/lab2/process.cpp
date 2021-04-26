@@ -94,10 +94,6 @@ public:
         in >> s;
         string num, den;
         int u = 0;
-        if (s[0] == '-') {
-            num.push_back('-');
-            u++;
-        }
         while (u < s.size() && s[u] != '/') {
             num.push_back(s[u]);
             u++;
