@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 
@@ -73,7 +74,7 @@ public:
     void pop_back() {
         if (reserved) {
             reserved--;
-            buffer[finish] = 0;
+            buffer[finish] = 0; // not necessary, made for clarity
             finish = (--finish + buffer_size) % buffer_size;
         }
     }
@@ -81,131 +82,140 @@ public:
     void pop_forward() {
         if (reserved) {
             reserved--;
-            buffer[start] = 0;
+            buffer[start] = 0; // not necessary, made for clarity
             start = ++start % buffer_size;
         }
     }
 
     T &operator[](int i) const {
-        if (i >= 0 && i < buffer_size) {
-            return buffer[i];
-        }
-        return buffer[buffer_size - 1];
+        assert(i >= 0 && i < buffer_size);
+        return buffer[i];
     }
 
     ~Ring() {
         delete[] buffer;
     }
 
-    class Iterator : public iterator<random_access_iterator_tag, T> {
+    class Custom_iterator : public iterator<random_access_iterator_tag, T> {
     private:
-        T *link;
+        T *ptr;
     public:
-        explicit Iterator(T *link_) : link(link_) {}
+        explicit Custom_iterator(T *ptr_) : ptr(ptr_) {}
 
-        Iterator(const Iterator &other) : link(other.link) {}
+        Custom_iterator(const Custom_iterator &other) : ptr(other.ptr) {}
 
-        Iterator& operator=(const Iterator &other) {
+        Custom_iterator& operator=(const Custom_iterator &other) {
             if (this == &other) {
                 return *this;
             }
-            link = other.link;
+            ptr = other.ptr;
             return *this;
         }
 
-        bool operator<(Iterator &other) {
-            return link < other.link;
+        bool operator<(Custom_iterator &other) {
+            return ptr < other.ptr;
         }
 
-        bool operator>=(Iterator &other) {
-            return !(link < other.link);
+        bool operator>=(Custom_iterator &other) {
+            return !(ptr < other.ptr);
         }
 
-        bool operator>(Iterator &other) {
-            return link > other.link;
+        bool operator>(Custom_iterator &other) {
+            return ptr > other.ptr;
         }
 
-        bool operator<=(Iterator &other) {
-            return !(link > other.link);
+        bool operator<=(Custom_iterator &other) {
+            return !(ptr > other.ptr);
         }
 
-        bool operator==(const Iterator &other) {
-            return link == other.link;
+        bool operator==(const Custom_iterator &other) {
+            return ptr == other.ptr;
         }
 
-        bool operator!=(const Iterator &other) {
-            return link != other.link;
+        bool operator!=(const Custom_iterator &other) {
+            return ptr != other.ptr;
         }
 
-        ptrdiff_t operator-(Iterator &other) {
-            return link - other.link;
+        ptrdiff_t operator-(Custom_iterator &other) {
+            return ptr - other.ptr;
         }
 
-        T& operator++() {
-            return *(++link);
+        Custom_iterator& operator++() {
+            ++this->ptr;
+            return *this;
         }
 
-        T operator++(int) {
-            Iterator tmp(link++);
-            return tmp.link;
+        Custom_iterator operator++(int) {
+            Custom_iterator tmp = *this;
+            ++(*this->ptr);
+            return tmp;
         }
 
-        T& operator--() {
-            return *(--link);
+        Custom_iterator& operator--() {
+            --this->ptr;
+            return *this;
         }
 
-        T operator--(int) {
-            Iterator tmp(link--);
-            return tmp.link;
+        Custom_iterator operator--(int) {
+            Custom_iterator tmp = *this;
+            --(*this->ptr);
+            return tmp;
         }
 
-        friend Iterator operator+(Iterator &other, int n) {
-            return Iterator(other.link + n);
+        friend Custom_iterator operator+(Custom_iterator &other, int n) {
+            return Custom_iterator(other.ptr + n);
         }
 
-        friend Iterator operator+(int n, Iterator &other) {
-            return Iterator(other.link + n);
+        friend Custom_iterator operator+(int n, Custom_iterator &other) {
+            return Custom_iterator(other.ptr + n);
         }
 
-        friend Iterator operator-(Iterator &other, int n) {
-            return Iterator(other.link - n);
+        friend Custom_iterator operator-(Custom_iterator &other, int n) {
+            return Custom_iterator(other.ptr - n);
         }
 
-        friend Iterator operator-(int n, Iterator &other) {
-            return Iterator(other.link - n);
+        friend Custom_iterator operator-(int n, Custom_iterator &other) {
+            return Custom_iterator(other.ptr - n);
+        }
+
+        Custom_iterator& operator+=(int n) {
+            this->ptr += n;
+            return *this;
+        }
+
+        Custom_iterator& operator-=(int n) {
+            this->ptr -= n;
+            return *this;
         }
 
         T& operator*() {
-            return *link;
-        }
-
-        T& operator+=(int n) {
-            link += n;
-            return *link;
-        }
-
-        T& operator-=(int n) {
-            link -= n;
-            return *link;
+            return *ptr;
         }
     };
 
-    Iterator begin() {
-        return Iterator(buffer);
+    Custom_iterator begin() {
+        return Custom_iterator(buffer);
     }
 
-    Iterator end() {
-        return Iterator(buffer + buffer_size);
+    Custom_iterator end() {
+        return Custom_iterator(buffer + buffer_size);
     }
 
 };
 
 int main() {
-    Ring<int> ogo(3);
-    ogo.push_back(1);ogo.push_back(2);ogo.push_back(3);
-    cout << *find(ogo.begin(), ogo.end(), 1) << endl;
-    cout << binary_search(ogo.begin(), ogo.end(), 1) << endl;
-    sort_heap(ogo.begin(), ogo.end());
+    Ring<int> ogo(12);
+    ogo.push_back(3);ogo.push_back(1);ogo.push_back(-111);
+    ogo.push_back(0);ogo.push_back(0);ogo.push_back(0);ogo.push_back(0);
+    ogo.push_front(31);ogo.push_front(31);ogo.push_front(31);ogo.push_front(31);ogo.push_front(31);
+    for (auto &i : ogo) {
+        i += 11;
+        cout << i << " ";
+    }
+    cout << endl;
+    cout << *find(ogo.begin(), ogo.end(), 11) << endl;
+    sort(ogo.begin(), ogo.end());
+    cout << binary_search(ogo.begin(), ogo.end(), 11) << endl;
     for (auto i : ogo) {
         cout << i << " ";
     }
