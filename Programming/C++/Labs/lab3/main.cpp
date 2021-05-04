@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <vector>
 #include <map>
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,8 +49,14 @@ public:
         }
         return os;
     }
-
 };
+
+double distance_g(const pair<double, double> &p1, const pair<double, double> &p2) {
+    double p1x = p1.first * M_PI / 180, p1y = p1.second * M_PI / 180, p2x = p2.first * M_PI / 180, p2y = p2.second * M_PI / 180;
+    double d = 2 * asin(sqrt(pow(sin((p2x - p1x) / 2), 2) + cos(p1x) * cos(p2x) * pow(sin((p1y - p2y) / 2), 2)));
+    // 6371 km ~ R(Earth)
+    return d * 6371;
+}
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
@@ -99,7 +107,7 @@ int main() {
 
         // other info
         vector<string> divided_streets, others;
-            // streets
+        // streets
         string streets = station.child_value(station_info[4].c_str());
         for (int i = 0; i < streets.size(); i++) {
             if (streets[i] != ',') {
@@ -117,27 +125,82 @@ int main() {
             divided_streets.push_back(tmp);
             tmp.clear();
         }
-            // other
+        // other
         for (int i = 5; i < station_info.size(); i++) {
             others.emplace_back(station.child_value(station_info[i].c_str()));
         }
-        
+
         other_info info(divided_streets, others);
         for (const string &route : divided_routes) {
             omg[type][object][route][coordll] = info;
         }
     }
-//    for (const auto& type : omg) {
-//        cout << type.first << endl << endl;
-//        for (const auto& object : type.second) {
-//            cout << object.first << endl << endl << endl;
-//            for (const auto& route : object.second) {
-//                cout << route.first << endl;
-//                for (const auto& k : route.second) {
-//                    cout << k.first.first << " " << k.first.second << endl;
-//                    cout << k.second << endl;
-//                }
-//            }
-//        }
-//    }
+    // #1
+    for (const auto& type : omg) {
+        cout << type.first << ": " << endl;
+        for (const auto& object : type.second) {
+            cout << object.first << endl;
+            string max_route;
+            int max_coord = 0;
+            for (const auto& route : object.second) {
+                if ((int)route.second.size() > max_coord) {
+                    max_coord = (int) route.second.size();
+                    max_route = route.first;
+                }
+            }
+            cout << max_route << ": " << max_coord << endl;
+        }
+        cout << endl;
+    }
+    // #2
+    for (const auto& type : omg) {
+        cout << type.first << ": " << endl;
+        for (const auto& object : type.second) {
+            cout << object.first << endl;
+            string longest_route;
+            double max_path = 0;
+            for (const auto& route : object.second) {
+                double path = 0;
+                vector<pair<double, double>> coordinates;
+                for (const auto &coord : route.second) {
+                    coordinates.push_back(coord.first);
+                }
+                int next_id, now_id = 0, cnt = (int)coordinates.size();
+                vector<bool> used(cnt, false);
+                used[0] = true;
+                --cnt;
+                while (cnt) {
+                    double min_tmp_path = 1e9;
+                    for (int i = 0; i < coordinates.size(); i++) {
+                        if (i == now_id || used[i]) {
+                            continue;
+                        }
+                        double path_to = distance_g(coordinates[now_id], coordinates[i]);
+                        if (min_tmp_path > path_to) {
+                            min_tmp_path = path_to;
+                            next_id = i;
+                        }
+                    }
+                    --cnt;
+                    now_id = next_id;
+                    used[now_id] = true;
+                    path += min_tmp_path;
+                }
+                if (path > max_path) {
+                    max_path = path;
+                    longest_route = route.first;
+                }
+                
+            }
+            if (!longest_route.empty()) {
+                cout << longest_route << ": " << max_path << endl;
+            }
+            else {
+                cout << "None" << endl;
+            }
+        }
+        cout << endl;
+    }
+    // #3
+    // ...
 }
