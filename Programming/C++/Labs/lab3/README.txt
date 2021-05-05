@@ -5,4 +5,4 @@ links to pugixml: 	https://pugixml.org/docs/quickstart.html
 			https://github.com/zeux/pugixml
 
 
-yet in process ... 
+map<type, map<object, map<route, map<coordinates, other_info>>>> omg;
