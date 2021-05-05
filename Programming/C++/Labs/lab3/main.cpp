@@ -10,15 +10,16 @@
 using namespace std;
 
 class other_info {
-private:
-    vector<string> streets;
-    vector<string> others;
 public:
+    vector<string> streets;
+
+    vector<string> others;
+
     other_info(vector<string> &str, vector<string> &oth) : streets(str), others(oth) {};
 
     other_info() = default;
 
-    other_info& operator=(const other_info &here) {
+    other_info &operator=(const other_info &here) {
         if (this == &here) {
             return *this;
         }
@@ -26,36 +27,21 @@ public:
         this->streets = here.streets;
         return *this;
     }
-
-    friend ostream& operator<<(ostream& os, const other_info& here) {
-        for (int i = 0; i < here.streets.size(); i++) {
-            os << here.streets[i];
-            if (i != here.streets.size() - 1) {
-                os << " : ";
-            }
-            else {
-                os << ' ';
-            }
-        }
-        os << "/ ";
-        for (int i = 0; i < here.others.size(); i++) {
-            os << here.others[i];
-            if (i != here.others.size() - 1) {
-                os << " : ";
-            }
-            else {
-                os << ' ';
-            }
-        }
-        return os;
-    }
 };
 
 double distance_g(const pair<double, double> &p1, const pair<double, double> &p2) {
-    double p1x = p1.first * M_PI / 180, p1y = p1.second * M_PI / 180, p2x = p2.first * M_PI / 180, p2y = p2.second * M_PI / 180;
+    double p1x = p1.first * M_PI / 180, p1y = p1.second * M_PI / 180, p2x = p2.first * M_PI / 180, p2y =
+            p2.second * M_PI / 180;
     double d = 2 * asin(sqrt(pow(sin((p2x - p1x) / 2), 2) + cos(p1x) * cos(p2x) * pow(sin((p1y - p2y) / 2), 2)));
     // 6371 km ~ R(Earth)
     return d * 6371;
+}
+
+void line() {
+    for (int i = 0; i < 30; ++i) {
+        cout << '-';
+    }
+    cout << endl << endl;
 }
 
 int main() {
@@ -64,9 +50,11 @@ int main() {
     pugi::xml_parse_result result = data.load_file("data.xml");
     assert(result);
     pugi::xml_node dataset = data.child("dataset");
-    const vector<string> station_info = {"type_of_vehicle", "object_type", "routes", "coordinates", "location", "number",  "name_stopping", "the_official_name"};
+    const vector<string> station_info = {"type_of_vehicle", "object_type", "routes", "coordinates", "location",
+                                         "number", "name_stopping", "the_official_name"};
     map<string, map<string, map<string, map<pair<double, double>, other_info>>>> omg;
-    for (pugi::xml_node station = dataset.child("transport_station"); station; station = station.next_sibling("transport_station")) {
+    for (pugi::xml_node station = dataset.child("transport_station"); station; station = station.next_sibling(
+            "transport_station")) {
         // type
         string type = station.child_value(station_info[0].c_str());
 
@@ -79,8 +67,7 @@ int main() {
         for (char i : routes) {
             if (!(i == ',' || i == '.')) {
                 tmp.push_back(i);
-            }
-            else {
+            } else {
                 divided_routes.push_back(tmp);
                 tmp.clear();
             }
@@ -96,8 +83,7 @@ int main() {
         for (char i : coord) {
             if (i != ',') {
                 tmp.push_back(i);
-            }
-            else {
+            } else {
                 coordll.first = stod(tmp);
                 tmp.clear();
             }
@@ -112,11 +98,10 @@ int main() {
         for (int i = 0; i < streets.size(); i++) {
             if (streets[i] != ',') {
                 tmp.push_back(streets[i]);
-            }
-            else {
+            } else {
                 divided_streets.push_back(tmp);
                 tmp.clear();
-                if (streets[i + 1] < streets.size() && streets[i + 1] == ' ') {
+                if (i + 1 < streets.size() && streets[i + 1] == ' ') {
                     ++i;
                 }
             }
@@ -136,14 +121,14 @@ int main() {
         }
     }
     // #1
-    for (const auto& type : omg) {
+    for (const auto &type : omg) {
         cout << type.first << ": " << endl;
-        for (const auto& object : type.second) {
+        for (const auto &object : type.second) {
             cout << object.first << endl;
             string max_route;
             int max_coord = 0;
-            for (const auto& route : object.second) {
-                if ((int)route.second.size() > max_coord) {
+            for (const auto &route : object.second) {
+                if ((int) route.second.size() > max_coord) {
                     max_coord = (int) route.second.size();
                     max_route = route.first;
                 }
@@ -152,20 +137,21 @@ int main() {
         }
         cout << endl;
     }
+    line();
     // #2
-    for (const auto& type : omg) {
+    for (const auto &type : omg) {
         cout << type.first << ": " << endl;
-        for (const auto& object : type.second) {
+        for (const auto &object : type.second) {
             cout << object.first << endl;
             string longest_route;
             double max_path = 0;
-            for (const auto& route : object.second) {
+            for (const auto &route : object.second) {
                 double path = 0;
                 vector<pair<double, double>> coordinates;
                 for (const auto &coord : route.second) {
                     coordinates.push_back(coord.first);
                 }
-                int next_id, now_id = 0, cnt = (int)coordinates.size();
+                int next_id, now_id = 0, cnt = (int) coordinates.size();
                 vector<bool> used(cnt, false);
                 used[0] = true;
                 --cnt;
@@ -190,17 +176,44 @@ int main() {
                     max_path = path;
                     longest_route = route.first;
                 }
-                
+
             }
             if (!longest_route.empty()) {
                 cout << longest_route << ": " << max_path << endl;
-            }
-            else {
+            } else {
                 cout << "None" << endl;
             }
         }
         cout << endl;
     }
+    line();
     // #3
-    // ...
+    map<string, map<string, map<string, int>>> street_stops;
+    for (const auto& type : omg) {
+        for (const auto& object : type.second) {
+            for (const auto& route : object.second) {
+                for (const auto& coord : route.second) {
+                    for (const auto &street : coord.second.streets) {
+                        ++street_stops[type.first][object.first][street];
+                    }
+                }
+            }
+        }
+    }
+    for (const auto& type : street_stops) {
+        cout << type.first <<": " << endl;
+        for (const auto &object : type.second) {
+            cout << object.first << endl;
+            int max_value = 0;
+            string max_street;
+            for (const auto &street : object.second) {
+                if (street.second > max_value) {
+                    max_value = street.second;
+                    max_street = street.first;
+                }
+            }
+            cout << max_street << ": " << max_value << endl;
+        }
+        cout << endl;
+    }
 }
