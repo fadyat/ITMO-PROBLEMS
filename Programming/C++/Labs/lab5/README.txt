@@ -1,37 +1,34 @@
 lab5.cpp
-  - Версия, содержащая обычный кольцевой буфер без max_capacity.
-  - Могут быть баги с resize(m): m < prev_capacity.
-  - Итераторы выводят "мусор".
+- Version containing a regular ring buffer without max_capacity.
+- Can be bugs with resize (m): m < prev_capacity.
+- Iterators take out "garbage".
 
 lab5-max_capacity.cpp
-  - Увеличивает размер до max_capacity, если необходимо, по аналогии с std::vector. 
-  - Кольцевой буфер снабжен итератором произвольного доступа.
-  - Минимальный размер буфера = 2.
-  
-  Остановимся на функциях:
-    resize(int ...) 
-      - перезаписывает элементы в правильном порядке
-      - сохраняет prev_capacity, если возможно
-      - обновляет max_capacity
-    
+- Increases the size to max_capacity, if necessary, by analogy with std::vector.
+- The circular buffer is provided with a random access iterator.
+- Minimum buffer size = 2.
+
+(*)Let's talk about the functions:
+    resize(int ...)
+    - overwrites items in the correct order
+    - saves prev_capacity if possible
+    - updates the max_capacity
+
     make_lr_normal()
-      - перезаписывает элементы в правильном порядке (сделана для того чтобы нормально работать с итераторами)
-      
+    - overwrites elements in the correct order (made to work normally with iterators)
+
     resize_before_max(bool ...)
-      - обновляет capacity до  min(capacity * 2, max_capacity)
-      - перезаписывает элементы в правильном порядке
-      - используется только если (capacity == reserved && capacity < max_capacity)
-      - принимает bool для того чтобы определить какой тип вставки производится, если push_back -> false, если push_front -> true.
-        благодаря этому сдвигает все элементы при необходимости.
-    
+    - updates capacity to min(capacity * 2, max_capacity)
+    - overwrites items in the correct order
+    - used only if((capacity == reserved) && (capacity < max_capacity))
+    - takes bool to determine which type of insert is made, if push_back() -> false, if push_front() -> true; thereby shifts all elements as needed.
+
     push_back(T)
-      - вставка элемента справа от finish
-      
+    - insert an element to the right of finish
+
     push_front(T)
-      - вставка элемента слева от start
-      
-      // если start == finish == 0 -> ни один не сдвинется с места, будет ставка в 0.
-      
-    pop_back(), pop_front() - удаление последнего и первого соответственно.
-    
-    
+    - insert item to the left of start
+
+    //if start == finish == 0 -> none will move, there will be a bet of 0.
+
+    pop_back(), pop_front() - delete the last and first, respectively.
