@@ -20,6 +20,7 @@ public:
     }
 
     void resize(int new_capacity) {
+        assert(new_capacity > 0);
         T *new_buffer = new T[new_capacity];
         int l = start, r = finish, id = 0;
         while (id < min(new_capacity, capacity) && l != r) {
@@ -33,13 +34,18 @@ public:
         start = 0;
         if (id == min(new_capacity, capacity)) { // all cells are occupied
             finish = id - 1;
+            reserved = id;
         } else { // have a free cell
             finish = id;
+            reserved = id + 1;
         }
         delete[] buffer;
         buffer = new_buffer;
         capacity = min(new_capacity, capacity);
         max_capacity = new_capacity;
+        if(start == finish) { // start == finish == 0 -> 1 element
+            reserved = 1;
+        }
     }
 
     void make_lr_normal() {
@@ -263,7 +269,11 @@ int main() {
     ogo.push_front(4);
     ogo.push_back(12);
     ogo.push_front(13);
-    ogo.make_sf_normal();
+//    ogo.pop_back();
+//    ogo.pop_forward();
+//    ogo.resize(4);
+//    ogo.resize(16);
+    ogo.make_lr_normal();
     sort(ogo.begin(), ogo.end());
     for (auto i : ogo) {
         cout << i << " ";
