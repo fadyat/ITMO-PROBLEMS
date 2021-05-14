@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Glad"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\external\;CMake Files\external\glfw\;CMake Files\external\glfw\CMake\;CMake Files\external\glfw\src\;CMake Files\external\glad\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glad">
+				<Option output="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/libglad.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glad/include"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 glad"/>
+					<CompileFile command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glad/fast">
+				<Option output="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/libglad.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glad/include"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/i686-w64-mingw32"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 glad/fast"/>
+					<CompileFile command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f &quot;D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/cmake-build-debug/external/glad/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glad/include/glad/glad.h">
+			<Option target="glad"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glad/src/glad.c">
+			<Option target="glad"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glfw/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\glfw\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glfw/CMake/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\external\glfw\CMake\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glfw/CMake/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\external\glfw\CMake\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glfw/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\glfw\src\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glfw/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\external\glfw\src\"/>
+		</Unit>
+		<Unit filename="D:/Github/ITMO-PROBLEMS/Programming/C++/Labs/lab6/external/glad/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\glad\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
