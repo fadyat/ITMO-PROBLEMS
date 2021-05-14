@@ -15,3 +15,5 @@ target_link_libraries(${PROJECT_NAME} glfw)
 
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
+
+target_link_libraries(${PROJECT_NAME} -lOpenGL32 -lfreeGLUT)
