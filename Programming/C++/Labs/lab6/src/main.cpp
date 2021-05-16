@@ -10,18 +10,19 @@ static int HEIGHT = 1024;
 
 float vertex[] = {1, 1, 0,  1, -1, 0,  -1, -1, 0,  -1, 1, 0};
 
+
 void show_ground() {
     glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, &vertex);
-        for (int i = -5; i < 5; i++) {
-            for (int j = -5; j < 5; j++) {
-                glPushMatrix();
-                    ((i + j) % 2) ? (glColor3f(1, 1, 1)) : (glColor3f(0.3, 0.3, 0.3));
-                    glTranslatef(float(2 * i), float(2 * j), 0);
-                    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-                glPopMatrix();
-            }
+    glVertexPointer(3, GL_FLOAT, 0, &vertex);
+    for (int i = -2; i < 2; i++) {
+        for (int j = -2; j < 2; j++) {
+            glPushMatrix();
+            ((i + j) % 2) ? (glColor3f(1, 1, 1)) : (glColor3f(0.3, 0.3, 0.3));
+            glTranslatef(float(2 * i), float(2 * j), -2);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+            glPopMatrix();
         }
+    }
     glDisable(GL_VERTEX_ARRAY);
 }
 
@@ -68,6 +69,110 @@ void movement() {
     glRotatef(float(-degree_z), 0, 0, 1);
     glTranslatef(-position.x, -position.y, -10);
 }
+
+class little_cube {
+private:
+    unsigned char rgb[3];
+public:
+    // up down front back left right
+    int color[6];
+    float edge_size;
+    little_cube() : color(), edge_size(1), rgb() {
+        memset(color, 0, sizeof(color));
+    }
+
+    // rotation of the cube relative to the XOZ plane by 90 degrees clockwise
+    void rotate_x() {
+        // 012345 -> 452310
+        swap(color[0], color[4]); // 412305
+        swap(color[1], color[5]); // 452301
+        swap(color[4], color[5]); // 452310
+    }
+
+    // rotation of the cube relative to the YOZ plane by 90 degrees clockwise
+    void rotate_y() {
+        // 012345 -> 231045
+        swap(color[0], color[2]); // 210345
+        swap(color[1], color[3]); // 230145
+        swap(color[2], color[3]); // 231045
+    }
+
+    // rotation of the cube relative to the XOY plane by 90 degrees clockwise
+    void rotate_z() {
+        // 012345 -> 015423
+        swap(color[2], color[5]); // 015342
+        swap(color[3], color[4]); // 015432
+        swap(color[4], color[5]); // 015423
+    };
+
+    void set_color(int plane_number, int color_) {
+        this->color[plane_number] = color_;
+    }
+
+    unsigned char *my_color_hex(int plane_number) {
+        // divide color[plane_number] on rgb
+        rgb[0] = color[plane_number] >> 16;
+        rgb[1] = color[plane_number] >> 8;
+        rgb[2] = color[plane_number];
+        return rgb;
+    }
+
+    void draw() {
+        glPushMatrix();
+        glBegin(GL_QUADS);
+        // up
+        glColor3ubv(my_color_hex(0));
+        glVertex3f(edge_size, edge_size, edge_size);
+        glVertex3f(0, edge_size, edge_size);
+        glVertex3f(0, 0, edge_size);
+        glVertex3f(edge_size, 0, edge_size);
+
+        // down
+        glColor3ubv(my_color_hex(1));
+        glVertex3f(edge_size, 0, 0);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, edge_size, 0);
+        glVertex3f(edge_size, edge_size, 0);
+
+        // front
+        glColor3ubv(my_color_hex(2));
+        glVertex3f(edge_size, 0, edge_size);
+        glVertex3f(0, 0, edge_size);
+        glVertex3f(0, 0, 0);
+        glVertex3f(edge_size, 0, 0);
+
+        // back
+        glColor3ubv(my_color_hex(3));
+        glVertex3f(edge_size, edge_size, 0);
+        glVertex3f(0, edge_size, 0);
+        glVertex3f(0, edge_size, edge_size);
+        glVertex3f(edge_size, edge_size, edge_size);
+
+        // left
+        glColor3ubv(my_color_hex(4));
+        glVertex3f(0, edge_size, edge_size);
+        glVertex3f(0, edge_size, 0);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, edge_size);
+
+        // right
+        glColor3ubv(my_color_hex(5));
+        glVertex3f(edge_size, edge_size, 0);
+        glVertex3f(edge_size, edge_size, edge_size);
+        glVertex3f(edge_size, 0, edge_size);
+        glVertex3f(edge_size, 0, 0);
+
+        glEnd();
+        glPopMatrix();
+    }
+};
+
+
+
+
+// up down front back left right
+int color_hex[9] = {0xFFFFFF, 0xFFFF00, 0xFF0F00, 0xFF931C, 0x25FF00, 0x3155EC};
+
 
 
 
@@ -160,7 +265,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     /* create main window */
-    hwnd = CreateWindowEx(0, "GLSample", "OpenGL Sample",
+    hwnd = CreateWindowEx(0, "GLSample", "CUB",
                           WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
                           CW_USEDEFAULT, WIDTH, HEIGHT, nullptr,
                           nullptr, hInstance, nullptr);
@@ -169,9 +274,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
+    glEnable(GL_DEPTH_TEST);
+    glFrustum(-1, 1,  -1, 1,  3, 100);
 
-
-    glFrustum(-1, 1,  -1, 1,  2, 100);
+    little_cube cube;
+    for (int i = 0; i < 6; i++) {
+        cube.set_color(i, color_hex[i]);
+    }
 
     /* program main loop */
     while (!bQuit) {
@@ -188,17 +297,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             /* OpenGL animation code goes here */
 
             glClearColor(0, 0, 0, 0);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glPushMatrix();
-                movement();
-                show_ground();
+            movement();
+            show_ground();
+            cube.draw();
             glPopMatrix();
 
             SwapBuffers(hDC);
         }
     }
-
     /* shutdown OpenGL */
     DisableOpenGL(hwnd, hDC, hRC);
 
