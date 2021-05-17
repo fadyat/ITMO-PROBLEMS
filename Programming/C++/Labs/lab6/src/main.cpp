@@ -390,7 +390,6 @@ public:
         }
         angle_of_face[face_number] = 0;
         cube_face = -1;
-        angle = abs(angle);
     }
 
     void while_not_90() {
