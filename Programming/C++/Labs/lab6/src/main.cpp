@@ -29,17 +29,17 @@ void movement() {
     /* move me */
     double alpha = -angle_z / 180 * M_PI;
     float speed = 0;
-    if (GetKeyState('W') < 0) {
+    if (GetKeyState('s') < 0) {
         speed = 0.1;
     }
-    else if (GetKeyState('S') < 0) {
+    else if (GetKeyState('z') < 0) {
         speed = -0.1;
     }
-    else if (GetKeyState('A') < 0) {
+    else if (GetKeyState('x') < 0) {
         speed = -0.1;
         alpha = M_PI * 0.5;
     }
-    else if (GetKeyState('D') < 0) {
+    else if (GetKeyState('c') < 0) {
         speed = 0.1;
         alpha = M_PI * 0.5;
     }
@@ -295,19 +295,52 @@ public:
         else if(GetKeyState('6') < 0) {
             key = 6;
         }
-        rotate_face(--key);
+        else if (GetKeyState('Q') < 0) {
+            key = 7;
+        }
+        else if (GetKeyState('W') < 0) {
+            key = 8;
+        }
+        else if (GetKeyState('E') < 0) {
+            key = 9;
+        }
+        else if (GetKeyState('R') < 0) {
+            key = 10;
+        }
+        else if (GetKeyState('T') < 0) {
+            key = 11;
+        }
+        else if (GetKeyState('Y') < 0) {
+            key = 12;
+        }
+        bool sign = true;
+        if (key > 6) {
+            key -= 6;
+            sign = false;
+        }
+
+        rotate_face(--key, sign);
     }
 
-    void rotate_face(int face_number) {
+    void rotate_face(int face_number, bool sign) {
         if (cube_face == -1 || cube_face == face_number) {
-            angle_of_face[face_number] += angle;
-            angle_of_face[face_number] = float(int(angle_of_face[face_number]) % 90);
-            if (int(angle_of_face[face_number])) {
+            float angle_ = angle;
+            if(!sign) {
+                angle_ = -angle;
+            }
+            angle_of_face[face_number] += angle_;
+            if (int(angle_of_face[face_number]) % 90 != 0) {
                 cube_face = face_number;
             }
             else {
-                int swaps = ((cube_face == 2 || cube_face == 3) ? (1) : (3));
-                is_full_rotate(face_number, swaps);
+                if (angle_of_face[face_number] > 0) {
+                    int swaps = ((cube_face == 2 || cube_face == 3) ? (1) : (3));
+                    is_full_rotate(face_number, swaps);
+                }
+                else {
+                    int swaps = ((cube_face == 2 || cube_face == 3) ? (3) : (1));
+                    is_full_rotate(face_number, swaps);
+                }
             }
         }
     }
@@ -357,11 +390,12 @@ public:
         }
         angle_of_face[face_number] = 0;
         cube_face = -1;
+        angle = abs(angle);
     }
 
     void while_not_90() {
         if(cube_face != -1) {
-            rotate_face(cube_face);
+            rotate_face(cube_face, angle_of_face[cube_face] > 0);
         }
         show();
     }
