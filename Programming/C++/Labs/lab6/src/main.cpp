@@ -29,17 +29,17 @@ void movement() {
     /* move me */
     double alpha = -angle_z / 180 * M_PI;
     float speed = 0;
-    if (GetKeyState('s') < 0) {
+    if (GetKeyState('S') < 0) {
         speed = 0.1;
     }
-    else if (GetKeyState('z') < 0) {
+    else if (GetKeyState('X') < 0) {
         speed = -0.1;
     }
-    else if (GetKeyState('x') < 0) {
+    else if (GetKeyState('Z') < 0) {
         speed = -0.1;
         alpha = M_PI * 0.5;
     }
-    else if (GetKeyState('c') < 0) {
+    else if (GetKeyState('C') < 0) {
         speed = 0.1;
         alpha = M_PI * 0.5;
     }
