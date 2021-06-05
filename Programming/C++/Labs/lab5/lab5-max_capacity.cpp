@@ -6,7 +6,7 @@ using namespace std;
 
 template<typename T>
 class Ring {
-private:
+public:
     T *buffer;
     int capacity;
     int start;
@@ -29,20 +29,17 @@ public:
             l = ++l % capacity;
             id++;
         }
-        if (id != min(new_capacity, capacity)) {
+        if (id != min(new_capacity, capacity) && reserved) {
             new_buffer[id] = buffer[l];
             id++;
         }
         start = 0;
-        finish = id - 1;
+        finish = (((id - 1) < 0) ? (0) : (id - 1));
         reserved = id;
         delete[] buffer;
         buffer = new_buffer;
         capacity = min(new_capacity, capacity);
         max_capacity = new_capacity;
-        if (start == finish && reserved) { // start == finish == 0 -> 1 element
-            reserved = 1;
-        }
     }
 
     void make_lr_normal() {
@@ -53,12 +50,12 @@ public:
             l = ++l % capacity;
             id++;
         }
-        if (id != capacity) {
+        if (id != capacity && reserved) {
             new_buffer[id] = buffer[l];
             id++;
         }
         start = 0;
-        finish = id - 1;
+        finish = (((id - 1) < 0) ? (0) : (id - 1));
         delete[] buffer;
         buffer = new_buffer;
     }
@@ -72,9 +69,9 @@ public:
             l = ++l % capacity;
             id = ++id % new_capacity;
         }
-        new_buffer[id] = buffer[l];
+        new_buffer[id++] = buffer[l];
         start = type_of_push;
-        finish = id;
+        finish = id - 1;
         delete[] buffer;
         buffer = new_buffer;
         capacity = new_capacity;
@@ -128,7 +125,7 @@ public:
     void pop_back() {
         if (reserved) {
             reserved--;
-            if (!(!reserved && finish == 0)) {
+            if (reserved || finish != 0) {
                 finish = (--finish + capacity) % capacity;
             }
         }
@@ -137,7 +134,7 @@ public:
     void pop_forward() {
         if (reserved) {
             reserved--;
-            if (!(!reserved && start == 0)) {
+            if (reserved || start != 0) {
                 start = ++start % capacity;
             }
         }
@@ -262,6 +259,7 @@ public:
 int main() {
     Ring<int> ogo(12);
     ogo.push_back(1);
+    ogo.resize(14);
     ogo.push_back(2);
     ogo.push_back(3);
     ogo.push_front(4);
@@ -270,7 +268,6 @@ int main() {
 //    ogo.pop_back();
 //    ogo.pop_forward();
 //    ogo.resize(4);
-    ogo.resize(16);
     ogo.make_lr_normal();
 //    sort(ogo.begin(), ogo.end());
     for (auto i : ogo) {
