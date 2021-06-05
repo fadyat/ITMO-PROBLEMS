@@ -29,6 +29,4 @@ lab5-max_capacity.cpp
     push_front(T)
     - insert item to the left of start
 
-    //if start == finish == 0 -> none will move, there will be a bet of 0.
-
     pop_back(), pop_front() - delete the last and first, respectively.
