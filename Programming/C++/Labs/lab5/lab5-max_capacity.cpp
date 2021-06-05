@@ -6,13 +6,14 @@ using namespace std;
 
 template<typename T>
 class Ring {
-public:
+private:
     T *buffer;
     int capacity;
     int start;
     int finish;
     int reserved;
     int max_capacity;
+
 public:
     explicit Ring(int max_capacity_) : start(0), finish(0), capacity(2), buffer(), reserved(0),
                                        max_capacity(max(max_capacity_, 2)) {
@@ -30,20 +31,16 @@ public:
         }
         if (id != min(new_capacity, capacity)) {
             new_buffer[id] = buffer[l];
+            id++;
         }
         start = 0;
-        if (id == min(new_capacity, capacity)) { // all cells are occupied
-            finish = id - 1;
-            reserved = id;
-        } else { // have a free cell
-            finish = id;
-            reserved = id + 1;
-        }
+        finish = id - 1;
+        reserved = id;
         delete[] buffer;
         buffer = new_buffer;
         capacity = min(new_capacity, capacity);
         max_capacity = new_capacity;
-        if(start == finish && reserved) { // start == finish == 0 -> 1 element
+        if (start == finish && reserved) { // start == finish == 0 -> 1 element
             reserved = 1;
         }
     }
@@ -58,13 +55,10 @@ public:
         }
         if (id != capacity) {
             new_buffer[id] = buffer[l];
+            id++;
         }
         start = 0;
-        if (id == capacity) { // all cells are occupied
-            finish = id - 1;
-        } else { // have a free cell
-            finish = id;
-        }
+        finish = id - 1;
         delete[] buffer;
         buffer = new_buffer;
     }
@@ -134,7 +128,7 @@ public:
     void pop_back() {
         if (reserved) {
             reserved--;
-            if(!(!reserved && finish == 0)) {
+            if (!(!reserved && finish == 0)) {
                 finish = (--finish + capacity) % capacity;
             }
         }
@@ -143,7 +137,7 @@ public:
     void pop_forward() {
         if (reserved) {
             reserved--;
-            if(!(!reserved && start == 0)) {
+            if (!(!reserved && start == 0)) {
                 start = ++start % capacity;
             }
         }
@@ -276,7 +270,7 @@ int main() {
 //    ogo.pop_back();
 //    ogo.pop_forward();
 //    ogo.resize(4);
-//    ogo.resize(16);
+    ogo.resize(16);
     ogo.make_lr_normal();
 //    sort(ogo.begin(), ogo.end());
     for (auto i : ogo) {
