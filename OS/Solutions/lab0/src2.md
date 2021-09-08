@@ -4,10 +4,8 @@ s=""
 bad="q"
 while [ "$s" != "$bad" ]
 do
+	total+=$s
 	read s
-	if [[ "$s" != "$bad" ]]
-	then total+=$s
-	fi
 done
 echo $total
 exit 0
