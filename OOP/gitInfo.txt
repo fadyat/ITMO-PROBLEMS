@@ -21,7 +21,7 @@ use "Tab" when u typing names of directories its helping u
 
 touch [name]		creating file with [name]
 mkdir [name]		making directory
-mv [name][to]		move
+mv [name][to]		move, rename
 
 >> https://www.youtube.com/watch?v=jeWjFbzZT-4
 
