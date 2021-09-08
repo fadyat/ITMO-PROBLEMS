@@ -1,0 +1,57 @@
+--------
+TERMINAL
+--------
+CMD			MEANING
+ls [path]		list files in directory
+cd [path]		change directory
+cd..			step back
+cd 			switch to previous dir
+cd ~			root
+pwd 			ur position
+open .			opening window with ur positioning
+open [name]		opening file from ur positioning if he exist
+open -a [name]		opening program
+cat [name]		watching file info
+echo "text"		print
+rm [name]		delete
+
+/*
+use "Tab" when u typing names of directories its helping u 
+*/
+
+touch [name]		creating file with [name]
+mkdir [name]		making directory
+mv [name][to]		move
+
+>> https://www.youtube.com/watch?v=jeWjFbzZT-4
+
+./[file]			running 
+chmod u+x [file]		root to running this file
+
+
+---
+GIT
+---
+CMD			MEANING
+git commit		commit
+git branch [name]	new branch 	/* git checkout -b [name]
+git checkout [name]	choosing branch				*/
+git merge [name]		merging 2 branches
+git rebase [name]	rebasing branch to another
+HEAD, ^, ~		moving in tree
+git branch -f [] []	relocate branch
+git reset []		local
+git revert []		remote
+git cherry-pick <c1><..> 	
+...
+
+git clone		...
+[!] emergence of new branches from the remote repository "origin/[branch]"
+git fetch		...
+git pull <=> git fetch + git merge
+git pull --rebase <=> git fetch + git rebase
+git push 		...
+
+>> https://learngitbranching.js.org/?locale=ru_RU
+
+ 
