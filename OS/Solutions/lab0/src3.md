@@ -17,6 +17,7 @@ do
 	 4 ) exit 0 ;;
 	 * ) echo "bad idea" ;;
 	esac
+	clear
 done
 exit 0
 
