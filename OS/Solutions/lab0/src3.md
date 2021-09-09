@@ -15,7 +15,6 @@ do
 	 2 ) nao ;;
 	 3 ) links ;;
 	 4 ) exit 0 ;;
-	 * ) echo "bad idea" ;;
 	esac
 	clear
 done
