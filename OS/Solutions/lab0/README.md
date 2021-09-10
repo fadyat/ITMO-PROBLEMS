@@ -41,6 +41,6 @@
   Подсчитать общее количество строк в файлах, находящихся в директории /var/log/ и имеющих расширение log.
 </div>
 <div>
-  <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/Solutions/lab0/src10.sh">10.</a>
+  <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/Solutions/lab0/src_10.sh">10.</a>
   Вывести три наиболее часто встречающихся слова из man по команде bash длиной не менее четырех символов.
 </div>
