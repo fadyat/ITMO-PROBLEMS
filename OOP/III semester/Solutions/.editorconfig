@@ -1,0 +1,83 @@
+﻿[*.cs]
+
+# IDE0008: Use explicit type
+csharp_style_var_when_type_is_apparent =true:warning
+
+# IDE0008: Use explicit type
+csharp_style_var_elsewhere =false:warning
+
+# IDE0008: Use explicit type
+dotnet_diagnostic.IDE0008.severity = warning
+
+# IDE0005: Using directive is unnecessary.
+dotnet_diagnostic.IDE0005.severity = warning
+
+# IDE0040: Add accessibility modifiers
+dotnet_style_require_accessibility_modifiers = always
+
+# IDE0090: Use 'new(...)'
+csharp_style_implicit_object_creation_when_type_is_apparent = false
+csharp_preserve_single_line_blocks=true
+csharp_using_directive_placement=outside_namespace:warning
+csharp_style_unused_value_assignment_preference=discard_variable:error
+csharp_prefer_static_local_function=true:warning
+csharp_style_prefer_pattern_matching=true:suggestion
+csharp_style_var_for_built_in_types=false:warning
+dotnet_diagnostic.CA1001.severity=error
+
+# SA1503: Braces should not be omitted
+dotnet_diagnostic.SA1503.severity = none
+
+# SA1200: Using directives should be placed correctly
+dotnet_diagnostic.SA1200.severity = none
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1600: Elements should be documented
+dotnet_diagnostic.SA1600.severity = none
+
+# SA1516: Elements should be separated by blank line
+dotnet_diagnostic.SA1516.severity = none
+
+# SA1309: Field names should not begin with underscore
+dotnet_diagnostic.SA1309.severity = silent
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = none
+csharp_new_line_before_open_brace=all
+csharp_space_between_method_declaration_parameter_list_parentheses=false
+csharp_new_line_before_members_in_object_initializers=false
+
+# SA1502: Element should not be on a single line
+dotnet_diagnostic.SA1502.severity = silent
+
+[*.{cs,vb}]
+dotnet_style_prefer_auto_properties=true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method=true:warning
+dotnet_style_null_propagation=true:warning
+dotnet_style_explicit_tuple_names=true:warning
+dotnet_style_prefer_inferred_tuple_names=true:warning
+dotnet_style_predefined_type_for_locals_parameters_members=true:suggestion
+dotnet_code_quality_unused_parameters=all:warning
+dotnet_style_qualification_for_field=false:warning
+dotnet_style_qualification_for_property=false:warning
+dotnet_style_qualification_for_method=false:warning
+dotnet_style_qualification_for_event=false:warning
+dotnet_diagnostic.CA1050.severity=warning
+dotnet_diagnostic.CA1061.severity=warning
+dotnet_diagnostic.CA1069.severity=warning
+dotnet_diagnostic.CA1303.severity=suggestion
+dotnet_diagnostic.CA1725.severity=warning
+dotnet_diagnostic.CA1724.severity=suggestion
+dotnet_diagnostic.CA1716.severity=warning
+dotnet_diagnostic.CA1720.severity=warning
+
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = warning
+
+# SA0001: XML comment analysis disabled
+dotnet_diagnostic.SA0001.severity = none
+
+# SA1500: Braces for multi-line statements should not share line
+dotnet_diagnostic.SA1500.severity = error
