@@ -1,6 +1,6 @@
 using System;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     public class Student
     {

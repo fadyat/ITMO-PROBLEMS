@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     public interface IIsuService
     {

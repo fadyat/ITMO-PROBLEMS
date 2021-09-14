@@ -1,7 +1,7 @@
 using System;
-using Isu.Tools;
+using Isu.Exceptions;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     public class CourseNumber
     {
@@ -9,7 +9,7 @@ namespace Isu.Services
 
         public CourseNumber(byte number)
         {
-            if (_course > 0 && _course < 10)
+            if (number <= 0 || number > 9)
                 throw new CourseNumberException("Сourse number must be digit not equal to zero!");
 
             _course = number;

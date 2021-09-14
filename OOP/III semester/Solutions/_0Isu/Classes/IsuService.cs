@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Isu.Tools;
+using Isu.Exceptions;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     /*
      isuService
@@ -40,7 +40,7 @@ namespace Isu.Services
                 throw new GroupException("Can't find group for student!");
 
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
-                throw new GroupException("Can't add student, group is full!");
+                throw new GroupException("Can't add student, full group!");
 
             _groups[groupIndex].StudentList.Add(newStudent);
             _groups[groupIndex].Capacity++;
@@ -133,13 +133,11 @@ namespace Isu.Services
             {
                 foreach (Student stud in grp.StudentList)
                 {
-                    if (stud.Id == student.Id && stud.Name == student.Name)
-                    {
-                        grp.StudentList.Remove(student);
-                        grp.Capacity--;
-                        existingStudent = true;
-                        break;
-                    }
+                    if (stud.Id != student.Id || stud.Name != student.Name) continue;
+                    grp.StudentList.Remove(student);
+                    grp.Capacity--;
+                    existingStudent = true;
+                    break;
                 }
 
                 if (existingStudent) break;
@@ -150,10 +148,10 @@ namespace Isu.Services
 
             int groupIndex = _groups.IndexOf(newGroup);
             if (groupIndex < 0)
-                throw new GroupException($"Group doesn't exist!");
+                throw new GroupException($"New group doesn't exist!");
 
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
-                throw new GroupException("Can't add student, group is full!");
+                throw new GroupException("Can't add student, to new full group!");
 
             _groups[groupIndex].StudentList.Add(student);
             _groups[groupIndex].Capacity++;

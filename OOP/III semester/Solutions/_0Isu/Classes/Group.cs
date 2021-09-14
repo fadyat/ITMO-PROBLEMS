@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     public class Group
     {
@@ -9,7 +9,7 @@ namespace Isu.Services
         public Group(GroupName name) { (_groupName, _studentsList) = (name, new List<Student>()); }
         public GroupName Name { get => _groupName; }
         public List<Student> StudentList { get => _studentsList;  }
-        public int Capacity { get; set; } = 0;
+        public int Capacity { get; set; }
         public int MaxCapacity { get; } = 30;
 
         public static bool operator ==(Group a, Group b) { return Equals(a, b); }
