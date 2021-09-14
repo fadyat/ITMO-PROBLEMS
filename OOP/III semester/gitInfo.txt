@@ -54,4 +54,4 @@ git push 		...
 
 >> https://learngitbranching.js.org/?locale=ru_RU
 
- 
+>> https://rustycrate.ru/руководства/2016/03/07/contributing.html 
