@@ -1,7 +1,7 @@
 using System;
-using Isu.Tools;
+using Isu.Exceptions;
 
-namespace Isu.Services
+namespace Isu.Classes
 {
     public class GroupName
     {

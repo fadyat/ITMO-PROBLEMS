@@ -1,6 +1,4 @@
-using System;
-
-namespace Isu.Tools
+namespace Isu.Exceptions
 {
     public class GroupNameException : GroupException
     {
