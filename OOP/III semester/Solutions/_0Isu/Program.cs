@@ -13,6 +13,10 @@ namespace Isu
 
             // Group m3205 = service.AddGroup(new GroupName(new CourseNumber(2), "05"));
             service.AddStudent(new Group(new GroupName(new CourseNumber(2), "02")), "Artyom Fadeyev");
+            service.AddStudent(new Group(new GroupName(new CourseNumber(2), "02")), "Artyom Fadeyev");
+            service.AddStudent(new Group(new GroupName(new CourseNumber(2), "02")), "Artyom Fadeyev");
+            service.AddStudent(new Group(new GroupName(new CourseNumber(2), "02")), "Artyom Fadeyev");
+            service.AddStudent(new Group(new GroupName(new CourseNumber(2), "02")), "Artyom Fadeyev");
 
             // Student aE = service.AddStudent(m3202, "Artyom Ezichev");
             // Console.WriteLine();

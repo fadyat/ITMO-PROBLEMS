@@ -9,8 +9,8 @@ namespace Isu.Services
 
         public CourseNumber(byte number)
         {
-            if (number.ToString().Length != 1)
-                throw new IsuException("Сourse number must be one number! ");
+            if (_course > 0 && _course < 10)
+                throw new CourseNumberException("Сourse number must be digit not equal to zero!");
 
             _course = number;
         }

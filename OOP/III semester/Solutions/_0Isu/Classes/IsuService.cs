@@ -4,6 +4,19 @@ using Isu.Tools;
 
 namespace Isu.Services
 {
+    /*
+     isuService
+     |
+     |_ List<group> + sparedId
+         |
+         |_ group
+            |
+            |_ groupName  +  List<student>
+               |             |
+               |             |_ student
+               |
+               |_ tag + groupNumber + courseNumber
+    */
     public class IsuService : IIsuService
     {
         private readonly List<Group> _groups;
@@ -13,7 +26,8 @@ namespace Isu.Services
         {
             var newGroup = new Group(name);
             if (_groups.Contains(newGroup))
-                throw new IsuException($"This group: ${newGroup.Name} is already exists! ");
+                throw new GroupException("Group is already exists!");
+
             _groups.Add(newGroup);
             return newGroup;
         }
@@ -23,9 +37,11 @@ namespace Isu.Services
             var newStudent = new Student(name, _spareId++);
             int groupIndex = _groups.IndexOf(group);
             if (groupIndex < 0)
-                throw new IsuException($"Can't find group: {group.Name} for student! ");
+                throw new GroupException("Can't find group for student!");
+
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
-                throw new IsuException($"Student with id: {newStudent.Id} can't be added because group is full");
+                throw new GroupException("Can't add student, group is full!");
+
             _groups[groupIndex].StudentList.Add(newStudent);
             _groups[groupIndex].Capacity++;
             return newStudent;
@@ -41,7 +57,7 @@ namespace Isu.Services
                 }
             }
 
-            throw new IsuException($"Can't get student with id: {id}! ");
+            throw new StudentException("Can't get student!");
         }
 
         public Student FindStudent(string name)
@@ -130,14 +146,15 @@ namespace Isu.Services
             }
 
             if (!existingStudent)
-                throw new IsuException($"Student with Id: {student.Id} doesn't exist ! ");
+                throw new StudentException("Student doesn't exist!");
 
             int groupIndex = _groups.IndexOf(newGroup);
             if (groupIndex < 0)
-                throw new IsuException($"Group with name: {newGroup.Name} doesn't exist ! ");
+                throw new GroupException($"Group doesn't exist!");
 
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
-                throw new IsuException($"Student with id: {student.Id} can't be added because group is full! ");
+                throw new GroupException("Can't add student, group is full!");
+
             _groups[groupIndex].StudentList.Add(student);
             _groups[groupIndex].Capacity++;
         }
@@ -146,7 +163,7 @@ namespace Isu.Services
         {
             int groupIndex = _groups.IndexOf(group);
             if (groupIndex < 0)
-                throw new IsuException($"Can't find group: {group.Name}! ");
+                throw new GroupException($"Can't find group: {group.Name}! ");
             Console.WriteLine($"{_groups[groupIndex].Name}, {_groups[groupIndex].Capacity}");
             foreach (Student student in _groups[groupIndex].StudentList)
                 Console.WriteLine(student);
