@@ -2,15 +2,15 @@
   <h3> Solutions & Problems & Tests</h3><hr>
 
   <div>
-      <a href = "">0.</a>
-      <a href = ""> Isu </a>
-      <a href = ""> Isu.Tests </a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Problems/lab0.md">0.</a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Solutions/_0Isu"> Isu </a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Solutions/_0Isu.Tests"> Isu.Tests </a>
   </div>
 
   <div>
-      <a href = "">1.</a>
-      <a href = ""> Shops </a>
-      <a href = ""> Shops.Tests </a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Problems/lab1.md">1.</a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Solutions/_1Shops"> Shops </a>
+      <a href = "https://github.com/fadyat/ITMO-PROBLEMS/tree/master/OOP/III%20semester/Solutions/_1Shops.Tests"> Shops.Tests </a>
   </div>
 
   <!-- <div>
