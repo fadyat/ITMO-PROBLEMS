@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31410.414
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_0Isu", "_0Isu\_0Isu.csproj", "{8567F59D-B6FA-4478-A4AE-4B137AC7BAE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_0Isu.Test", "_0Isu.Test\_0Isu.Test.csproj", "{84885B5F-7385-4745-A268-7E31715997A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_0Isu.Tests", "_0Isu.Tests\_0Isu.Tests.csproj", "{84885B5F-7385-4745-A268-7E31715997A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_2IsuExtra", "_2IsuExtra\_2IsuExtra.csproj", "{75B77160-09F3-4F12-BEC1-919B63F6D6A4}"
 EndProject
@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_5BackupsExtra", "_5Backups
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_2IsuExtra.Tests", "_2IsuExtra.Tests\_2IsuExtra.Tests.csproj", "{76F496C6-EE25-492E-81A5-8AD9B938C148}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_1Shops.Test", "_1Shops.Test\_1Shops.Test.csproj", "{355C9405-3A4C-4020-A660-32F733B578B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_1Shops.Tests", "_1Shops.Tests\_1Shops.Tests.csproj", "{355C9405-3A4C-4020-A660-32F733B578B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_3Backups.Tests", "_3Backups.Tests\_3Backups.Tests.csproj", "{798892D6-EECC-4C27-BB43-FD8BD26133CD}"
 EndProject
