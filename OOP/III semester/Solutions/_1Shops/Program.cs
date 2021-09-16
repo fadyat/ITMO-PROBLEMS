@@ -11,7 +11,7 @@ namespace Shops
 
              ShopManager ---- List<Shop> _shops + List<Product> _registeredProducts
              |
-             |_ (CreateShop, RegisterProduct, CheapProductSearch, DeliverProducts, SetProductsPrices)
+             |_ (CreateShop, RegisterProduct, CheapProductSearch, DeliverProducts, SetProductsPrices, PurchaseProduct)
                  |            |
                  |            |
                  |            |_ Product ---- _price + _name
@@ -20,8 +20,6 @@ namespace Shops
 
 
              Customer ---- _name + _money + Dictionary<Product, ProductQuantity> _purchasedProducts
-             |
-             |_ (PurchaseProduct)
 
              */
         }
