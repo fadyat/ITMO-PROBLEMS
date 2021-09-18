@@ -6,5 +6,6 @@ namespace Shops.Classes
     {
         public ProductQuantity(uint quantity) { Quantity = quantity; }
         public uint Quantity { get; set; }
+        public override string ToString() { return Quantity.ToString(); }
     }
 }

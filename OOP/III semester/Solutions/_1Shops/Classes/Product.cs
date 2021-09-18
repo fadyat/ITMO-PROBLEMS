@@ -8,7 +8,15 @@ namespace Shops.Classes
         public Product(string productName) { _name = productName; }
         public double Price { get; set; } = -1;
         public string Name => _name;
-
-        // public override string ToString() { return _name + " " + Price.ToString(".##"); }
+        public static bool operator ==(Product a, Product b) { return Equals(a, b); }
+        public static bool operator !=(Product a, Product b) { return !Equals(a, b); }
+        public override int GetHashCode() { return _name.GetHashCode(); }
+        public override string ToString() { return _name + " " + Price.ToString(".##"); }
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj.GetType() != GetType()) return false;
+            var other = (Product)obj;
+            return other != null && _name == other._name;
+        }
     }
 }

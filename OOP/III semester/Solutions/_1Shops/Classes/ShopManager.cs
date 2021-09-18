@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Shops.Exceptions;
 using Shops.Interfaces;
@@ -6,9 +7,9 @@ namespace Shops.Classes
 {
     public class ShopManager : IShopManager
     {
+        private readonly HashSet<Shop> _createdShops; // shops ids
+        private readonly HashSet<Product> _registeredProducts; // products names
         private uint _spareId;
-        private HashSet<Shop> _createdShops; // shops ids
-        private HashSet<Product> _registeredProducts; // products names
 
         public ShopManager()
         {
@@ -35,7 +36,7 @@ namespace Shops.Classes
             return newProduct;
         }
 
-        public Shop CheapProductSearch(ref List<KeyValuePair<Product, ProductQuantity>> productsToBuyCheap)
+        public Shop CheapProductSearch(List<KeyValuePair<Product, ProductQuantity>> productsToBuyCheap)
         {
             double lowestPrice = 1e9;
             var shopWithLowestPrice = new Shop();
@@ -70,7 +71,7 @@ namespace Shops.Classes
             return shopWithLowestPrice;
         }
 
-        public void AddProducts(ref Shop shop, ref List<KeyValuePair<Product, ProductQuantity>> products, ref List<double> productsPrices)
+        public void AddProducts(Shop shop, List<KeyValuePair<Product, ProductQuantity>> products, List<double> productsPrices)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
@@ -83,6 +84,9 @@ namespace Shops.Classes
             {
                 if (!_registeredProducts.Contains(product))
                     throw new ProductException($"Product {product.Name} hasn't been registered!");
+
+                if (!shop.StoredProducts.ContainsKey(product))
+                    shop.StoredProducts.Add(product, new ProductQuantity(0));
 
                 shop.StoredProducts[product].Quantity += productQuantity.Quantity;
                 product.Price = productsPrices[i++];
@@ -117,6 +121,25 @@ namespace Shops.Classes
                     throw new ShopException(
                         $"Not enough product need more: {productQuantity.Quantity - shop.StoredProducts[product].Quantity}");
                 }
+            }
+        }
+
+        public void LookThrow()
+        {
+            Console.WriteLine("\n\nCreated shops:");
+            foreach (Shop shop in _createdShops)
+            {
+                Console.WriteLine($" * " + shop);
+                foreach ((Product product, ProductQuantity quantity) in shop.StoredProducts)
+                {
+                    Console.WriteLine("\t - " + product + " " + quantity);
+                }
+            }
+
+            Console.WriteLine("\n\nRegistered products:");
+            foreach (Product product in _registeredProducts)
+            {
+                Console.WriteLine($" * " + product.Name);
             }
         }
     }
