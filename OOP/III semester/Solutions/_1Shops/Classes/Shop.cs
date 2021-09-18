@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Xml.XPath;
 using Shops.Interfaces;
 
 namespace Shops.Classes

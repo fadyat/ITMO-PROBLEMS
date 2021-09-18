@@ -1,7 +1,4 @@
-﻿using System;
-using Shops.Classes;
-
-namespace Shops
+﻿namespace Shops
 {
     internal class Program
     {
