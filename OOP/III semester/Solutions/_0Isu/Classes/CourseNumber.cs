@@ -10,7 +10,7 @@ namespace Isu.Classes
         public CourseNumber(byte number)
         {
             if (number <= 0 || number > 9)
-                throw new CourseNumberException("Сourse number must be digit not equal to zero!");
+                throw new IsuException("Сourse number must be digit not equal to zero!");
 
             _course = number;
         }

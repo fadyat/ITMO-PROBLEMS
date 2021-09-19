@@ -12,10 +12,10 @@ namespace Isu.Classes
         public GroupName(CourseNumber course, string group)
         {
             if (group.Length != 2)
-                throw new GroupNumberException("Group number must be two numbers!");
+                throw new IsuException("Group number must be two numbers!");
 
             if (!((group[0] >= '0' && group[0] <= '9') && (group[1] >= '0' && group[1] <= '9')))
-                throw new GroupNumberException("Group number should have only digits!");
+                throw new IsuException("Group number should have only digits!");
 
             (_course, _groupNumber) = (course, group);
         }
