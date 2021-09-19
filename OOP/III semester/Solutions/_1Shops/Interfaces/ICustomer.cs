@@ -7,6 +7,6 @@ namespace Shops.Interfaces
     {
         double Money { get; set; }
         string Name { get; }
-        Dictionary<Product, ProductQuantity> PurchasedProducts { get; }
+        Dictionary<Product, ProductInfo> PurchasedProducts { get; }
     }
 }

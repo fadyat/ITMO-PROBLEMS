@@ -10,8 +10,8 @@ namespace Shops.Interfaces
         HashSet<Product> RegisteredProducts { get; }
         Shop CreateShop(string shopName, string shopAddress);
         Product RegisterProduct(string productName);
-        Shop CheapProductSearch(List<KeyValuePair<Product, ProductQuantity>> productsToBuyCheap);
-        void AddProducts(Shop shop, List<KeyValuePair<Product, ProductQuantity>> productsToSetPrices, List<double> productPrices);
-        void PurchaseProduct(Customer customer, Shop shop, List<KeyValuePair<Product, ProductQuantity>> productsToPurchase);
+        Shop CheapProductSearch(List<KeyValuePair<Product, ProductInfo>> productsToBuyCheap);
+        void AddProducts(Shop shop, List<KeyValuePair<Product, ProductInfo>> productsToSetPrices, List<double> productPrices);
+        void PurchaseProduct(Customer customer, Shop shop, List<KeyValuePair<Product, ProductInfo>> productsToPurchase);
     }
 }

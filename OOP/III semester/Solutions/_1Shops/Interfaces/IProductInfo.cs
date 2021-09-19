@@ -1,7 +1,8 @@
 namespace Shops.Interfaces
 {
-    public interface IProductQuantity
+    public interface IProductInfo
     {
         uint Quantity { get; set; }
+        double Price { get; set; }
     }
 }

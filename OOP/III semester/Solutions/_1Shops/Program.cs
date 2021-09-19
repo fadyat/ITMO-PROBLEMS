@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Shops.Classes;
 
 namespace Shops
@@ -31,20 +32,21 @@ namespace Shops
             shopManager.RegisterProduct("sweet");
 
             Shop shop1 = shopManager.CreateShop("Lenta", "Pushkin_Square_12");
-            var products1 = new List<KeyValuePair<Product, ProductQuantity>>()
+            var products1 = new List<KeyValuePair<Product, ProductInfo>>()
             {
-                new KeyValuePair<Product, ProductQuantity>(new Product("milk"), new ProductQuantity(25)),
-                new KeyValuePair<Product, ProductQuantity>(new Product("beer"), new ProductQuantity(50)),
+                new KeyValuePair<Product, ProductInfo>(new Product("milk"), new ProductInfo(1)),
+                new KeyValuePair<Product, ProductInfo>(new Product("sweet"), new ProductInfo(1)),
+                new KeyValuePair<Product, ProductInfo>(new Product("pancakes"), new ProductInfo(1)),
             };
-            var prices1 = new List<double>() { 19.99, 59.99 };
+            var prices1 = new List<double>() { 19.99, 59.99, 99.99 };
             shopManager.AddProducts(shop1, products1, prices1);
 
             Shop shop2 = shopManager.CreateShop("Diksi", "Lermontova_5");
-            var products2 = new List<KeyValuePair<Product, ProductQuantity>>()
+            var products2 = new List<KeyValuePair<Product, ProductInfo>>()
             {
-                new KeyValuePair<Product, ProductQuantity>(new Product("milk"), new ProductQuantity(30)),
-                new KeyValuePair<Product, ProductQuantity>(new Product("pancakes"), new ProductQuantity(5)),
-                new KeyValuePair<Product, ProductQuantity>(new Product("sweet"), new ProductQuantity(200)),
+                new KeyValuePair<Product, ProductInfo>(new Product("milk"), new ProductInfo(3)),
+                new KeyValuePair<Product, ProductInfo>(new Product("pancakes"), new ProductInfo(3)),
+                new KeyValuePair<Product, ProductInfo>(new Product("sweet"), new ProductInfo(3)),
             };
             var prices2 = new List<double>() { 29.99, 100.33, 7.00 };
             shopManager.AddProducts(shop2, products2, prices2);

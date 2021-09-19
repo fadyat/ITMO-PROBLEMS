@@ -8,6 +8,6 @@ namespace Shops.Interfaces
         uint Id { get; }
         string Name { get; }
         string Address { get; }
-        Dictionary<Product, ProductQuantity> StoredProducts { get; }
+        Dictionary<Product, ProductInfo> StoredProducts { get; }
     }
 }

@@ -36,7 +36,7 @@ namespace Shops.Classes
             return newProduct;
         }
 
-        public Shop CheapProductSearch(List<KeyValuePair<Product, ProductQuantity>> productsToBuyCheap)
+        public Shop CheapProductSearch(List<KeyValuePair<Product, ProductInfo>> productsToBuyCheap)
         {
             double lowestPrice = 1e9;
             var shopWithLowestPrice = new Shop();
@@ -44,24 +44,20 @@ namespace Shops.Classes
             {
                 double currentPrice = 0;
                 bool correctShop = true;
-                var alreadyUsed = new Dictionary<Product, uint>();
-
-                foreach ((Product product, ProductQuantity productQuantity) in productsToBuyCheap)
+                foreach ((Product product, ProductInfo productInfo) in productsToBuyCheap)
                 {
                     if (!_registeredProducts.Contains(product))
                         return null;
 
-                    if (shop.StoredProducts[product].Quantity - alreadyUsed[product] < productQuantity.Quantity)
+                    if (shop.StoredProducts[product].Quantity < productInfo.Quantity)
                     {
                         correctShop = false;
                         break;
                     }
 
-                    alreadyUsed[product] += productQuantity.Quantity;
-                    currentPrice += product.Price * productQuantity.Quantity;
+                    currentPrice += productInfo.Quantity * shop.StoredProducts[product].Price;
                 }
 
-                alreadyUsed.Clear();
                 if (!correctShop || currentPrice >= lowestPrice) continue;
 
                 lowestPrice = currentPrice;
@@ -71,7 +67,7 @@ namespace Shops.Classes
             return shopWithLowestPrice;
         }
 
-        public void AddProducts(Shop shop, List<KeyValuePair<Product, ProductQuantity>> products, List<double> productsPrices)
+        public void AddProducts(Shop shop, List<KeyValuePair<Product, ProductInfo>> products, List<double> productsPrices)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
@@ -80,46 +76,46 @@ namespace Shops.Classes
                 throw new ShopManagerException($"Can't set prices, not enough data!");
 
             int i = 0;
-            foreach ((Product product, ProductQuantity productQuantity) in products)
+            foreach ((Product product, ProductInfo productInfo) in products)
             {
                 if (!_registeredProducts.Contains(product))
                     throw new ProductException($"Product {product.Name} hasn't been registered!");
 
                 if (!shop.StoredProducts.ContainsKey(product))
-                    shop.StoredProducts.Add(product, new ProductQuantity(0));
+                    shop.StoredProducts.Add(product, new ProductInfo(0, 0));
 
-                shop.StoredProducts[product].Quantity += productQuantity.Quantity;
-                product.Price = productsPrices[i++];
+                shop.StoredProducts[product].Quantity += productInfo.Quantity;
+                shop.StoredProducts[product].Price = productsPrices[i++];
             }
         }
 
-        public void PurchaseProduct(Customer customer, Shop shop, List<KeyValuePair<Product, ProductQuantity>> productsToPurchase)
+        public void PurchaseProduct(Customer customer, Shop shop, List<KeyValuePair<Product, ProductInfo>> productsToPurchase)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
-            foreach ((Product product, ProductQuantity productQuantity) in productsToPurchase)
+            foreach ((Product product, ProductInfo productInfo) in productsToPurchase)
             {
                 if (!_registeredProducts.Contains(product))
                     throw new ProductException($"Product {product.Name} hasn't been registered!");
 
-                if (shop.StoredProducts[product].Quantity >= productQuantity.Quantity)
+                if (shop.StoredProducts[product].Quantity >= productInfo.Quantity)
                 {
-                    if (customer.Money >= product.Price * productQuantity.Quantity)
+                    if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Quantity)
                     {
-                        shop.StoredProducts[product].Quantity -= productQuantity.Quantity;
-                        customer.Money -= product.Price * productQuantity.Quantity;
+                        shop.StoredProducts[product].Quantity -= productInfo.Quantity;
+                        customer.Money -= shop.StoredProducts[product].Price * productInfo.Quantity;
                     }
                     else
                     {
                         throw new CustomerException(
-                            $"Not enough money need more: {(product.Price * productQuantity.Quantity) - customer.Money}");
+                            $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Quantity) - customer.Money}");
                     }
                 }
                 else
                 {
                     throw new ShopException(
-                        $"Not enough product need more: {productQuantity.Quantity - shop.StoredProducts[product].Quantity}");
+                        $"Not enough product need more: {productInfo.Quantity - shop.StoredProducts[product].Quantity}");
                 }
             }
         }
@@ -130,9 +126,9 @@ namespace Shops.Classes
             foreach (Shop shop in _createdShops)
             {
                 Console.WriteLine($" * " + shop);
-                foreach ((Product product, ProductQuantity quantity) in shop.StoredProducts)
+                foreach ((Product product, ProductInfo productInfo) in shop.StoredProducts)
                 {
-                    Console.WriteLine("\t - " + product + " " + quantity);
+                    Console.WriteLine("\t - " + product + " " + productInfo.Price + " " + productInfo.Quantity);
                 }
             }
 
