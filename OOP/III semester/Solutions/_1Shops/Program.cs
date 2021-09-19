@@ -50,6 +50,9 @@ namespace Shops
             };
             var prices2 = new List<double>() { 29.99, 100.33, 7.00 };
             shopManager.AddProducts(shop2, products2, prices2);
+            var alex = new Customer("Alex", 1000);
+            shopManager.PurchaseProduct(alex, shop2, products1);
+            Console.WriteLine(alex.Money);
             shopManager.LookThrow();
         }
     }
