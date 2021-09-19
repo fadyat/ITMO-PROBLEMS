@@ -16,9 +16,7 @@ namespace Shops.Classes
 
         public double Money { get; set; }
         public string Name => _name;
-
         public Dictionary<Product, ProductInfo> PurchasedProducts => _purchasedProducts;
-
         public override string ToString() { return _name + " " + Money.ToString(".##"); }
     }
 }
