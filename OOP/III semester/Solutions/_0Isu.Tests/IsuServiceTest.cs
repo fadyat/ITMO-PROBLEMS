@@ -11,10 +11,18 @@ namespace Isu.Tests
         [SetUp]
         public void Setup() { _isuService = new IsuService(); }
         
-        [TestCase(1, "12", 1, "12")]
-        [TestCase(0, "aa", 9, "bb")]
-        [TestCase(0, "03", 5, "03")]
-        [TestCase(11, "01", 11, "02")]
+        [Test]
+        public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
+        {
+            Group group = _isuService.AddGroup(new GroupName(new CourseNumber(1), "02"));
+            Student alex = _isuService.AddStudent(group, "alex");
+            Student tmpAlex = _isuService.FindStudent("alex");
+            if (tmpAlex == null || alex.Group != tmpAlex.Group)
+                Assert.Fail();
+        }
+
+        [TestCase(1, "12", 1, "12")] [TestCase(0, "aa", 9, "bb")]
+        [TestCase(0, "03", 5, "03")] [TestCase(11, "01", 11, "02")]
         [Test]
         public void AddingGroupCheckExisting_ThrowException(byte crs1, string n1, byte crs2, string n2)
         {
@@ -24,10 +32,8 @@ namespace Isu.Tests
                 _isuService.AddGroup(new GroupName(new CourseNumber(crs2), n2));
             });
         }
-        
-        [TestCase(1,"122")]
-        [TestCase(123, "01")]
-        [TestCase(2, "aa")]
+        /* my test */
+        [TestCase(1,"122")] [TestCase(123, "01")] [TestCase(2, "aa")]
         [Test]
         public void CreateGroupWithInvalidName_ThrowException(byte course, string groupNumber)
         {
@@ -37,8 +43,7 @@ namespace Isu.Tests
             });
         }
         
-        [TestCase(31)]
-        [TestCase(77)]
+        [TestCase(31)] [TestCase(77)]
         [Test]
         public void ReachMaxStudentPerGroup_ThrowException(int howMuchAdd)
         {
@@ -61,7 +66,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                /* it's impossible to create to students with equal id */
+                /* it's impossible to create students with equal id */
                 _isuService.AddGroup(new GroupName(new CourseNumber(1), "02"));
 
                 Student alex = _isuService.AddStudent(new Group(new GroupName(new CourseNumber(1), "02")), "Alex");

@@ -5,22 +5,23 @@ namespace Isu.Classes
 {
     public class GroupName
     {
-        private const string Tag = "M3";
+        /* private const string Tag = "M3"; */
         private readonly CourseNumber _course;
         private readonly string _groupNumber;
 
-        public GroupName(CourseNumber course, string group)
+        public GroupName(CourseNumber courseNumber, string groupNumber)
         {
-            if (group.Length != 2)
+            if (groupNumber.Length != 2)
                 throw new IsuException("Group number must be two numbers!");
 
-            if (!((group[0] >= '0' && group[0] <= '9') && (group[1] >= '0' && group[1] <= '9')))
+            if (!((groupNumber[0] >= '0' && groupNumber[0] <= '9')
+                  && (groupNumber[1] >= '0' && groupNumber[1] <= '9')))
                 throw new IsuException("Group number should have only digits!");
 
-            (_course, _groupNumber) = (course, group);
+            (_course, _groupNumber) = (courseNumber, groupNumber);
         }
 
-        public CourseNumber Course { get => _course; }
+        public CourseNumber Course => _course;
 
         public static bool operator ==(GroupName a, GroupName b) { return Equals(a, b); }
 
@@ -35,6 +36,6 @@ namespace Isu.Classes
                    _groupNumber == other._groupNumber;
         }
 
-        public override string ToString() { return Tag + Convert.ToString(_course) + Convert.ToString(_groupNumber); }
+        public override string ToString() { return "M3" + _course.ToString() + _groupNumber; }
     }
 }

@@ -1,11 +1,9 @@
-﻿using System;
-using Isu.Classes;
-
-namespace Isu
+﻿namespace Isu
 {
     internal class Program
     {
         private static void Main()
-        { }
+        {
+        }
     }
 }

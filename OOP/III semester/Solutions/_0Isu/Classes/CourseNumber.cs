@@ -1,4 +1,3 @@
-using System;
 using Isu.Exceptions;
 
 namespace Isu.Classes
@@ -10,7 +9,7 @@ namespace Isu.Classes
         public CourseNumber(byte number)
         {
             if (number <= 0 || number > 9)
-                throw new IsuException("Сourse number must be digit not equal to zero!");
+                throw new IsuException("Course number must be digit not equal to zero!");
 
             _course = number;
         }
@@ -28,6 +27,6 @@ namespace Isu.Classes
             return other != null && _course == other._course;
         }
 
-        public override string ToString() { return Convert.ToString(_course); }
+        public override string ToString() { return _course.ToString(); }
     }
 }

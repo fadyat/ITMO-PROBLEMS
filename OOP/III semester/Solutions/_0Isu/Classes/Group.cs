@@ -6,11 +6,13 @@ namespace Isu.Classes
     {
         private readonly GroupName _groupName;
         private readonly List<Student> _studentsList;
-        public Group(GroupName name) { (_groupName, _studentsList) = (name, new List<Student>()); }
-        public GroupName Name { get => _groupName; }
-        public List<Student> StudentList { get => _studentsList;  }
+
+        public Group(GroupName groupName) { (_groupName, _studentsList) = (groupName, new List<Student>()); }
+
+        public GroupName Name => _groupName;
+        public List<Student> StudentList => _studentsList;
         public int Capacity { get; set; }
-        public int MaxCapacity { get; } = 30;
+        public int MaxCapacity => 30;
 
         public static bool operator ==(Group a, Group b) { return Equals(a, b); }
 
@@ -24,5 +26,7 @@ namespace Isu.Classes
             var other = (Group)obj;
             return other != null && _groupName == other._groupName;
         }
+
+        public override string ToString() { return _groupName.ToString(); }
     }
 }

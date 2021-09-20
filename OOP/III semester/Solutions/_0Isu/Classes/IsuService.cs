@@ -1,22 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Isu.Exceptions;
 
 namespace Isu.Classes
 {
-    /*
-     isuService
-     |
-     |_ List<group> + sparedId
-         |
-         |_ group
-            |
-            |_ groupName  +  List<student>
-               |             |
-               |             |_ student
-               |
-               |_ tag + groupNumber + courseNumber
-    */
     public class IsuService : IIsuService
     {
         private readonly List<Group> _groups;
@@ -34,13 +22,10 @@ namespace Isu.Classes
 
         public Student AddStudent(Group group, string name)
         {
-            var newStudent = new Student(name, _spareId++);
+            var newStudent = new Student(name, _spareId++) { Group = group };
             int groupIndex = _groups.IndexOf(group);
             if (groupIndex < 0)
                 throw new IsuException("Can't find group for student!");
-
-            if (group.StudentList.Contains(newStudent))
-                throw new IsuException("Group already have this student!");
 
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
                 throw new IsuException("Can't add student, full group!");
@@ -52,122 +37,71 @@ namespace Isu.Classes
 
         public Student GetStudent(int id)
         {
-            foreach (Group grp in _groups)
-            {
-                foreach (Student student in grp.StudentList)
-                {
-                    if (student.Id == id) return student;
-                }
-            }
+            foreach (Student student in _groups.SelectMany(grp => grp.StudentList.Where(student => student.Id == id)))
+                return student;
 
             throw new IsuException("Can't get student!");
         }
 
         public Student FindStudent(string name)
         {
-            foreach (Group grp in _groups)
-            {
-                foreach (Student student in grp.StudentList)
-                {
-                    if (student.Name == name) return student;
-                }
-            }
-
-            return null;
+            return _groups.SelectMany(grp => grp.StudentList.Where(student => student.Name == name)).FirstOrDefault();
         }
 
         public List<Student> FindStudents(GroupName groupName)
         {
-            foreach (Group grp in _groups)
-            {
-                if (grp.Name == groupName)
-                {
-                    return grp.StudentList;
-                }
-            }
-
-            return null;
+            return (from grp in _groups where grp.Name == groupName select grp.StudentList).FirstOrDefault();
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
             var tmp = new List<Student>();
-            foreach (Group grp in _groups)
-            {
-                if (grp.Name.Course == courseNumber)
-                {
-                    foreach (Student std in grp.StudentList)
-                        tmp.Add(std);
-                }
-            }
+            foreach (Group grp in _groups.Where(grp => grp.Name.Course == courseNumber))
+                tmp.AddRange(grp.StudentList);
 
             return tmp;
         }
 
         public Group FindGroup(GroupName groupName)
         {
-            foreach (Group grp in _groups)
-            {
-                if (grp.Name == groupName)
-                    return grp;
-            }
-
-            return null;
+            return _groups.FirstOrDefault(grp => grp.Name == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            var tmp = new List<Group>();
-            foreach (Group grp in _groups)
-            {
-                if (grp.Name.Course == courseNumber)
-                {
-                    tmp.Add(grp);
-                }
-            }
-
-            return tmp;
+            return _groups.Where(grp => grp.Name.Course == courseNumber).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            bool existingStudent = false;
-            foreach (Group grp in _groups)
-            {
-                foreach (Student stud in grp.StudentList)
-                {
-                    if (stud.Id != student.Id || stud.Name != student.Name) continue;
-                    grp.StudentList.Remove(student);
-                    grp.Capacity--;
-                    existingStudent = true;
-                    break;
-                }
+            if (student.Group == newGroup)
+                throw new Exception("Student is already in this group!");
 
-                if (existingStudent) break;
-            }
+            int groupIndex = _groups.IndexOf(student.Group);
+            if (groupIndex < 0)
+                throw new IsuException($"Last group doesn't exist!");
 
-            if (!existingStudent)
-                throw new IsuException("Student doesn't exist!");
+            _groups[groupIndex].StudentList.Remove(student);
+            _groups[groupIndex].Capacity--;
 
-            int groupIndex = _groups.IndexOf(newGroup);
+            groupIndex = _groups.IndexOf(newGroup);
             if (groupIndex < 0)
                 throw new IsuException($"New group doesn't exist!");
 
             if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
                 throw new IsuException("Can't add student, to new full group!");
 
+            student.Group = newGroup;
             _groups[groupIndex].StudentList.Add(student);
             _groups[groupIndex].Capacity++;
         }
 
-        public void GroupInfo(Group group) // my method
+        public override string ToString()
         {
-            int groupIndex = _groups.IndexOf(group);
-            if (groupIndex < 0)
-                throw new IsuException($"Can't find group: {group.Name}! ");
-            Console.WriteLine($"{_groups[groupIndex].Name}, {_groups[groupIndex].Capacity}");
-            foreach (Student student in _groups[groupIndex].StudentList)
-                Console.WriteLine(student);
+            return _groups.Aggregate(string.Empty, (current1, group) =>
+                    group.StudentList.Select(student =>
+                    student.ToString()).Aggregate(current1, (current, tmp) =>
+                    current + tmp + "\n"));
         }
     }
 }
