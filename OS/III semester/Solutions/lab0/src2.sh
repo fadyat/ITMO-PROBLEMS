@@ -2,10 +2,12 @@
 total=""
 s=""
 bad="q"
+
 while [ "$s" != "$bad" ]
 do
-	total+=$s
-	read s
+ total+=$s
+ read s
 done
+
 echo $total
 exit 0
