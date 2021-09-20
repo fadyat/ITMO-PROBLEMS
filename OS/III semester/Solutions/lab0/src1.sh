@@ -1,13 +1,16 @@
 #!/bin/bash
-let a=0
 if [[ $1 -gt $2 ]]
-then a=$1
-else a=$2
+ then
+  if [[ $1 -gt $3 ]]
+   then
+    echo $1
+   else
+    echo $3
+  fi
+elif [[ $2 -gt $3 ]]
+ then
+  echo $2
+ else 
+  echo $3
 fi
-
-if [[ $3 -gt $a ]]
-then a=$3
-fi
-
-echo $a
-exit
+exit 0
