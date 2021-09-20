@@ -11,6 +11,6 @@ namespace Isu.Classes
         public string Name => _name;
         public Group Group { get; set; }
 
-        public override string ToString() { return Group.ToString() + ": " + _name + " " + _id; }
+        public override string ToString() { return Group + ": " + _name + " " + _id; }
     }
 }

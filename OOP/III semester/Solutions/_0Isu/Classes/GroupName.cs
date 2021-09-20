@@ -36,6 +36,6 @@ namespace Isu.Classes
                    _groupNumber == other._groupNumber;
         }
 
-        public override string ToString() { return "M3" + _course.ToString() + _groupNumber; }
+        public override string ToString() { return "M3" + _course + _groupNumber; }
     }
 }
