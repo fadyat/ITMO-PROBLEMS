@@ -27,5 +27,7 @@ namespace Isu.Classes
             var other = (Group)obj;
             return other != null && _groupName == other._groupName;
         }
+
+        public override string ToString() { return _groupName.ToString(); }
     }
 }
