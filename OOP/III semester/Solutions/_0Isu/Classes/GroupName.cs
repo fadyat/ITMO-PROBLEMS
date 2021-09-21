@@ -43,7 +43,5 @@ namespace Isu.Classes
             return other != null && _course == other._course &&
                    _groupNumber == other._groupNumber;
         }
-
-        public override string ToString() { return _tag + _course + _groupNumber; }
     }
 }

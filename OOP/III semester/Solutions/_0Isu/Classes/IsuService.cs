@@ -95,12 +95,10 @@ namespace Isu.Classes
             newGroup.Capacity++;
         }
 
-        // public override string ToString()
-        // {/
-            // return _groups.Aggregate(string.Empty, (current1, group) =>
-          // /          group.StudentList.Select(student =>
-                    // student.ToString()).Aggregate(current1, (current, tmp) =>
-                    // current + tmp + "\n"));
-        // }
+        public override string ToString()
+        {
+            return _totalStudents.Aggregate(string.Empty, (current, student) =>
+                current + (student.ToString() + '\n'));
+        }
     }
 }
