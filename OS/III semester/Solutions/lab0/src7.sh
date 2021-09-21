@@ -1,6 +1,6 @@
 #!/bin/bash
 touch emails.lst
-grep --text -s -h -R -E -o "\b[[:alnum:]\_\.\-]+@[[:alnum:]]+\.[[:alpha:]]{2,6}\b" /etc/ |
+grep --text -s -h -R -E -o "\b[[:alnum:]\_\.\-]+@[[:alpha:]]+\.[[:alpha:]]{2,6}\b" /etc/ |
 sort |
 uniq -c |
 awk '{
