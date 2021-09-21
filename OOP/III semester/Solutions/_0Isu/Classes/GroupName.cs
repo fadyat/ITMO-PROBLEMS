@@ -1,27 +1,35 @@
 using System;
+using System.Linq;
 using Isu.Exceptions;
 
 namespace Isu.Classes
 {
     public class GroupName
     {
-        /* private const string Tag = "M3"; */
-        private readonly CourseNumber _course;
+        private readonly string _tag;
+        private readonly uint _course;
         private readonly string _groupNumber;
 
-        public GroupName(CourseNumber courseNumber, string groupNumber)
+        public GroupName(uint courseNumber, string groupNumber, string tag = "M3")
         {
-            if (groupNumber.Length != 2)
-                throw new IsuException("Group number must be two numbers!");
+            if (!Enum.IsDefined(typeof(CorrectCourses), courseNumber))
+                throw new IsuException("Wrong course number format!");
 
-            if (!((groupNumber[0] >= '0' && groupNumber[0] <= '9')
-                  && (groupNumber[1] >= '0' && groupNumber[1] <= '9')))
-                throw new IsuException("Group number should have only digits!");
+            if (groupNumber.Length != 2 || groupNumber.Any(symbol => symbol < '0' || symbol > '9'))
+                throw new IsuException("Group number should have two digits!");
 
-            (_course, _groupNumber) = (courseNumber, groupNumber);
+            (_course, _groupNumber, _tag) = (courseNumber, groupNumber, tag);
         }
 
-        public CourseNumber Course => _course;
+        private enum CorrectCourses : uint
+        {
+            First = 1,
+            Second,
+            Third,
+            Fours,
+        }
+
+        public uint Course => _course;
 
         public static bool operator ==(GroupName a, GroupName b) { return Equals(a, b); }
 
@@ -36,6 +44,6 @@ namespace Isu.Classes
                    _groupNumber == other._groupNumber;
         }
 
-        public override string ToString() { return "M3" + _course + _groupNumber; }
+        public override string ToString() { return _tag + _course + _groupNumber; }
     }
 }

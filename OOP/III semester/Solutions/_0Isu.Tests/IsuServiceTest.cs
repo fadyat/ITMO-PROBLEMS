@@ -14,7 +14,7 @@ namespace Isu.Tests
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group group = _isuService.AddGroup(new GroupName(new CourseNumber(1), "02"));
+            Group group = _isuService.AddGroup(new GroupName(1, "02"));
             Student alex = _isuService.AddStudent(group, "alex");
             Student tmpAlex = _isuService.FindStudent("alex");
             if (tmpAlex == null || alex.Group != tmpAlex.Group)
@@ -28,8 +28,8 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                _isuService.AddGroup(new GroupName(new CourseNumber(crs1), n1));
-                _isuService.AddGroup(new GroupName(new CourseNumber(crs2), n2));
+                _isuService.AddGroup(new GroupName(crs1, n1));
+                _isuService.AddGroup(new GroupName(crs2, n2));
             });
         }
         /* my test */
@@ -39,7 +39,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                _isuService.AddGroup(new GroupName(new CourseNumber(course), groupNumber));
+                _isuService.AddGroup(new GroupName(course, groupNumber));
             });
         }
         
@@ -49,7 +49,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group m3102 = _isuService.AddGroup(new GroupName(new CourseNumber(1), "02"));
+                Group m3102 = _isuService.AddGroup(new GroupName(1, "02"));
                 for (int i = 0; i < howMuchAdd; i++)
                 {
                     _isuService.AddStudent(m3102, i.ToString() + "Student");
@@ -67,15 +67,15 @@ namespace Isu.Tests
             Assert.Catch<IsuException>(() =>
             {
                 /* it's impossible to create students with equal id */
-                _isuService.AddGroup(new GroupName(new CourseNumber(1), "02"));
+                _isuService.AddGroup(new GroupName(1, "02"));
 
-                Student alex = _isuService.AddStudent(new Group(new GroupName(new CourseNumber(1), "02")), "Alex");
+                Student alex = _isuService.AddStudent(new Group(new GroupName(1, "02")), "Alex");
                 if (!studentExist)
                     alex = new Student("RandomNameOfStudent", 123123);
 
-                var newGroup = new Group(new GroupName(new CourseNumber(1), "03"));
+                var newGroup = new Group(new GroupName(1, "03"));
                 if (newGroupExist)
-                    _isuService.AddGroup(new GroupName(new CourseNumber(1), "03"));
+                    _isuService.AddGroup(new GroupName(1, "03"));
 
                 _isuService.ChangeStudentGroup(alex, newGroup);
             });

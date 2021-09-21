@@ -1,18 +1,19 @@
-using System.Collections.Generic;
-
 namespace Isu.Classes
 {
     public class Group
     {
         private readonly GroupName _groupName;
-        private readonly List<Student> _studentsList;
+        private readonly uint _maxCapacity;
 
-        public Group(GroupName groupName) { (_groupName, _studentsList) = (groupName, new List<Student>()); }
+        public Group(GroupName groupName, uint maxCapacity = 30)
+        {
+            _groupName = groupName;
+            _maxCapacity = maxCapacity;
+        }
 
         public GroupName Name => _groupName;
-        public List<Student> StudentList => _studentsList;
-        public int Capacity { get; set; }
-        public int MaxCapacity => 30;
+        public uint Capacity { get; set; }
+        public uint MaxCapacity => _maxCapacity;
 
         public static bool operator ==(Group a, Group b) { return Equals(a, b); }
 

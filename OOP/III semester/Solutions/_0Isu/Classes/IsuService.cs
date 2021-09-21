@@ -7,37 +7,44 @@ namespace Isu.Classes
 {
     public class IsuService : IIsuService
     {
-        private readonly List<Group> _groups;
+        private readonly HashSet<Group> _registeredGroups;
+        private readonly List<Student> _totalStudents;
         private uint _spareId;
-        public IsuService() { (_groups, _spareId) = (new List<Group>(), 100000); }
+
+        public IsuService()
+        {
+            _registeredGroups = new HashSet<Group>();
+            _totalStudents = new List<Student>();
+            _spareId = 100000;
+        }
+
         public Group AddGroup(GroupName name)
         {
             var newGroup = new Group(name);
-            if (_groups.Contains(newGroup))
+            if (_registeredGroups.Contains(newGroup))
                 throw new IsuException("Group is already exists!");
 
-            _groups.Add(newGroup);
+            _registeredGroups.Add(newGroup);
             return newGroup;
         }
 
         public Student AddStudent(Group group, string name)
         {
             var newStudent = new Student(name, _spareId++) { Group = group };
-            int groupIndex = _groups.IndexOf(group);
-            if (groupIndex < 0)
+            if (!_registeredGroups.Contains(group))
                 throw new IsuException("Can't find group for student!");
 
-            if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
+            if (group.Capacity >= group.MaxCapacity)
                 throw new IsuException("Can't add student, full group!");
 
-            _groups[groupIndex].StudentList.Add(newStudent);
-            _groups[groupIndex].Capacity++;
+            group.Capacity++;
+            _totalStudents.Add(newStudent);
             return newStudent;
         }
 
-        public Student GetStudent(int id)
+        public Student GetStudent(uint id)
         {
-            foreach (Student student in _groups.SelectMany(grp => grp.StudentList.Where(student => student.Id == id)))
+            foreach (Student student in _totalStudents.Where(student => student.Id == id))
                 return student;
 
             throw new IsuException("Can't get student!");
@@ -45,31 +52,27 @@ namespace Isu.Classes
 
         public Student FindStudent(string name)
         {
-            return _groups.SelectMany(grp => grp.StudentList.Where(student => student.Name == name)).FirstOrDefault();
+            return _totalStudents.FirstOrDefault(student => student.Name == name);
         }
 
         public List<Student> FindStudents(GroupName groupName)
         {
-            return (from grp in _groups where grp.Name == groupName select grp.StudentList).FirstOrDefault();
+            return _totalStudents.Where(student => student.Group.Name == groupName).ToList();
         }
 
-        public List<Student> FindStudents(CourseNumber courseNumber)
+        public List<Student> FindStudents(uint courseNumber)
         {
-            var tmp = new List<Student>();
-            foreach (Group grp in _groups.Where(grp => grp.Name.Course == courseNumber))
-                tmp.AddRange(grp.StudentList);
-
-            return tmp;
+            return _totalStudents.Where(student => student.Group.Name.Course == courseNumber).ToList();
         }
 
         public Group FindGroup(GroupName groupName)
         {
-            return _groups.FirstOrDefault(grp => grp.Name == groupName);
+            return _registeredGroups.FirstOrDefault(group => group.Name == groupName);
         }
 
-        public List<Group> FindGroups(CourseNumber courseNumber)
+        public List<Group> FindGroups(uint courseNumber)
         {
-            return _groups.Where(grp => grp.Name.Course == courseNumber).ToList();
+            return _registeredGroups.Where(group => group.Name.Course == courseNumber).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
@@ -77,31 +80,27 @@ namespace Isu.Classes
             if (student.Group == newGroup)
                 throw new Exception("Student is already in this group!");
 
-            int groupIndex = _groups.IndexOf(student.Group);
-            if (groupIndex < 0)
+            if (!_registeredGroups.Contains(student.Group))
                 throw new IsuException($"Last group doesn't exist!");
 
-            _groups[groupIndex].StudentList.Remove(student);
-            _groups[groupIndex].Capacity--;
+            student.Group.Capacity--;
 
-            groupIndex = _groups.IndexOf(newGroup);
-            if (groupIndex < 0)
+            if (!_registeredGroups.Contains(newGroup))
                 throw new IsuException($"New group doesn't exist!");
 
-            if (_groups[groupIndex].Capacity >= _groups[groupIndex].MaxCapacity)
+            if (newGroup.Capacity >= newGroup.MaxCapacity)
                 throw new IsuException("Can't add student, to new full group!");
 
             student.Group = newGroup;
-            _groups[groupIndex].StudentList.Add(student);
-            _groups[groupIndex].Capacity++;
+            newGroup.Capacity++;
         }
 
-        public override string ToString()
-        {
-            return _groups.Aggregate(string.Empty, (current1, group) =>
-                    group.StudentList.Select(student =>
-                    student.ToString()).Aggregate(current1, (current, tmp) =>
-                    current + tmp + "\n"));
-        }
+        // public override string ToString()
+        // {/
+            // return _groups.Aggregate(string.Empty, (current1, group) =>
+          // /          group.StudentList.Select(student =>
+                    // student.ToString()).Aggregate(current1, (current, tmp) =>
+                    // current + tmp + "\n"));
+        // }
     }
 }
