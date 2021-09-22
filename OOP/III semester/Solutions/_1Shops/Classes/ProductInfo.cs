@@ -1,4 +1,3 @@
-using System.Xml;
 using Shops.Interfaces;
 
 namespace Shops.Classes
@@ -10,6 +9,6 @@ namespace Shops.Classes
         public uint Quantity { get; set; }
         public double Price { get; set; }
 
-        public override string ToString() { return Quantity.ToString(); }
+        public override string ToString() { return Quantity.ToString() + Price.ToString(".##"); }
     }
 }

@@ -7,8 +7,8 @@ namespace Shops.Classes
 {
     public class ShopManager : IShopManager
     {
-        private readonly HashSet<Shop> _createdShops; // shops ids
-        private readonly HashSet<Product> _registeredProducts; // products names
+        private readonly HashSet<Shop> _createdShops;
+        private readonly HashSet<Product> _registeredProducts;
         private uint _spareId;
 
         public ShopManager()
@@ -32,6 +32,9 @@ namespace Shops.Classes
         public Product RegisterProduct(string productName)
         {
             var newProduct = new Product(productName);
+            if (_registeredProducts.Contains(newProduct))
+                throw new ShopException($"Product {newProduct.Name} is already registered!");
+
             _registeredProducts.Add(newProduct);
             return newProduct;
         }
@@ -73,13 +76,13 @@ namespace Shops.Classes
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
             if (productsPrices.Count != products.Count)
-                throw new ShopManagerException($"Can't set prices, not enough data!");
+                throw new ShopException($"Can't set prices, not enough data!");
 
             int i = 0;
             foreach ((Product product, ProductInfo productInfo) in products)
             {
                 if (!_registeredProducts.Contains(product))
-                    throw new ProductException($"Product {product.Name} hasn't been registered!");
+                    throw new ShopException($"Product {product.Name} hasn't been registered!");
 
                 if (!shop.StoredProducts.ContainsKey(product))
                     shop.StoredProducts.Add(product, new ProductInfo(0, 0));
@@ -97,7 +100,7 @@ namespace Shops.Classes
             foreach ((Product product, ProductInfo productInfo) in productsToPurchase)
             {
                 if (!_registeredProducts.Contains(product))
-                    throw new ProductException($"Product {product.Name} hasn't been registered!");
+                    throw new ShopException($"Product {product.Name} hasn't been registered!");
 
                 if (shop.StoredProducts[product].Quantity >= productInfo.Quantity)
                 {
@@ -108,35 +111,33 @@ namespace Shops.Classes
                     }
                     else
                     {
-                        throw new CustomerException(
+                        throw new ShopException(
                             $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Quantity) - customer.Money}");
                     }
                 }
                 else
                 {
                     throw new ShopException(
-                        $"Not enough product need more: {productInfo.Quantity - shop.StoredProducts[product].Quantity}");
+                        $"Not enough products need more: {productInfo.Quantity - shop.StoredProducts[product].Quantity}");
                 }
             }
         }
 
-        public void LookThrow()
+        public void Info()
         {
             Console.WriteLine("\n\nCreated shops:");
             foreach (Shop shop in _createdShops)
             {
-                Console.WriteLine($" * " + shop);
+                Console.WriteLine(" * " + shop);
                 foreach ((Product product, ProductInfo productInfo) in shop.StoredProducts)
                 {
-                    Console.WriteLine("\t - " + product + " " + productInfo.Price + " " + productInfo.Quantity);
+                    Console.WriteLine("\t - " + product + " " + productInfo);
                 }
             }
 
             Console.WriteLine("\n\nRegistered products:");
             foreach (Product product in _registeredProducts)
-            {
-                Console.WriteLine($" * " + product.Name);
-            }
+                Console.WriteLine($" * " + product);
         }
     }
 }
