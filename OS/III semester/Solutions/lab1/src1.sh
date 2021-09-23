@@ -1,13 +1,16 @@
 #!/bin/bash
-touch src1_data
-touch tmp
-ps -U "root" -o pid,comm |
-sed 's/^ \{1,\}//g' |
-sed 's/ /:/g' > tmp
-wc -l tmp |
-awk '{
- print "Processes: " $1 "\n"
-}' > src1_data
-cat tmp >> src1_data
-rm tmp
+if [[ $1 -gt $2 ]]
+ then
+  if [[ $1 -gt $3 ]]
+   then
+    echo $1
+   else
+    echo $3
+  fi
+elif [[ $2 -gt $3 ]]
+ then
+  echo $2
+ else 
+  echo $3
+fi
 exit 0
