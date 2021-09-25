@@ -5,8 +5,8 @@ sum=0
 cnt=0
 while read line
 do
- nowPpid=`echo $line | awk '{ print $2 }' | sed 's/ Parent_ProcessID=//'`
- art=`echo $line | awk '{ print $3 }' | sed 's/ Average_Running_Time=//'`
+ nowPpid=`echo $line | awk -F: '{ print $2 }' | sed 's/ Parent_ProcessID=//'`
+ art=`echo $line | awk -F: '{ print $3 }' | sed 's/ Average_Running_Time=//'`
  if [[ $prevPpid != nowPpid ]]
   then
    avg=`bc -l <<< "($sum) / ($cnt)" | awk '{ printf("%f", $0) }'`
