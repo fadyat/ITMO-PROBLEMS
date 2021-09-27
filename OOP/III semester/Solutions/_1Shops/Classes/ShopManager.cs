@@ -7,25 +7,21 @@ namespace Shops.Classes
 {
     public class ShopManager : IShopManager
     {
-        private readonly HashSet<Shop> _createdShops;
+        private readonly Dictionary<Shop, Dictionary<Product, (uint have, double price)>> _createdShops;
         private readonly HashSet<Product> _registeredProducts;
         private uint _spareId;
 
         public ShopManager()
         {
-            _createdShops = new HashSet<Shop>();
+            _createdShops = new Dictionary<Shop, Dictionary<Product, (uint have, double price)>>();
             _registeredProducts = new HashSet<Product>();
             _spareId = 100000;
         }
 
-        /* public uint Id => _spareId;
-           public HashSet<Shop> CreatedShops => _createdShops;
-           public HashSet<Product> RegisteredProducts => _registeredProducts; */
-
         public Shop CreateShop(string shopName, string shopAddress)
         {
             var newShop = new Shop(_spareId++, shopName, shopAddress);
-            _createdShops.Add(newShop);
+            _createdShops.Add(newShop, new Dictionary<Product, (uint have, double price)>());
             return newShop;
         }
 
@@ -39,26 +35,26 @@ namespace Shops.Classes
             return newProduct;
         }
 
-        public Shop CheapProductSearch(List<(Product, ProductInfo)> productsToBuyCheap)
+        public Shop CheapProductSearch(List<(Product, uint need)> productsToBuyCheap)
         {
             double lowestPrice = 1e9;
             var shopWithLowestPrice = new Shop();
-            foreach (Shop shop in _createdShops)
+            foreach ((Shop shop, Dictionary<Product, (uint have, double price)> products) in _createdShops)
             {
                 double currentPrice = 0;
                 bool correctShop = true;
-                foreach ((Product product, ProductInfo productInfo) in productsToBuyCheap)
+                foreach ((Product product, uint need) in productsToBuyCheap)
                 {
                     if (!_registeredProducts.Contains(product))
                         return null;
 
-                    if (shop.StoredProducts[product].Quantity < productInfo.Quantity)
+                    if (!products.ContainsKey(product) || products[product].have < need)
                     {
                         correctShop = false;
                         break;
                     }
 
-                    currentPrice += productInfo.Quantity * shop.StoredProducts[product].Price;
+                    currentPrice += need * products[product].price;
                 }
 
                 if (!correctShop || currentPrice >= lowestPrice) continue;
@@ -70,55 +66,49 @@ namespace Shops.Classes
             return shopWithLowestPrice;
         }
 
-        public void AddProducts(Shop shop, List<(Product, ProductInfo)> products, List<double> productsPrices)
+        public void AddProducts(Shop shop, List<(Product, uint have, double price)> products)
         {
-            if (!_createdShops.Contains(shop))
+            if (!_createdShops.ContainsKey(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
-            if (productsPrices.Count != products.Count)
-                throw new ShopException($"Can't set prices, not enough data!");
-
-            int i = 0;
-            foreach ((Product product, ProductInfo productInfo) in products)
+            foreach ((Product product, uint newCnt, double newPrice) in products)
             {
                 if (!_registeredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
-                if (!shop.StoredProducts.ContainsKey(product))
-                    shop.StoredProducts.Add(product, new ProductInfo(0, 0));
+                if (!_createdShops[shop].ContainsKey(product))
+                    _createdShops[shop].Add(product, (0, 0));
 
-                shop.StoredProducts[product].Quantity += productInfo.Quantity;
-                shop.StoredProducts[product].Price = productsPrices[i++];
+                _createdShops[shop][product] = (_createdShops[shop][product].have + newCnt, newPrice);
             }
         }
 
-        public void PurchaseProduct(Customer customer, Shop shop, List<(Product, ProductInfo)> productsToPurchase)
+        public void PurchaseProduct(Customer customer, Shop shop, List<(Product, uint need)> productsToPurchase)
         {
-            if (!_createdShops.Contains(shop))
+            if (!_createdShops.ContainsKey(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
-            foreach ((Product product, ProductInfo productInfo) in productsToPurchase)
+            foreach ((Product product, uint need) in productsToPurchase)
             {
                 if (!_registeredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
-                if (shop.StoredProducts[product].Quantity >= productInfo.Quantity)
+                if (_createdShops[shop][product].have >= need)
                 {
-                    if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Quantity)
+                    if (customer.Money >= _createdShops[shop][product].price * need)
                     {
-                        shop.StoredProducts[product].Quantity -= productInfo.Quantity;
-                        customer.Money -= shop.StoredProducts[product].Price * productInfo.Quantity;
+                        _createdShops[shop][product] = (_createdShops[shop][product].have - need,
+                            _createdShops[shop][product].price);
+                        customer.Money -= _createdShops[shop][product].price * need;
                     }
                     else
                     {
-                        throw new ShopException(
-                            $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Quantity) - customer.Money}");
+                        throw new ShopException($"Not enough money need more!");
                     }
                 }
                 else
                 {
-                    throw new ShopException(
-                        $"Not enough products need more: {productInfo.Quantity - shop.StoredProducts[product].Quantity}");
+                    throw new ShopException($"Not enough products need more!");
                 }
             }
         }
@@ -126,12 +116,12 @@ namespace Shops.Classes
         public void Info()
         {
             Console.WriteLine("\n\nCreated shops:");
-            foreach (Shop shop in _createdShops)
+            foreach ((Shop shop, Dictionary<Product, (uint have, double price)> products) in _createdShops)
             {
                 Console.WriteLine(" * " + shop);
-                foreach ((Product product, ProductInfo productInfo) in shop.StoredProducts)
+                foreach ((Product product, (uint have, double price)) in products)
                 {
-                    Console.WriteLine("\t - " + product + " " + productInfo);
+                    Console.WriteLine("\t - " + product + " " + have + " " + price);
                 }
             }
 

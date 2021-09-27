@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Shops.Classes
 {
     public class Shop
@@ -7,19 +5,14 @@ namespace Shops.Classes
         private readonly uint _id;
         private readonly string _name;
         private readonly string _address;
-        private readonly Dictionary<Product, ProductInfo> _storedProducts;
 
         public Shop() { }
         public Shop(uint shopId, string shopName, string shopAddress)
         {
             (_id, _name, _address) = (shopId, shopName, shopAddress);
-            _storedProducts = new Dictionary<Product, ProductInfo>();
         }
 
-        /* public uint Id => _id; */
-        /* public string Address => _address; */
         public string Name => _name;
-        public Dictionary<Product, ProductInfo> StoredProducts => _storedProducts;
 
         public static bool operator ==(Shop a, Shop b) { return Equals(a, b); }
 
