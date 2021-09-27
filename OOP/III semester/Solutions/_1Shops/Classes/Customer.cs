@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Shops.Interfaces;
 
 namespace Shops.Classes
 {
-    public class Customer : ICustomer
+    public class Customer
     {
         private readonly string _name;
         private readonly Dictionary<Product, ProductInfo> _purchasedProducts;
@@ -17,6 +16,7 @@ namespace Shops.Classes
         public double Money { get; set; }
         public string Name => _name;
         public Dictionary<Product, ProductInfo> PurchasedProducts => _purchasedProducts;
+
         public override string ToString() { return _name + " " + Money.ToString(".##"); }
     }
 }

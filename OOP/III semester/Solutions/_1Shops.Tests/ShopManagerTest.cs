@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using Shops.Classes;
 using Shops.Exceptions;
@@ -26,8 +27,22 @@ namespace Shops.Tests
                 _shopManager.RegisterProduct("pineapple");
             });
         }
+
+        private static readonly object[] TestCases =
+        {
+            new List<string> {"milk", "water", "apple"}
+        };
         
-        // [Test]
-        // public void Che
+        [Test, TestCaseSource(nameof(TestCases))]
+        public void AddingProductsToTheShop_ThrowException(List<string> products)
+        {
+            Assert.Catch<ShopException>(() =>
+            {
+                _shopManager.CreateShop("Lenta", "Lermontova 1");
+                foreach (string pr in products)
+                    _shopManager.RegisterProduct(pr);
+                
+            });
+        }
     }
 }

@@ -18,9 +18,9 @@ namespace Shops.Classes
             _spareId = 100000;
         }
 
-        public uint Id => _spareId;
-        public HashSet<Shop> CreatedShops => _createdShops;
-        public HashSet<Product> RegisteredProducts => _registeredProducts;
+        /* public uint Id => _spareId;
+           public HashSet<Shop> CreatedShops => _createdShops;
+           public HashSet<Product> RegisteredProducts => _registeredProducts; */
 
         public Shop CreateShop(string shopName, string shopAddress)
         {
@@ -39,7 +39,7 @@ namespace Shops.Classes
             return newProduct;
         }
 
-        public Shop CheapProductSearch(List<KeyValuePair<Product, ProductInfo>> productsToBuyCheap)
+        public Shop CheapProductSearch(List<(Product, ProductInfo)> productsToBuyCheap)
         {
             double lowestPrice = 1e9;
             var shopWithLowestPrice = new Shop();
@@ -70,7 +70,7 @@ namespace Shops.Classes
             return shopWithLowestPrice;
         }
 
-        public void AddProducts(Shop shop, List<KeyValuePair<Product, ProductInfo>> products, List<double> productsPrices)
+        public void AddProducts(Shop shop, List<(Product, ProductInfo)> products, List<double> productsPrices)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
@@ -92,7 +92,7 @@ namespace Shops.Classes
             }
         }
 
-        public void PurchaseProduct(Customer customer, Shop shop, List<KeyValuePair<Product, ProductInfo>> productsToPurchase)
+        public void PurchaseProduct(Customer customer, Shop shop, List<(Product, ProductInfo)> productsToPurchase)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");

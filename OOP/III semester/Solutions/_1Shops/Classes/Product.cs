@@ -1,8 +1,6 @@
-using Shops.Interfaces;
-
 namespace Shops.Classes
 {
-    public class Product : IProduct
+    public class Product
     {
         private readonly string _name;
 

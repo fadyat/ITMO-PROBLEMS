@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Shops.Interfaces;
 
 namespace Shops.Classes
 {
-    public class Shop : IShop
+    public class Shop
     {
         private readonly uint _id;
         private readonly string _name;
@@ -17,9 +16,9 @@ namespace Shops.Classes
             _storedProducts = new Dictionary<Product, ProductInfo>();
         }
 
-        public uint Id => _id;
+        /* public uint Id => _id; */
+        /* public string Address => _address; */
         public string Name => _name;
-        public string Address => _address;
         public Dictionary<Product, ProductInfo> StoredProducts => _storedProducts;
 
         public static bool operator ==(Shop a, Shop b) { return Equals(a, b); }
@@ -28,7 +27,7 @@ namespace Shops.Classes
 
         public override int GetHashCode() { return _id.GetHashCode(); }
 
-        public override string ToString() { return _name + " " + _address + " " + _id.ToString(); }
+        public override string ToString() { return _name + " " + _address + " " + _id; }
 
         public override bool Equals(object obj)
         {
