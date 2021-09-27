@@ -16,8 +16,6 @@ namespace Shops.Classes
             _storedProducts = new Dictionary<Product, ProductInfo>();
         }
 
-        /* public uint Id => _id; */
-        /* public string Address => _address; */
         public string Name => _name;
         public Dictionary<Product, ProductInfo> StoredProducts => _storedProducts;
 

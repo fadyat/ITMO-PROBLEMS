@@ -2,11 +2,11 @@ namespace Shops.Classes
 {
     public class ProductInfo
     {
-        public ProductInfo(uint quantity, double price = -1) { (Quantity, Price) = (quantity, price); }
+        public ProductInfo(uint cnt, double price = -1) { (Cnt, Price) = (cnt, price); }
 
-        public uint Quantity { get; set; }
+        public uint Cnt { get; set; }
         public double Price { get; set; }
 
-        public override string ToString() { return Quantity + " " + Price.ToString(".##"); }
+        public override string ToString() { return Cnt + " " + Price.ToString(".##"); }
     }
 }

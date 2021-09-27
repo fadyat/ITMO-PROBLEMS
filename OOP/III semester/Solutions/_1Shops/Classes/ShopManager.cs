@@ -18,10 +18,6 @@ namespace Shops.Classes
             _spareId = 100000;
         }
 
-        /* public uint Id => _spareId;
-           public HashSet<Shop> CreatedShops => _createdShops;
-           public HashSet<Product> RegisteredProducts => _registeredProducts; */
-
         public Shop CreateShop(string shopName, string shopAddress)
         {
             var newShop = new Shop(_spareId++, shopName, shopAddress);
@@ -52,13 +48,13 @@ namespace Shops.Classes
                     if (!_registeredProducts.Contains(product))
                         return null;
 
-                    if (shop.StoredProducts[product].Quantity < productInfo.Quantity)
+                    if (!shop.StoredProducts.ContainsKey(product) || shop.StoredProducts[product].Cnt < productInfo.Cnt)
                     {
                         correctShop = false;
                         break;
                     }
 
-                    currentPrice += productInfo.Quantity * shop.StoredProducts[product].Price;
+                    currentPrice += productInfo.Cnt * shop.StoredProducts[product].Price;
                 }
 
                 if (!correctShop || currentPrice >= lowestPrice) continue;
@@ -70,15 +66,11 @@ namespace Shops.Classes
             return shopWithLowestPrice;
         }
 
-        public void AddProducts(Shop shop, List<(Product, ProductInfo)> products, List<double> productsPrices)
+        public void AddProducts(Shop shop, List<(Product, ProductInfo)> products)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
-            if (productsPrices.Count != products.Count)
-                throw new ShopException($"Can't set prices, not enough data!");
-
-            int i = 0;
             foreach ((Product product, ProductInfo productInfo) in products)
             {
                 if (!_registeredProducts.Contains(product))
@@ -87,8 +79,8 @@ namespace Shops.Classes
                 if (!shop.StoredProducts.ContainsKey(product))
                     shop.StoredProducts.Add(product, new ProductInfo(0, 0));
 
-                shop.StoredProducts[product].Quantity += productInfo.Quantity;
-                shop.StoredProducts[product].Price = productsPrices[i++];
+                shop.StoredProducts[product].Cnt += productInfo.Cnt;
+                shop.StoredProducts[product].Price = productInfo.Price;
             }
         }
 
@@ -102,23 +94,23 @@ namespace Shops.Classes
                 if (!_registeredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
-                if (shop.StoredProducts[product].Quantity >= productInfo.Quantity)
+                if (shop.StoredProducts[product].Cnt >= productInfo.Cnt)
                 {
-                    if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Quantity)
+                    if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Cnt)
                     {
-                        shop.StoredProducts[product].Quantity -= productInfo.Quantity;
-                        customer.Money -= shop.StoredProducts[product].Price * productInfo.Quantity;
+                        shop.StoredProducts[product].Cnt -= productInfo.Cnt;
+                        customer.Money -= shop.StoredProducts[product].Price * productInfo.Cnt;
                     }
                     else
                     {
                         throw new ShopException(
-                            $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Quantity) - customer.Money}");
+                            $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Cnt) - customer.Money}");
                     }
                 }
                 else
                 {
                     throw new ShopException(
-                        $"Not enough products need more: {productInfo.Quantity - shop.StoredProducts[product].Quantity}");
+                        $"Not enough products need more: {productInfo.Cnt - shop.StoredProducts[product].Cnt}");
                 }
             }
         }
