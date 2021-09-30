@@ -1,6 +1,7 @@
 # Use command 'top' if u want to check the correctness
 # Press 'x' to see the column which they are sorted
 # Use '<' & '>' to change the column
+# RES - is ur column
 
 #!/bin/bash
 first=true
