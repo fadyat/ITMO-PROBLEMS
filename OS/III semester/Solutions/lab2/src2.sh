@@ -1,5 +1,4 @@
 #!/bin/bash
-touch src2_data
 ps -A -o pid,cmd |
 grep "/sbin" |
 awk '{

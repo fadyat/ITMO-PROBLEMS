@@ -1,6 +1,4 @@
 #!/bin/bash
-touch src1_data
-touch tmp
 ps -U "root" -o pid,comm |
 sed 's/^ \{1,\}//g' |
 sed 's/ /:/g' > tmp
