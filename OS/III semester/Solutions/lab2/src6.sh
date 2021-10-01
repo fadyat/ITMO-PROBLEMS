@@ -17,6 +17,6 @@ for pid in $(ps -A -o pid); do
   fi
  fi
 done
-sort tmp -nk2 | tail -1 | awk '{ print $1}' > src6_data
+sort tmp -nk2 | tail -1 | awk '{ print $1 }' > src6_data
 rm tmp
 exit 0
