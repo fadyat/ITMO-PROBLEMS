@@ -9,7 +9,7 @@ for pid in $(ps -A -o pid); do
  statusFile="/proc/$pid/status"
  ram=$((grep -s 'VmRSS' $statusFile) | awk '{ print $2 }')
  if [[ $ram != "" ]]; then
-  if [[ $ first == true ]]; then
+  if [[ $first == true ]]; then
    echo $pid $ram > tmp
    first=false
   else
