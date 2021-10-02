@@ -1,5 +1,5 @@
 #!/bin/bash
-ps -A -o pid,cmd |
+ps -A -o pid=,cmd= |
 grep "/sbin" |
 awk '{
  print $1

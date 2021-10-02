@@ -1,5 +1,5 @@
 #!/bin./bash
-ps -A -o pid,stime= |
+ps -A -o pid=,stime= |
 sort -r -k2 |
 head -1 |
 tail -1 |

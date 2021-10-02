@@ -1,6 +1,6 @@
 #!/bin/bash
 first=true
-for pid in $(ps -A -o pid); do
+for pid in $(ps -A -o pid=); do
  statusFile="/proc/$pid/status"
  schedFile="/proc/$pid/sched"
  ppid=$(grep -s 'PPid' $statusFile | awk '{print $2}')
