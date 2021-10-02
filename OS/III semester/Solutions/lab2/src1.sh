@@ -4,4 +4,3 @@ wc -l tmp | awk '{ print "Processes: " $1 }' > src1_data
 cat tmp >> src1_data
 rm tmp
 exit 0
-
