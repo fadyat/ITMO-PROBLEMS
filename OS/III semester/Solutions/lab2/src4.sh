@@ -6,14 +6,9 @@ for pid in $(ps -A -o pid); do
  ppid=$(grep -s 'PPid' $statusFile | awk '{print $2}')
  runtime=$(grep -s 'sum_exec_runtime' $schedFile | awk '{print $3}')
  switches=$(grep -s 'nr_switches' $schedFile | awk '{print $3}')
- if [[ $ppid != "" ]] && [[ $runtime != "" ]] && [[ $switches != "" ]]; then
+ if [[ $runtime != "" ]] && [[ $switches != "" ]]; then
   art=`bc -l <<< "($runtime) / ($switches)" | awk '{ printf("%f\n", $0) }'`
-  if [[ $first == true ]]; then
-   echo "$pid $ppid $art" > tmp
-   first=false
-  else
-   echo "$pid $ppid $art" >> tmp
-  fi
+  echo "$pid $ppid $art" >> tmp
  fi
 done
 sort -n -k2 tmp |
