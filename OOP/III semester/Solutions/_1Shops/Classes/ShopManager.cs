@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Shops.Exceptions;
 using Shops.Interfaces;
 
@@ -8,14 +9,23 @@ namespace Shops.Classes
     public class ShopManager : IShopManager
     {
         private readonly HashSet<Shop> _createdShops;
-        private readonly HashSet<Product> _registeredProducts;
         private uint _spareId;
 
         public ShopManager()
         {
             _createdShops = new HashSet<Shop>();
-            _registeredProducts = new HashSet<Product>();
             _spareId = 100000;
+        }
+
+        public void RegisterProduct(Shop shop, IEnumerable<string> productsName)
+        {
+            foreach (Product newProduct in productsName.Select(productName => new Product(productName)))
+            {
+                if (shop.RegisteredProducts.Contains(newProduct))
+                    throw new ShopException($"Product {newProduct.Name} is already registered!");
+
+                shop.RegisteredProducts.Add(newProduct);
+            }
         }
 
         public Shop CreateShop(string shopName, string shopAddress)
@@ -23,16 +33,6 @@ namespace Shops.Classes
             var newShop = new Shop(_spareId++, shopName, shopAddress);
             _createdShops.Add(newShop);
             return newShop;
-        }
-
-        public Product RegisterProduct(string productName)
-        {
-            var newProduct = new Product(productName);
-            if (_registeredProducts.Contains(newProduct))
-                throw new ShopException($"Product {newProduct.Name} is already registered!");
-
-            _registeredProducts.Add(newProduct);
-            return newProduct;
         }
 
         public Shop CheapProductSearch(List<(Product, ProductInfo)> productsToBuyCheap)
@@ -45,7 +45,7 @@ namespace Shops.Classes
                 bool correctShop = true;
                 foreach ((Product product, ProductInfo productInfo) in productsToBuyCheap)
                 {
-                    if (!_registeredProducts.Contains(product))
+                    if (!shop.RegisteredProducts.Contains(product))
                         return null;
 
                     if (!shop.StoredProducts.ContainsKey(product) || shop.StoredProducts[product].Cnt < productInfo.Cnt)
@@ -73,7 +73,7 @@ namespace Shops.Classes
 
             foreach ((Product product, ProductInfo productInfo) in products)
             {
-                if (!_registeredProducts.Contains(product))
+                if (!shop.RegisteredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
                 if (!shop.StoredProducts.ContainsKey(product))
@@ -91,7 +91,7 @@ namespace Shops.Classes
 
             foreach ((Product product, ProductInfo productInfo) in productsToPurchase)
             {
-                if (!_registeredProducts.Contains(product))
+                if (!shop.RegisteredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
                 if (shop.StoredProducts[product].Cnt >= productInfo.Cnt)
@@ -99,7 +99,7 @@ namespace Shops.Classes
                     if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Cnt)
                     {
                         shop.StoredProducts[product] =
-                            new ProductInfo(shop.StoredProducts[product].Cnt + productInfo.Cnt, shop.StoredProducts[product].Price);
+                            new ProductInfo(shop.StoredProducts[product].Cnt - productInfo.Cnt, shop.StoredProducts[product].Price);
 
                         customer.Money -= shop.StoredProducts[product].Price * productInfo.Cnt;
                     }
@@ -119,19 +119,21 @@ namespace Shops.Classes
 
         public void Info()
         {
-            Console.WriteLine("\n\nCreated shops:");
+            Console.WriteLine("\nCreated shops:");
             foreach (Shop shop in _createdShops)
             {
-                Console.WriteLine(" * " + shop);
+                Console.WriteLine(" # " + shop);
+                Console.WriteLine(" - Registered products:");
+                foreach (Product product in shop.RegisteredProducts)
+                    Console.WriteLine($"\t * " + product);
+                Console.WriteLine(" - Stored products:");
                 foreach ((Product product, ProductInfo productInfo) in shop.StoredProducts)
                 {
-                    Console.WriteLine("\t - " + product + " " + productInfo);
+                    Console.WriteLine("\t * " + product + " " + productInfo);
                 }
-            }
 
-            Console.WriteLine("\n\nRegistered products:");
-            foreach (Product product in _registeredProducts)
-                Console.WriteLine($" * " + product);
+                Console.WriteLine();
+            }
         }
     }
 }

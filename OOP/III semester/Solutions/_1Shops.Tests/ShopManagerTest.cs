@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using NUnit.Framework;
 using Shops.Classes;
 using Shops.Exceptions;
@@ -12,19 +12,15 @@ namespace Shops.Tests
         [SetUp]
         public void SetUp() { _shopManager = new ShopManager(); }
 
-        /*
-            2. Add products to shop.
-            3. Purchase products.
-            4. Cheapest shops search on a lot shops.
-         */
+        
         
         [Test]
         public void RegisterEqualProducts_ThrowException()
         {
             Assert.Catch<ShopException>(() =>
             {
-                _shopManager.RegisterProduct("pineapple");
-                _shopManager.RegisterProduct("pineapple");
+                ShopManager.RegisterProduct("pineapple");
+                ShopManager.RegisterProduct("pineapple");
             });
         }
 
@@ -40,9 +36,9 @@ namespace Shops.Tests
             {
                 _shopManager.CreateShop("Lenta", "Lermontova 1");
                 foreach (string pr in products)
-                    _shopManager.RegisterProduct(pr);
+                    ShopManager.RegisterProduct(pr);
                 
             });
         }
     }
-}
+}*/
