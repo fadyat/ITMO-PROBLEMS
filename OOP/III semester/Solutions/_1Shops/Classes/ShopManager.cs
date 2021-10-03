@@ -79,8 +79,8 @@ namespace Shops.Classes
                 if (!shop.StoredProducts.ContainsKey(product))
                     shop.StoredProducts.Add(product, new ProductInfo(0, 0));
 
-                shop.StoredProducts[product].Cnt += productInfo.Cnt;
-                shop.StoredProducts[product].Price = productInfo.Price;
+                shop.StoredProducts[product] =
+                    new ProductInfo(shop.StoredProducts[product].Cnt + productInfo.Cnt, productInfo.Price);
             }
         }
 
@@ -98,7 +98,9 @@ namespace Shops.Classes
                 {
                     if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Cnt)
                     {
-                        shop.StoredProducts[product].Cnt -= productInfo.Cnt;
+                        shop.StoredProducts[product] =
+                            new ProductInfo(shop.StoredProducts[product].Cnt + productInfo.Cnt, shop.StoredProducts[product].Price);
+
                         customer.Money -= shop.StoredProducts[product].Price * productInfo.Cnt;
                     }
                     else

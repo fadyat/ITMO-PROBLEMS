@@ -38,7 +38,7 @@ namespace Shops
                 (new Product("sweet"), new ProductInfo(2)),
             };
             shopManager.PurchaseProduct(sergo, shopManager.CheapProductSearch(products3), products3);
-            /* Console.WriteLine(sergo.Money); */
+            Console.WriteLine(sergo.Money);
             shopManager.Info();
         }
     }
