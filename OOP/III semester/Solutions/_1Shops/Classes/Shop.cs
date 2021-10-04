@@ -5,37 +5,20 @@ namespace Shops.Classes
     public class Shop
     {
         private readonly uint _id;
-        private readonly string _name;
         private readonly string _address;
-        private readonly Dictionary<Product, ProductInfo> _storedProducts;
-        private readonly HashSet<Product> _registeredProducts;
 
         public Shop() { }
         public Shop(uint shopId, string shopName, string shopAddress)
         {
-            (_id, _name, _address) = (shopId, shopName, shopAddress);
-            _storedProducts = new Dictionary<Product, ProductInfo>();
-            _registeredProducts = new HashSet<Product>();
+            (_id, Name, _address) = (shopId, shopName, shopAddress);
+            StoredProducts = new Dictionary<Product, ProductInfo>();
+            RegisteredProducts = new HashSet<Product>();
         }
 
-        public string Name => _name;
-        public Dictionary<Product, ProductInfo> StoredProducts => _storedProducts;
+        public string Name { get; }
+        public Dictionary<Product, ProductInfo> StoredProducts { get; }
+        public HashSet<Product> RegisteredProducts { get; }
 
-        public HashSet<Product> RegisteredProducts => _registeredProducts;
-
-        public static bool operator ==(Shop a, Shop b) { return Equals(a, b); }
-
-        public static bool operator !=(Shop a, Shop b) { return !Equals(a, b); }
-
-        public override int GetHashCode() { return _id.GetHashCode(); }
-
-        public override string ToString() { return _name + " " + _address + " " + _id; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (Shop)obj;
-            return other != null && _id == other._id;
-        }
+        public override string ToString() { return Name + " " + _address + " " + _id; }
     }
 }

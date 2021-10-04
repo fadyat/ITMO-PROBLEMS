@@ -35,7 +35,7 @@ namespace Shops.Classes
             return newShop;
         }
 
-        public Shop CheapProductSearch(List<(Product, ProductInfo)> productsToBuyCheap)
+        public Shop CheapProductSearch(List<(Product, uint cheapCnt)> productsToBuyCheap)
         {
             double lowestPrice = 1e9;
             var shopWithLowestPrice = new Shop();
@@ -43,18 +43,16 @@ namespace Shops.Classes
             {
                 double currentPrice = 0;
                 bool correctShop = true;
-                foreach ((Product product, ProductInfo productInfo) in productsToBuyCheap)
+                foreach ((Product product, uint cheapCnt) in productsToBuyCheap)
                 {
-                    if (!shop.RegisteredProducts.Contains(product))
-                        return null;
-
-                    if (!shop.StoredProducts.ContainsKey(product) || shop.StoredProducts[product].Cnt < productInfo.Cnt)
+                    if (!shop.RegisteredProducts.Contains(product) || !shop.StoredProducts.ContainsKey(product) ||
+                        shop.StoredProducts[product].Cnt < cheapCnt)
                     {
                         correctShop = false;
                         break;
                     }
 
-                    currentPrice += productInfo.Cnt * shop.StoredProducts[product].Price;
+                    currentPrice += cheapCnt * shop.StoredProducts[product].Price;
                 }
 
                 if (!correctShop || currentPrice >= lowestPrice) continue;
@@ -79,40 +77,38 @@ namespace Shops.Classes
                 if (!shop.StoredProducts.ContainsKey(product))
                     shop.StoredProducts.Add(product, new ProductInfo(0, 0));
 
-                shop.StoredProducts[product] =
-                    new ProductInfo(shop.StoredProducts[product].Cnt + productInfo.Cnt, productInfo.Price);
+                shop.StoredProducts[product] = new ProductInfo(
+                    shop.StoredProducts[product].Cnt + productInfo.Cnt, productInfo.Price);
             }
         }
 
-        public void PurchaseProduct(Customer customer, Shop shop, List<(Product, ProductInfo)> productsToPurchase)
+        public void PurchaseProduct(Customer customer, Shop shop, List<(Product, uint purchaseCnt)> productsToPurchase)
         {
             if (!_createdShops.Contains(shop))
                 throw new ShopException($"Shop {shop.Name} hasn't been created!");
 
-            foreach ((Product product, ProductInfo productInfo) in productsToPurchase)
+            foreach ((Product product, uint purchaseCnt) in productsToPurchase)
             {
                 if (!shop.RegisteredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
-                if (shop.StoredProducts[product].Cnt >= productInfo.Cnt)
+                if (shop.StoredProducts[product].Cnt >= purchaseCnt)
                 {
-                    if (customer.Money >= shop.StoredProducts[product].Price * productInfo.Cnt)
+                    if (customer.Money >= shop.StoredProducts[product].Price * purchaseCnt)
                     {
-                        shop.StoredProducts[product] =
-                            new ProductInfo(shop.StoredProducts[product].Cnt - productInfo.Cnt, shop.StoredProducts[product].Price);
+                        shop.StoredProducts[product] = new ProductInfo(
+                                shop.StoredProducts[product].Cnt - purchaseCnt, shop.StoredProducts[product].Price);
 
-                        customer.Money -= shop.StoredProducts[product].Price * productInfo.Cnt;
+                        customer.Money -= shop.StoredProducts[product].Price * purchaseCnt;
                     }
                     else
                     {
-                        throw new ShopException(
-                            $"Not enough money need more: {(shop.StoredProducts[product].Price * productInfo.Cnt) - customer.Money}");
+                        throw new ShopException("Not enough money need more!");
                     }
                 }
                 else
                 {
-                    throw new ShopException(
-                        $"Not enough products need more: {productInfo.Cnt - shop.StoredProducts[product].Cnt}");
+                    throw new ShopException($"Not enough products need more!");
                 }
             }
         }
