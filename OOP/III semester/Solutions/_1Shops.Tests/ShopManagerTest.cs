@@ -1,9 +1,9 @@
 /*using System.Collections.Generic;
 using NUnit.Framework;
-using Shops.Classes;
-using Shops.Exceptions;
+using _1Shops.Classes;
+using _1Shops.Exceptions;
 
-namespace Shops.Tests
+namespace _1Shops.Tests
 {
     public class ShopManagerTest
     {
