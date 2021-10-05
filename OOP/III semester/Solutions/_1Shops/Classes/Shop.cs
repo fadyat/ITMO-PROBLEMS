@@ -61,23 +61,10 @@ namespace Shops.Classes
                 {
                     if (customer.Money >= StoredProducts[product].Price * purchaseCnt)
                     {
-                        /*foreach (KeyValuePair<Product, ProductInfo> kek in StoredProducts)
-                        {
-                            Console.WriteLine(kek);
-                        }
-
-                        Console.WriteLine(":)))");*/
                         var productInfo = new ProductInfo(StoredProducts[product].Cnt - purchaseCnt, StoredProducts[product].Price);
                         StoredProducts.Remove(product);
                         StoredProducts = new Dictionary<Product, ProductInfo>(StoredProducts) { { product, productInfo } };
-                        /*foreach (KeyValuePair<Product, ProductInfo> kek in StoredProducts)
-                        {
-                            Console.WriteLine(kek);
-                        }
-
-                        Console.WriteLine(";)))");*/
                         customer = new Customer(customer.Name, customer.Money - (StoredProducts[product].Price * purchaseCnt));
-                        Console.WriteLine(customer.Name + customer.Money + "\n\n\n");
                     }
                     else
                     {

@@ -7,13 +7,8 @@ namespace Shops.Classes
             (Name, Money) = (customerName, startMoney);
         }
 
-        public double Money { get; private set; }
+        public double Money { get; }
         public string Name { get; }
-
-        public void SetMoney(double moneyl)
-        {
-            Money = moneyl;
-        }
 
         public override string ToString() { return Name + " " + Money.ToString(".##"); }
     }
