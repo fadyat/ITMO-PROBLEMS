@@ -16,17 +16,17 @@ namespace Shops.Tests
         {
             Assert.Catch<ShopException>(() =>
             {
-                Shop shop1 = _shopManager.CreateShop("Lenta", "Pushkin1");
-                _shopManager.RegisterProduct(shop1, new List<string> { "pineapple", "pineapple" });
+                Shop shop1 = _shopManager.CreateShop("Lenta");
+                shop1.RegisterProduct(new List<string> { "pineapple", "pineapple" });
             });
         }
         
         [Test] public void AddingEqualsProductsToTheShop()
         {
-            Shop shop1 = _shopManager.CreateShop("Lenta", "Pushkin1");
-            _shopManager.RegisterProduct(shop1, new List<string> { "apple" });
+            Shop shop1 = _shopManager.CreateShop("Lenta");
+            shop1.RegisterProduct(new List<string> { "apple" });
             var apple = new Product("apple");
-            _shopManager.AddProducts(shop1, new List<(Product, ProductInfo)>
+            shop1.AddProducts(new List<(Product, ProductInfo)>
             {
                 (apple, new ProductInfo(10, 5.99)),
                 (new Product("apple"), new ProductInfo(10, 4.99))
@@ -36,17 +36,17 @@ namespace Shops.Tests
 
         [Test] public void CheapestShopFinding()
         {
-            Shop shop1 = _shopManager.CreateShop("Lenta", "Pushkin1");
-            _shopManager.RegisterProduct(shop1, new List<string> { "apple", "sweet" });
-            _shopManager.AddProducts(shop1, new List<(Product, ProductInfo)>
+            Shop shop1 = _shopManager.CreateShop("Lenta");
+            shop1.RegisterProduct(new List<string> { "apple", "sweet" });
+            shop1.AddProducts(new List<(Product, ProductInfo)>
             {
                 (new Product("apple"), new ProductInfo(10, 10)),
                 (new Product("sweet"), new ProductInfo(10, 20))
             });
             
-            Shop shop2 = _shopManager.CreateShop("Lenta", "Pushkin1");
-            _shopManager.RegisterProduct(shop2, new List<string> { "apple", "sweet" });
-            _shopManager.AddProducts(shop2, new List<(Product, ProductInfo)>
+            Shop shop2 = _shopManager.CreateShop("Lenta");
+            shop2.RegisterProduct(new List<string> { "apple", "sweet" });
+            shop2.AddProducts(new List<(Product, ProductInfo)>
             {
                 (new Product("apple"), new ProductInfo(10, 20)),
                 (new Product("sweet"), new ProductInfo(10, 10))
@@ -62,29 +62,29 @@ namespace Shops.Tests
 
         [Test] public void PurchaseProduct()
         {
-            Shop shop1 = _shopManager.CreateShop("Lenta", "Pushkin1");
-            _shopManager.RegisterProduct(shop1, new List<string> { "apple", "sweet" });
-            _shopManager.AddProducts(shop1, new List<(Product, ProductInfo)>
+            Shop shop1 = _shopManager.CreateShop("Lenta");
+            shop1.RegisterProduct(new List<string> { "apple", "sweet" });
+            shop1.AddProducts(new List<(Product, ProductInfo)>
             {
                 (new Product("apple"), new ProductInfo(10, 10)),
                 (new Product("sweet"), new ProductInfo(10, 20))
             });
             
-            Shop shop2 = _shopManager.CreateShop("Lenta", "Pushkin1");
-            _shopManager.RegisterProduct(shop2, new List<string> { "apple", "sweet" });
-            _shopManager.AddProducts(shop2, new List<(Product, ProductInfo)>
+            Shop shop2 = _shopManager.CreateShop("Lenta");
+            shop2.RegisterProduct(new List<string> { "apple", "sweet" });
+            shop2.AddProducts(new List<(Product, ProductInfo)>
             {
                 (new Product("apple"), new ProductInfo(10, 20)),
                 (new Product("sweet"), new ProductInfo(10, 10))
             });
             var customer1 = new Customer("customer1", 1000);
             var customer2 = new Customer("customer2", 1000);
-            _shopManager.PurchaseProduct(customer1, shop1, new List<(Product, uint purchaseCnt)>
+            shop1.PurchaseProduct(ref customer1, new List<(Product, uint purchaseCnt)>
             {
                 (new Product("apple"), 5),
                 (new Product("sweet"), 5)
             });
-            _shopManager.PurchaseProduct(customer2, shop2, new List<(Product, uint purchaseCnt)>
+            shop2.PurchaseProduct(ref customer2, new List<(Product, uint purchaseCnt)>
             {
                 (new Product("apple"), 5),
                 (new Product("sweet"), 5)

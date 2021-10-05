@@ -6,10 +6,10 @@ namespace Shops.Classes
 
         public string Name { get; }
 
-        public static bool operator ==(Product a, Product b) { return Equals(a, b); }
-        public static bool operator !=(Product a, Product b) { return !Equals(a, b); }
         public override int GetHashCode() { return Name.GetHashCode(); }
+
         public override string ToString() { return Name; }
+
         public override bool Equals(object obj)
         {
             if (obj != null && obj.GetType() != GetType()) return false;

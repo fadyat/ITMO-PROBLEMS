@@ -2,15 +2,19 @@ namespace Shops.Classes
 {
     public class Customer
     {
-        private readonly string _name;
-
         public Customer(string customerName, double startMoney)
         {
-            (_name, Money) = (customerName, startMoney);
+            (Name, Money) = (customerName, startMoney);
         }
 
-        public double Money { get; set; }
+        public double Money { get; private set; }
+        public string Name { get; }
 
-        public override string ToString() { return _name + " " + Money.ToString(".##"); }
+        public void SetMoney(double moneyl)
+        {
+            Money = moneyl;
+        }
+
+        public override string ToString() { return Name + " " + Money.ToString(".##"); }
     }
 }
