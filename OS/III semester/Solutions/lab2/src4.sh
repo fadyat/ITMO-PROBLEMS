@@ -1,5 +1,4 @@
 #!/bin/bash
-first=true
 for pid in $(ps -A -o pid=); do
  statusFile="/proc/$pid/status"
  schedFile="/proc/$pid/sched"
