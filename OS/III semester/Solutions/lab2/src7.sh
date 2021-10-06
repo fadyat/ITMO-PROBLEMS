@@ -4,10 +4,10 @@ for pid in $(ps -A -o pid=); do
  seconds=60
  if [[ $etime -le $seconds ]]; then
   io="/proc/$pid/io"
-  wrBytes=`grep -s "^write_bytes:" $io | awk '{ print $2 }'`
-  if [[ wrBytes != "" ]]; then
+  rdBytes=`grep -s "^read_bytes:" $io | awk '{ print $2 }'`
+  if [[ rdBytes != "" ]]; then
    cmd=`ps -p $pid -o cmd=`
-   echo $pid : $wrBytes : $cmd >> tmp
+   echo $pid : $rdBytes : $cmd >> tmp
   fi
  fi
 done
