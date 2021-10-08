@@ -18,9 +18,9 @@ namespace Shops.Classes
 
         public HashSet<Product> RegisteredProducts { get; private set; }
 
-        public uint Id { get; }
-
         public string Name { get; }
+
+        private uint Id { get; }
 
         public void RegisterProduct(string productName)
         {
