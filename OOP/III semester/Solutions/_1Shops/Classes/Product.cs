@@ -2,7 +2,10 @@ namespace Shops.Classes
 {
     public class Product
     {
-        public Product(string productName) { Name = productName; }
+        public Product(string productName)
+        {
+            Name = productName;
+        }
 
         public string Name { get; }
 

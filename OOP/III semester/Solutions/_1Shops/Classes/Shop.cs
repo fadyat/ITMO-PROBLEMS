@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Exceptions;
@@ -16,19 +15,32 @@ namespace Shops.Classes
         }
 
         public Dictionary<Product, ProductInfo> StoredProducts { get; private set; }
-        public HashSet<Product> RegisteredProducts { get; private set; }
-        public uint Id { get; }
-        private string Name { get; }
 
-        public void RegisterProduct(IEnumerable<string> productsName)
+        public HashSet<Product> RegisteredProducts { get; private set; }
+
+        public uint Id { get; }
+
+        public string Name { get; }
+
+        public void RegisterProduct(string productName)
         {
-            foreach (Product newProduct in productsName.Select(productName => new Product(productName)))
+            RegisterProduct(new List<string> { productName });
+        }
+
+        public void RegisterProduct(IEnumerable<string> productsNames)
+        {
+            foreach (Product newProduct in productsNames.Select(product => new Product(product)))
             {
                 if (RegisteredProducts.Contains(newProduct))
                     throw new ShopException($"Product {newProduct.Name} is already registered!");
 
                 RegisteredProducts = new HashSet<Product>(RegisteredProducts) { newProduct };
             }
+        }
+
+        public void AddProducts(Product product, ProductInfo productInfo)
+        {
+            AddProducts(new List<(Product, ProductInfo)> { (product, productInfo) });
         }
 
         public void AddProducts(List<(Product, ProductInfo)> products)
@@ -78,7 +90,7 @@ namespace Shops.Classes
             }
         }
 
-        public override string ToString() { return Name + " " + " " + Id; }
+        public override string ToString() { return Name + " " + Id; }
 
         public override int GetHashCode() { return Id.GetHashCode(); }
 

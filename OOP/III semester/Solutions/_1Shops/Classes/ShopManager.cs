@@ -24,11 +24,11 @@ namespace Shops.Classes
 
         public Shop CheapProductSearch(List<(Product, uint cheapCnt)> productsToBuyCheap)
         {
-            double lowestPrice = 1e9;
+            uint lowestPrice = (uint)1e9;
             Shop shopWithLowestPrice = null;
             foreach (Shop shop in _createdShops)
             {
-                double currentPrice = 0;
+                uint currentPrice = 0;
                 bool correctShop = true;
                 foreach ((Product product, uint cheapCnt) in productsToBuyCheap)
                 {

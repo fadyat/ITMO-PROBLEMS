@@ -14,25 +14,25 @@ namespace Shops
             shop1.RegisterProduct(new List<string> { "milk", "sweet", });
             var products1 = new List<(Product, ProductInfo)>
             {
-                (new Product("milk"), new ProductInfo(25, 19.99)),
+                (new Product("milk"), new ProductInfo(25, 1999)),
             };
             shop1.AddProducts(products1);
             var products2 = new List<(Product, ProductInfo)>
             {
-                (new Product("milk"), new ProductInfo(25, 40)),
-                (new Product("sweet"), new ProductInfo(4, 4)),
+                (new Product("milk"), new ProductInfo(25, 4000)),
+                (new Product("sweet"), new ProductInfo(4, 400)),
             };
             shop1.AddProducts(products2);
             Shop shop2 = shopManager.CreateShop("Diksi");
             shop2.RegisterProduct(new List<string> { "milk", "pancakes", "sweet", });
             var products3 = new List<(Product, ProductInfo)>
             {
-                (new Product("milk"), new ProductInfo(30, 30)),
-                (new Product("pancakes"), new ProductInfo(5, 100.33)),
-                (new Product("sweet"), new ProductInfo(200, 8)),
+                (new Product("milk"), new ProductInfo(30, 30 * 100)),
+                (new Product("pancakes"), new ProductInfo(5, 10033)),
+                (new Product("sweet"), new ProductInfo(200, 8 * 100)),
             };
             shop2.AddProducts(products3);
-            var sergo = new Customer("Sergo", 10000);
+            var sergo = new Customer("Sergo", 100000);
             var products4 = new List<(Product, uint cnt)>
             {
                 (new Product("milk"), 1),
