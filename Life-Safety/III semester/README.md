@@ -4,7 +4,7 @@
   <a href = "./basicPrinciples"> 1. </a> Basic principles
 </div>
 <div>
-  <a href = "./emergencySafety"> 2. </a> Emergancy safety
+  <a href = "./emergаncySafety"> 2. </a> Emergancy safety
 </div>
 <hr>
 <div>
