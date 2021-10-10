@@ -6,7 +6,7 @@
 #!/bin/bash
 for pid in $(ps -A -o pid=); do
  statusFile="/proc/$pid/status"
- ram=$((grep -s 'VmRSS' $statusFile) | awk '{ print $2 }')
+ ram=`(grep -s 'VmRSS' $statusFile) | awk '{ print $2 }'`
  if [[ $ram != "" ]]; then
   echo $pid $ram >> tmp
  fi
