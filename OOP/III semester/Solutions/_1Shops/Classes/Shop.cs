@@ -7,16 +7,17 @@ namespace Shops.Classes
 {
     public class Shop : IShop
     {
+        private Dictionary<Product, ProductInfo> _storedProducts;
+        private HashSet<Product> _registeredProducts;
         public Shop(uint shopId, string shopName)
         {
             (Id, Name) = (shopId, shopName);
-            StoredProducts = new Dictionary<Product, ProductInfo>();
-            RegisteredProducts = new HashSet<Product>();
+            _storedProducts = new Dictionary<Product, ProductInfo>();
+            _registeredProducts = new HashSet<Product>();
         }
 
-        public Dictionary<Product, ProductInfo> StoredProducts { get; private set; }
-
-        public HashSet<Product> RegisteredProducts { get; private set; }
+        public IReadOnlyDictionary<Product, ProductInfo> StoredProducts => _storedProducts;
+        public IEnumerable<Product> RegisteredProducts => _registeredProducts;
 
         public string Name { get; }
 
@@ -31,10 +32,10 @@ namespace Shops.Classes
         {
             foreach (Product newProduct in productsNames.Select(product => new Product(product)))
             {
-                if (RegisteredProducts.Contains(newProduct))
+                if (_registeredProducts.Contains(newProduct))
                     throw new ShopException($"Product {newProduct.Name} is already registered!");
 
-                RegisteredProducts = new HashSet<Product>(RegisteredProducts) { newProduct };
+                _registeredProducts = new HashSet<Product>(_registeredProducts) { newProduct };
             }
         }
 
@@ -47,15 +48,15 @@ namespace Shops.Classes
         {
             foreach ((Product product, ProductInfo productInfo) in products)
             {
-                if (!RegisteredProducts.Contains(product))
+                if (!_registeredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
                 var newProductInfo = new ProductInfo(productInfo.Cnt, productInfo.Price);
-                if (StoredProducts.ContainsKey(product))
+                if (_storedProducts.ContainsKey(product))
                     newProductInfo = new ProductInfo(StoredProducts[product].Cnt + productInfo.Cnt, productInfo.Price);
 
-                StoredProducts.Remove(product);
-                StoredProducts = new Dictionary<Product, ProductInfo>(StoredProducts) { { product, newProductInfo } };
+                _storedProducts.Remove(product);
+                _storedProducts = new Dictionary<Product, ProductInfo>(_storedProducts) { { product, newProductInfo } };
             }
         }
 
@@ -63,20 +64,20 @@ namespace Shops.Classes
         {
             foreach ((Product product, uint purchaseCnt) in productsToPurchase)
             {
-                if (!RegisteredProducts.Contains(product))
+                if (!_registeredProducts.Contains(product))
                     throw new ShopException($"Product {product.Name} hasn't been registered!");
 
-                if (!StoredProducts.ContainsKey(product))
+                if (!_storedProducts.ContainsKey(product))
                     throw new ShopException($"Product {product.Name} hasn't been added in the store! ");
 
-                if (StoredProducts[product].Cnt >= purchaseCnt)
+                if (_storedProducts[product].Cnt >= purchaseCnt)
                 {
-                    if (customer.Money >= StoredProducts[product].Price * purchaseCnt)
+                    if (customer.Money >= _storedProducts[product].Price * purchaseCnt)
                     {
-                        var productInfo = new ProductInfo(StoredProducts[product].Cnt - purchaseCnt, StoredProducts[product].Price);
-                        StoredProducts.Remove(product);
-                        StoredProducts = new Dictionary<Product, ProductInfo>(StoredProducts) { { product, productInfo } };
-                        customer = new Customer(customer.Name, customer.Money - (StoredProducts[product].Price * purchaseCnt));
+                        var productInfo = new ProductInfo(_storedProducts[product].Cnt - purchaseCnt, _storedProducts[product].Price);
+                        _storedProducts.Remove(product);
+                        _storedProducts = new Dictionary<Product, ProductInfo>(_storedProducts) { { product, productInfo } };
+                        customer = new Customer(customer.Name, customer.Money - (_storedProducts[product].Price * purchaseCnt));
                     }
                     else
                     {
