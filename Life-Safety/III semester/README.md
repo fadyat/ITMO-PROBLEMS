@@ -3,29 +3,40 @@
 <hr>
 
 <div>
-  <a href = "./basicPrinciples"> 1. </a> Basic principles
+  <a href = "./basicPrinciples"> 1. </a> #
+  Basic principles
 </div>
 
 <div>
-  <a href = "./emergancySafety"> 2. </a> Emergancy safety
+  <a href = "./emergancySafety"> 2. </a> #
+  <a href = "./emergancySafety/mySolution.pdf"> Emergancy safety </a>
 </div>
 
 <div>
-  <a href = "./healthySleep"> 3. </a> Healthy sleep
+  <a href = "./healthySleep"> 3. </a> #
+  <a href="./healthySleep/myResults.pdf"> Healthy sleep </a>
 </div>
 
 <div>
-  <a href = "./conflictFreeCommunication"> 4. </a> Conflict free communication
+  <a href = "./conflictFreeCommunication"> 4. </a> # 
+  Conflict free communication
 </div>
 
 <div>
-  <a href = "./travelSafety"> 5. </a> Travel safety
+  <a href = "./travelSafety"> 5. </a> #
+  <a href = "./travelSafety/myTrip.pdf"> Travel safety </a>
 </div>
 
 <div>
-  <a href = "./ecoFriendlyLifestyle"> 6. </a> Conscious consumption & eco-friendly lifestyle
+  <a href = "./ecoFriendlyLifestyle"> 6. </a> #
+  Conscious consumption & eco-friendly lifestyle
 </div>
 
 <div>
-   <a href = "./psychologicalSafety"> 7. </a> Psychological safety
+   <a href = "./psychologicalSafety"> 7. </a> #
+  Psychological safety
 </div>
+
+
+
+
