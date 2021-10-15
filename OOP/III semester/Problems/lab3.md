@@ -23,7 +23,7 @@
 - Повторяем, получаем стораджи *_2
 - Убираем из бекапной джобы FileC, запускаем джобу, получаем третий рестор поинт у которого есть два стораджа - FileA_3 FileB_3
 
-![](https://github.com/fadyat/ITMO-PROBLEMS/new/master/OOP/III%20semester/Data/backupsImage.png)
+![](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OOP/III%20semester/Data/backupsImage.png)
 
 ## Создание резервных копий
 
