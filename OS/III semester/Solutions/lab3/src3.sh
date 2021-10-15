@@ -1,5 +1,5 @@
 # use crontab [-l] for all crontab process from root
-# 	        [-r] for reset all root process
+# 	          [-r] for reset all root process
 #             [-e] for all started crontab processes
 
 #!/bin/bash
