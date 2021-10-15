@@ -1,7 +1,4 @@
-﻿using System;
-using Isu.Classes;
-
-namespace Isu
+﻿namespace Isu
 {
     internal static class Program
     {

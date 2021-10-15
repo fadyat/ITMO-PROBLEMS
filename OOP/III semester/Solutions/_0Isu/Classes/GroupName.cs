@@ -4,6 +4,24 @@ using Isu.Exceptions;
 
 namespace Isu.Classes
 {
+    /// <summary>
+    /// Correct CourseNumbers.
+    /// </summary>
+    public enum CorrectCourses : uint
+    {
+        /// <summary> First </summary>
+        First = 1,
+
+        /// <summary> Second </summary>
+        Second,
+
+        /// <summary> Third </summary>
+        Third,
+
+        /// <summary> Fours </summary>
+        Fours,
+    }
+
     public class GroupName
     {
         private readonly string _tag;
@@ -18,14 +36,6 @@ namespace Isu.Classes
                 throw new IsuException("Group number should have two digits!");
 
             (Course, _groupNumber, _tag) = (courseNumber, groupNumber, tag);
-        }
-
-        private enum CorrectCourses : uint
-        {
-            First = 1,
-            Second,
-            Third,
-            Fours,
         }
 
         public uint Course { get; }
