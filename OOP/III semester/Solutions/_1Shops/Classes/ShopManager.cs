@@ -59,7 +59,7 @@ namespace Shops.Classes
                 Console.WriteLine(" # " + shop);
                 Console.WriteLine(" - Registered products:");
                 foreach (Product product in shop.RegisteredProducts)
-                    Console.WriteLine($"\t * " + product);
+                    Console.WriteLine("\t * " + product);
                 Console.WriteLine(" - Stored products:");
                 foreach ((Product product, ProductInfo productInfo) in shop.StoredProducts)
                 {

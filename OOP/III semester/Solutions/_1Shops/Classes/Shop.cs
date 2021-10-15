@@ -86,7 +86,7 @@ namespace Shops.Classes
                 }
                 else
                 {
-                    throw new ShopException($"Not enough products need more!");
+                    throw new ShopException("Not enough products need more!");
                 }
             }
         }
