@@ -17,7 +17,7 @@ namespace Isu.Tests
             Group group = _isuService.AddGroup(new GroupName(1, "02"));
             Student alex = _isuService.AddStudent(group, "alex");
             Student tmpAlex = _isuService.FindStudent("alex");
-            if (tmpAlex == null || alex.Group != tmpAlex.Group)
+            if (tmpAlex == null || !Equals(alex.Group, tmpAlex.Group))
                 Assert.Fail();
         }
 
@@ -70,10 +70,10 @@ namespace Isu.Tests
                 _isuService.AddGroup(new GroupName(1, "02"));
 
                 Student alex = _isuService.AddStudent(new Group(new GroupName(1, "02")), "Alex");
-                if (!studentExist)
-                    alex = new Student("RandomNameOfStudent", 123123);
-
                 var newGroup = new Group(new GroupName(1, "03"));
+                if (!studentExist)
+                    alex = new Student("RandomNameOfStudent", 123123, newGroup);
+
                 if (newGroupExist)
                     _isuService.AddGroup(new GroupName(1, "03"));
 

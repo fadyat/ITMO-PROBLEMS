@@ -2,15 +2,24 @@ namespace Isu.Classes
 {
     public class Student
     {
-        private readonly string _name;
-        private readonly uint _id;
-        public Student(string studentName,  uint studentId)
-            { (_name, _id) = (studentName, studentId); }
+        public Student(string studentName, uint studentId, Group studentGroup)
+        {
+            (Name, Id, Group) = (studentName, studentId, studentGroup);
+        }
 
-        public uint Id => _id;
-        public string Name => _name;
-        public Group Group { get; set; }
+        public uint Id { get; }
+        public string Name { get; }
+        public Group Group { get; }
 
-        public override string ToString() { return Group + ": " + _name + " " + _id; }
+        public override int GetHashCode() { return Id.GetHashCode(); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj.GetType() != GetType()) return false;
+            var other = (Student)obj;
+            return other != null && Id == other.Id;
+        }
+
+        public override string ToString() { return Group + ": " + Name + " " + Id; }
     }
 }
