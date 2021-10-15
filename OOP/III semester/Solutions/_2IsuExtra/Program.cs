@@ -1,6 +1,9 @@
-﻿namespace IsuExtra
+﻿using System;
+using IsuExtra.Classes;
+
+namespace IsuExtra
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {
