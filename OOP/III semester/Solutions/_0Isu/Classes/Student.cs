@@ -2,9 +2,14 @@ namespace Isu.Classes
 {
     public class Student
     {
+        public Student(Student copyStudent, Group copyGroup)
+            : this(copyStudent.Name, copyStudent.Id, copyGroup) { }
+
         public Student(string studentName, uint studentId, Group studentGroup)
         {
-            (Name, Id, Group) = (studentName, studentId, studentGroup);
+            Name = studentName;
+            Id = studentId;
+            Group = studentGroup;
         }
 
         public uint Id { get; }

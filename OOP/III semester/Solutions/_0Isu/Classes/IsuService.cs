@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Isu.Exceptions;
 using Isu.Interfaces;
@@ -8,16 +9,19 @@ namespace Isu.Classes
 {
     public class IsuService : IIsuService
     {
-        private Dictionary<Group, uint> _registeredGroups;
-        private List<Student> _totalStudents;
-        private uint _spareId;
+        private ImmutableDictionary<Group, uint> _registeredGroups;
+        private ImmutableList<Student> _totalStudents;
+        private uint _sparedStudentId;
 
         public IsuService()
         {
-            _registeredGroups = new Dictionary<Group, uint>();
-            _totalStudents = new List<Student>();
-            _spareId = 100000;
+            _registeredGroups = ImmutableDictionary<Group, uint>.Empty;
+            _totalStudents = ImmutableList<Student>.Empty;
+            _sparedStudentId = 100000;
         }
+
+        protected IReadOnlyDictionary<Group, uint> RegisteredGroups => _registeredGroups;
+        protected IEnumerable<Student> TotalStudents => _totalStudents;
 
         public Group AddGroup(GroupName name)
         {
@@ -25,32 +29,23 @@ namespace Isu.Classes
             if (_registeredGroups.ContainsKey(newGroup))
                 throw new IsuException("Group is already exists!");
 
-            _registeredGroups = new Dictionary<Group, uint>(_registeredGroups)
-            {
-                { newGroup, 0 },
-            };
+            _registeredGroups = _registeredGroups.Add(newGroup, 0);
             return newGroup;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            var newStudent = new Student(name, _spareId++, group);
             if (!_registeredGroups.ContainsKey(group))
                 throw new IsuException("Can't find group for student!");
 
-            uint prevCapacity = _registeredGroups[group];
-            if (prevCapacity >= group.MaxCapacity)
+            if (_registeredGroups[group] >= group.MaxCapacity)
                 throw new IsuException("Can't add student, full group!");
 
-            _registeredGroups.Remove(group);
-            _registeredGroups = new Dictionary<Group, uint>(_registeredGroups)
-            {
-                { group, ++prevCapacity },
-            };
-            _totalStudents = new List<Student>(_totalStudents)
-            {
-                newStudent,
-            };
+            var newStudent = new Student(name, _sparedStudentId++, group);
+            uint newCapacity = _registeredGroups[group] + 1;
+            _registeredGroups = _registeredGroups.Remove(group);
+            _registeredGroups = _registeredGroups.Add(group, newCapacity);
+            _totalStudents = _totalStudents.Add(newStudent);
             return newStudent;
         }
 
@@ -64,17 +59,20 @@ namespace Isu.Classes
 
         public Student FindStudent(string name)
         {
-            return _totalStudents.FirstOrDefault(student => Equals(student.Name, name));
+            return _totalStudents.FirstOrDefault(student =>
+                Equals(student.Name, name));
         }
 
         public List<Student> FindStudents(GroupName groupName)
         {
-            return _totalStudents.Where(student => Equals(student.Group.Name, groupName)).ToList();
+            return _totalStudents.Where(student =>
+                Equals(student.Group.Name, groupName)).ToList();
         }
 
         public List<Student> FindStudents(uint courseNumber)
         {
-            return _totalStudents.Where(student => Equals(student.Group.Name.Course, courseNumber)).ToList();
+            return _totalStudents.Where(student =>
+                Equals(student.Group.Name.Course, courseNumber)).ToList();
         }
 
         public Group FindGroup(GroupName groupName)
@@ -91,6 +89,25 @@ namespace Isu.Classes
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
+            ChangeStudentGroupCheck(student, newGroup);
+            _totalStudents = _totalStudents.Remove(student);
+            _totalStudents = _totalStudents.Add(new Student(student, newGroup));
+            uint newCapacity = _registeredGroups[newGroup] + 1;
+            uint prevCapacity = _registeredGroups[student.Group] - 1;
+            _registeredGroups = _registeredGroups.Remove(student.Group);
+            _registeredGroups = _registeredGroups.Add(student.Group, prevCapacity);
+            _registeredGroups = _registeredGroups.Remove(newGroup);
+            _registeredGroups = _registeredGroups.Add(newGroup, newCapacity);
+        }
+
+        public override string ToString()
+        {
+            return _totalStudents.Aggregate(string.Empty, (current, student) =>
+                current + (student.ToString() + '\n'));
+        }
+
+        private void ChangeStudentGroupCheck(Student student, Group newGroup)
+        {
             if (!_totalStudents.Contains(student))
                 throw new IsuException("This student doesn't exist!");
 
@@ -105,27 +122,6 @@ namespace Isu.Classes
 
             if (_registeredGroups[newGroup] >= newGroup.MaxCapacity)
                 throw new IsuException("Can't add student, to new full group!");
-
-            _totalStudents.Remove(student);
-            _totalStudents = new List<Student>(_totalStudents)
-            {
-                new Student(student.Name, student.Id, new Group(newGroup.Name)),
-            };
-            uint newCapacity = _registeredGroups[newGroup] + 1;
-            uint prevCapacity = Math.Max(_registeredGroups[student.Group] - 1, 0);
-            _registeredGroups.Remove(student.Group);
-            _registeredGroups.Remove(newGroup);
-            _registeredGroups = new Dictionary<Group, uint>(_registeredGroups)
-            {
-                { student.Group, prevCapacity },
-                { newGroup, newCapacity },
-            };
-        }
-
-        public override string ToString()
-        {
-            return _totalStudents.Aggregate(string.Empty, (current, student) =>
-                current + (student.ToString() + '\n'));
         }
     }
 }

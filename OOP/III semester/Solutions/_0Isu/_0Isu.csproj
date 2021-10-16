@@ -6,6 +6,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <RootNamespace>Isu</RootNamespace>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
