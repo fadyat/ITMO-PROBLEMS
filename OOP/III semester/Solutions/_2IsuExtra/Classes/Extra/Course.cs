@@ -2,14 +2,14 @@ namespace IsuExtra.Classes.Extra
 {
     public class Course
     {
-        public Course(string tagFaculty, Lesson info, uint maxCapacity = 30)
+        public Course(string facultyTag, Lesson info, uint maxCapacity = 30)
         {
-            TagFaculty = tagFaculty;
+            FacultyTag = facultyTag;
             Info = info;
             MaxCapacity = maxCapacity;
         }
 
-        public string TagFaculty { get; }
+        public string FacultyTag { get; }
         public Lesson Info { get; }
         public uint MaxCapacity { get; }
     }

@@ -8,10 +8,10 @@ namespace IsuExtra.Classes.Extra
 
         public Faculty(string tagFaculty, List<Lesson> facultySchedule)
         {
-            TagFaculty = tagFaculty;
+            Tag = tagFaculty;
             _schedule = facultySchedule;
         }
 
-        public string TagFaculty { get; }
+        public string Tag { get; }
     }
 }

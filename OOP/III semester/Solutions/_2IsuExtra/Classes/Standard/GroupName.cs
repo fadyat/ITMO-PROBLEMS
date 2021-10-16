@@ -24,7 +24,7 @@ namespace IsuExtra.Classes.Standard
     {
         private readonly string _groupNumber;
 
-        public GroupName(uint courseNumber, string groupNumber, string tagFaculty = "M3")
+        public GroupName(uint courseNumber, string groupNumber, string facultyTag = "M3")
         {
             if (!Enum.IsDefined(typeof(CorrectCourses), courseNumber))
                 throw new IsuException("Wrong course number format!");
@@ -32,15 +32,15 @@ namespace IsuExtra.Classes.Standard
             if (groupNumber.Length != 2 || groupNumber.Any(symbol => symbol is < '0' or > '9'))
                 throw new IsuException("Group number should have two digits!");
 
-            if (tagFaculty.First() is < 'A' or > 'Z')
+            if (facultyTag.First() is < 'A' or > 'Z')
                 throw new IsuException("Faculty tag should begin with letter!");
 
-            (Course, _groupNumber, TagFaculty) = (courseNumber, groupNumber, tagFaculty);
+            (Course, _groupNumber, FacultyTag) = (courseNumber, groupNumber, facultyTag);
         }
 
         public uint Course { get; }
 
-        public string TagFaculty { get; }
+        public string FacultyTag { get; }
 
         public override int GetHashCode() { return HashCode.Combine(Course, _groupNumber); }
 
@@ -49,9 +49,9 @@ namespace IsuExtra.Classes.Standard
             if (obj != null && obj.GetType() != GetType()) return false;
             var other = (GroupName)obj;
             return other != null && Course == other.Course &&
-                   _groupNumber == other._groupNumber && TagFaculty == other.TagFaculty;
+                   _groupNumber == other._groupNumber && FacultyTag == other.FacultyTag;
         }
 
-        public override string ToString() { return TagFaculty + Course + _groupNumber; }
+        public override string ToString() { return FacultyTag + Course + _groupNumber; }
     }
 }
