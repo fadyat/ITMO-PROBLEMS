@@ -1,7 +1,4 @@
-﻿using System;
-using IsuExtra.Classes;
-
-namespace IsuExtra
+﻿namespace IsuExtra
 {
     internal static class Program
     {
