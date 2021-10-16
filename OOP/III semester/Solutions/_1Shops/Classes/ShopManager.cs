@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Shops.Interfaces;
 
@@ -7,19 +8,19 @@ namespace Shops.Classes
 {
     public class ShopManager : IShopManager
     {
-        private HashSet<Shop> _createdShops;
+        private ImmutableHashSet<Shop> _createdShops;
         private uint _spareId;
 
         public ShopManager()
         {
-            _createdShops = new HashSet<Shop>();
+            _createdShops = ImmutableHashSet<Shop>.Empty;
             _spareId = 100000;
         }
 
         public Shop CreateShop(string shopName)
         {
             var newShop = new Shop(_spareId++, shopName);
-            _createdShops = new HashSet<Shop>(_createdShops) { newShop };
+            _createdShops = _createdShops.Add(newShop);
             return newShop;
         }
 
