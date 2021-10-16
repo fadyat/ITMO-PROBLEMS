@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
-using IsuExtra.Classes.Standard;
+using IsuExtra.Classes.Inherited;
+using IsuExtra.Classes.New;
 
 namespace IsuExtra.Interfaces
 {
-    public interface IIsuService
+    public interface IIsuService : Isu.Interfaces.IIsuService
     {
-        Group AddGroup(GroupName name);
-        Student AddStudent(Group group, string name);
-        Student GetStudent(uint id);
-        Student FindStudent(string name);
-        List<Student> FindStudents(GroupName groupName);
-        List<Student> FindStudents(uint courseNumber);
-        Group FindGroup(GroupName groupName);
-        List<Group> FindGroups(uint courseNumber);
-        void ChangeStudentGroup(Student student, Group newGroup);
+        Course AddCourse(string facultyTag, Lesson courseInfo, uint maxCapacity = 30);
+        Faculty AddFaculty(string facultyTag, IEnumerable<Lesson> schedule);
+        void SubscribeCourse(Student student, Course subCourse);
+        void UnsubscribeCourse(Student student, Course unsubCourse);
     }
 }
