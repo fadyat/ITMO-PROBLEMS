@@ -22,5 +22,10 @@ namespace IsuExtra.Classes.New
         }
 
         public override int GetHashCode() { return FacultyTag.GetHashCode(); }
+
+        public override string ToString()
+        {
+            return FacultyTag + " " + Info + " " + MaxCapacity;
+        }
     }
 }

@@ -12,10 +12,10 @@ namespace IsuExtra.Classes.New
             Auditory = auditory;
         }
 
-        public string Name { get; }
         public TimeInterval DTime { get; }
-        public string Teacher { get; }
-        public uint Auditory { get; }
+        private string Name { get; }
+        private string Teacher { get; }
+        private uint Auditory { get; }
 
         public bool CrossingTime(Lesson other)
         {
@@ -44,5 +44,10 @@ namespace IsuExtra.Classes.New
         }
 
         public override int GetHashCode() { return HashCode.Combine(Name, DTime); }
+
+        public override string ToString()
+        {
+            return Name + " " + DTime + " " + Teacher + " " + Auditory;
+        }
     }
 }

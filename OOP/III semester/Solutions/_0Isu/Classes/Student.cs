@@ -15,6 +15,7 @@ namespace Isu.Classes
         public uint Id { get; }
         public string Name { get; }
         public Group Group { get; }
+        public string FacultyTag => Group.Name.FacultyTag;
 
         public override int GetHashCode() { return Id.GetHashCode(); }
 

@@ -66,5 +66,10 @@ namespace IsuExtra.Classes.New
         }
 
         public override int GetHashCode() { return HashCode.Combine(Start, End, DayOfWeek); }
+
+        public override string ToString()
+        {
+            return DayOfWeek + " " + Start.ToString("H:mm") + " " + End.ToString("H:mm");
+        }
     }
 }

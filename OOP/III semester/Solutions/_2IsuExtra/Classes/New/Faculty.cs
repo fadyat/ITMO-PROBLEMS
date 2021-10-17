@@ -1,35 +1,50 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Isu.Classes;
 
 namespace IsuExtra.Classes.New
 {
     public class Faculty
     {
-        public Faculty(string tagFaculty, ImmutableList<Lesson> facultySchedule)
+        public Faculty(string tagFaculty)
+        : this(tagFaculty, ImmutableDictionary<Group, ImmutableList<Lesson>>.Empty) { }
+
+        public Faculty(string tagFaculty, Dictionary<Group, List<Lesson>> flow)
         {
             Tag = tagFaculty;
-            Schedule = facultySchedule;
+            Flows = ImmutableDictionary<Group, ImmutableList<Lesson>>.Empty;
+            foreach ((Group grp, List<Lesson> schedule) in flow)
+            {
+                Flows = Flows.Add(grp, schedule.ToImmutableList());
+            }
+        }
+
+        public Faculty(string tagFaculty, ImmutableDictionary<Group, ImmutableList<Lesson>> flow)
+        {
+            Tag = tagFaculty;
+            Flows = flow;
         }
 
         public string Tag { get; }
 
-        public ImmutableList<Lesson> Schedule { get; }
+        public ImmutableDictionary<Group, ImmutableList<Lesson>> Flows { get; }
 
-        public bool CrossingSchedule(Lesson pickedCourse)
+        public bool CrossingSchedule(Group group, Lesson pickedCourse)
         {
-            return Schedule.Any(lesson => lesson.CrossingTime(pickedCourse));
+            return Flows[group].Any(lesson => lesson.CrossingTime(pickedCourse));
         }
 
-        public bool CrossingTeacher(Lesson pickedCourse)
+        public bool CrossingTeacher(Group group, Lesson pickedCourse)
         {
-            return Schedule.Any(lesson => lesson.CrossingTime(pickedCourse) &&
-                                          lesson.CrossingTeacher(pickedCourse));
+            return Flows[group].Any(lesson => lesson.CrossingTime(pickedCourse) &&
+                                             lesson.CrossingTeacher(pickedCourse));
         }
 
-        public bool CrossingAuditory(Lesson pickedCourse)
+        public bool CrossingAuditory(Group group, Lesson pickedCourse)
         {
-            return Schedule.Any(lesson => lesson.CrossingTime(pickedCourse) &&
-                                          lesson.CrossingAuditory(pickedCourse));
+            return Flows[group].Any(lesson => lesson.CrossingTime(pickedCourse) &&
+                                             lesson.CrossingAuditory(pickedCourse));
         }
 
         public override bool Equals(object obj)
@@ -40,5 +55,18 @@ namespace IsuExtra.Classes.New
         }
 
         public override int GetHashCode() { return Tag.GetHashCode(); }
+
+        public override string ToString()
+        {
+            string list = string.Empty;
+            foreach ((Group group, ImmutableList<Lesson> lessons) in Flows)
+            {
+                list += "*" + group;
+                list = lessons.Aggregate(list, (current, lesson) => current + (lesson + " "));
+                list += '\n';
+            }
+
+            return Tag + "\n" + list;
+        }
     }
 }
