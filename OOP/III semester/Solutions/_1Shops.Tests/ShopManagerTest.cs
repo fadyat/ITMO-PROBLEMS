@@ -107,7 +107,7 @@ namespace Shops.Tests
                 "shop1",
                 new Customer.CustomerBuilder()
                     .WithName("customer1")
-                    .WithMoney(10000)
+                    .WithMoney(20000)
                     .Build(),
                 new List<string> { "apple", "banana", "pineapple" },
                 new List<int> { 1, 3 },

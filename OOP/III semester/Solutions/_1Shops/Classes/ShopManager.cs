@@ -73,7 +73,7 @@ namespace Shops.Classes
 
         public uint PurchaseProducts(ref Customer customer, Shop shop, List<Product> productToPurchase, List<uint> quantities)
         {
-            if (_registeredShops.Contains(shop))
+            if (!_registeredShops.Contains(shop))
                 throw new ShopException("This shop hasn't been registered!");
 
             uint prevMoney = customer.Money;
