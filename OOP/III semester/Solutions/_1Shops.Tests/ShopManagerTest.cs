@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Shops.Classes;
 using Shops.Exceptions;
@@ -15,38 +17,19 @@ namespace Shops.Tests
         {
             _shopManager = new ShopManager();
         }
-        
-        private static readonly object[] RegisterData = 
-        {
-            new object[] {new List<string> {"apple","apple"}},
-            
-            new object[] {new List<string> {"pineapple", "pineapple"}}
-        };
-        
-        [TestCaseSource(nameof(RegisterData))]
-        public void RegisterEqualProducts_ThrowException(List<string> products)
-        {
-            Assert.Catch<ShopException>(() =>
-            {
-                Shop shop1 = _shopManager.CreateShop("Lenta");
-                shop1.RegisterProduct(products);
-            });
-        }
 
         private static readonly object[] AddData = 
         {
             new object[] {"apple", new List<ProductInfo>
             {
-                new ProductInfo(2, 1000),
-                new ProductInfo(4, 1500),
-                new ProductInfo(7, 2000)
-            }},
-            
-            new object[] {"cake", new List<ProductInfo>
-            {
-                new ProductInfo(6, 3000),
-                new ProductInfo(4, 5000),
-                new ProductInfo(20, 2500)
+                new ProductInfo.ProductInfoBuilder()
+                    .WithQuantity(2)
+                    .WithPrice(1000)
+                    .Build(),
+                new ProductInfo.ProductInfoBuilder()
+                    .WithQuantity(40)
+                    .WithPrice(2000)
+                    .Build(),
             }}
         };
 
@@ -54,18 +37,18 @@ namespace Shops.Tests
         public void AddingEqualsProductsToTheShop(string productName, List<ProductInfo> info)
         {
             Shop shop1 = _shopManager.CreateShop("Lenta");
-            shop1.RegisterProduct(productName);
+            List<Product> registeredProducts = _shopManager.RegisterProduct(productName);
+            Product myProduct = registeredProducts[0];
             uint totalCnt = 0;
             uint lastPrice = 0;
             foreach (ProductInfo newInfo in info)
             {
-                shop1.AddProducts(new Product(productName), newInfo);
-                totalCnt += newInfo.Cnt;
+                _shopManager.AddProduct(shop1, myProduct, newInfo);
+                totalCnt += newInfo.Quantity;
                 lastPrice = newInfo.Price;
             }
-            var product = new Product(productName);
-            Assert.AreEqual(totalCnt, shop1.StoredProducts[product].Cnt);
-            Assert.AreEqual(lastPrice, shop1.StoredProducts[product].Price);
+            Assert.AreEqual(totalCnt, shop1.StoredProducts.GetProductInfo(myProduct).Quantity);
+            Assert.AreEqual(lastPrice, shop1.StoredProducts.GetProductInfo(myProduct).Price);
         }
 
         private static readonly object[] CheapData =
@@ -136,10 +119,9 @@ namespace Shops.Tests
         };
         
         [TestCaseSource(nameof(CheapData))]
-        public void CheapestShopFinding(List<(string, Dictionary<Product, ProductInfo>)> shopsInfo, 
-            List<(Product, uint cheapCnt)> productsToBuyCheap) 
+        public void CheapestShopFinding(List<(string, List<(string, List<ProductInfo>)>)> shopsWithProductsToRegister, 
+            List<(Product, uint quantities)> productsToBuyCheap)
         {
-            /* in tests shop0 is always cheapest */
             foreach ((string shopName, Dictionary<Product, ProductInfo> products) in shopsInfo)
             {
                 Shop shop = _shopManager.CreateShop(shopName);
@@ -156,53 +138,53 @@ namespace Shops.Tests
         private static readonly object[] PurchaseData =
         {
             new object[] {
-                new Customer("customer0", 100000),
-                new Dictionary<Product, ProductInfo> {
-                    {new Product("milk"), new ProductInfo(12, 4000)},
-                    {new Product("cake"), new ProductInfo(30, 3000)}
+                "shop1",
+                new Customer.CustomerBuilder()
+                    .WithName("customer1")
+                    .WithMoney(10000)
+                    .Build(),
+                new List<string> { "apple", "banana", "pineapple" },
+                new List<int> { 1, 3 },
+                new List<ProductInfo>
+                {
+                    new ProductInfo.ProductInfoBuilder()
+                        .WithQuantity(10)
+                        .WithPrice(1000)
+                        .Build(),
+                    new ProductInfo.ProductInfoBuilder()
+                        .WithQuantity(20)
+                        .WithPrice(2000)
+                        .Build()
                 },
-                new List<(Product, uint purchaseCnt)> {
-                    (new Product("milk"), 10),
-                    (new Product("cake"), 15)
-                }
-            },
-            
-            new object[] {
-                new Customer("customer1", 500000),
-                new Dictionary<Product, ProductInfo> {
-                    {new Product("milk"), new ProductInfo(40, 4100)}
-                },
-                new List<(Product, uint purchaseCnt)> {
-                    (new Product("milk"), 20)
-                }
+                new List<uint> { 7, 15 }
             }
         };
         
         [TestCaseSource(nameof(PurchaseData))]
-        public void PurchaseProduct(Customer customer, Dictionary<Product, ProductInfo> products,
-            List<(Product, uint purchaseCnt)> productsToPurchase)
+        public void PurchaseProduct(string shopName, Customer customer,
+            List<string> productsToRegister, List<int> whichProductsPick,
+            List<ProductInfo> hisProductsInfo, List<uint> hisQuantities)
         {
-            Shop shop = _shopManager.CreateShop("shop0");
-            var prevCnt = new Dictionary<Product, uint>();
-            foreach ((Product product,  ProductInfo productInfo) in products)
-            {
-                shop.RegisterProduct(product.Name);
-                shop.AddProducts(product, productInfo);
-                prevCnt.Add(product, productInfo.Cnt);
-            }
-            uint lostMoney = 0;
-            foreach ((Product product, uint purchaseCnt) in productsToPurchase)
-            {
-                lostMoney += products[product].Price * purchaseCnt;
-            }
-
+            Shop shop = _shopManager.CreateShop(shopName);
+            List<Product> registerProducts = _shopManager.RegisterProducts(productsToRegister);
+            var pickedProducts = registerProducts
+                .Where((t, i) => whichProductsPick.Contains(i + 1))
+                .ToList();
+            
+            StoredProducts previousStored = _shopManager.AddProducts(shop, pickedProducts, hisProductsInfo);
             uint prevMoney = customer.Money;
-            shop.PurchaseProduct(ref customer, productsToPurchase);
-            Assert.AreEqual(lostMoney, prevMoney - customer.Money);
-            foreach ((Product product, uint purchaseCnt) in productsToPurchase)
+            uint spentMoney = _shopManager.PurchaseProducts(ref customer, shop, pickedProducts, hisQuantities);
+            
+            Assert.AreEqual(spentMoney, prevMoney - customer.Money);
+
+            for (int i = 0; i < hisProductsInfo.Count; i++)
             {
-                Assert.AreEqual(purchaseCnt, prevCnt[product] - shop.StoredProducts[product].Cnt);
+                hisProductsInfo[i] = hisProductsInfo[i].ToBuilder()
+                    .WithQuantity(hisQuantities[i])
+                    .Build();
             }
+            _shopManager.AddProducts(shop, pickedProducts, hisProductsInfo);
+            Assert.AreEqual(previousStored, shop.StoredProducts);
         }
     }
 }

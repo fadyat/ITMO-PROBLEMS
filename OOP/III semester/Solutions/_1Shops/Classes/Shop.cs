@@ -1,98 +1,27 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using Shops.Exceptions;
-using Shops.Interfaces;
 
 namespace Shops.Classes
 {
-    public class Shop : IShop
+    public class Shop
     {
-        private ImmutableDictionary<Product, ProductInfo> _storedProducts;
-        private ImmutableHashSet<Product> _registeredProducts;
-        public Shop(uint shopId, string shopName)
+        private Shop() { }
+        private Shop(uint shopId, string shopName, StoredProducts storedProducts)
         {
             (Id, Name) = (shopId, shopName);
-            _storedProducts = ImmutableDictionary<Product, ProductInfo>.Empty;
-            _registeredProducts = ImmutableHashSet<Product>.Empty;
+            StoredProducts = storedProducts;
         }
 
-        public IReadOnlyDictionary<Product, ProductInfo> StoredProducts => _storedProducts;
-        public IEnumerable<Product> RegisteredProducts => _registeredProducts;
+        public StoredProducts StoredProducts { get; }
 
         public string Name { get; }
 
-        private uint Id { get; }
+        public uint Id { get; }
 
-        public void RegisterProduct(string productName)
+        public override string ToString()
         {
-            RegisterProduct(new List<string> { productName });
+            return " \t # " + Name + " " + Id + '\n' + StoredProducts;
         }
-
-        public void RegisterProduct(IEnumerable<string> productsNames)
-        {
-            foreach (Product newProduct in productsNames.Select(product => new Product(product)))
-            {
-                if (_registeredProducts.Contains(newProduct))
-                    throw new ShopException($"Product {newProduct.Name} is already registered!");
-
-                _registeredProducts = _registeredProducts.Add(newProduct);
-            }
-        }
-
-        public void AddProducts(Product product, ProductInfo productInfo)
-        {
-            AddProducts(new List<(Product, ProductInfo)> { (product, productInfo) });
-        }
-
-        public void AddProducts(List<(Product, ProductInfo)> products)
-        {
-            foreach ((Product product, ProductInfo productInfo) in products)
-            {
-                if (!_registeredProducts.Contains(product))
-                    throw new ShopException($"Product {product.Name} hasn't been registered!");
-
-                var newProductInfo = new ProductInfo(productInfo.Cnt, productInfo.Price);
-                if (_storedProducts.ContainsKey(product))
-                    newProductInfo = new ProductInfo(StoredProducts[product].Cnt + productInfo.Cnt, productInfo.Price);
-
-                _storedProducts = _storedProducts.Remove(product);
-                _storedProducts = _storedProducts.Add(product, newProductInfo);
-            }
-        }
-
-        public void PurchaseProduct(ref Customer customer, List<(Product, uint purchaseCnt)> productsToPurchase)
-        {
-            foreach ((Product product, uint purchaseCnt) in productsToPurchase)
-            {
-                if (!_registeredProducts.Contains(product))
-                    throw new ShopException($"Product {product.Name} hasn't been registered!");
-
-                if (!_storedProducts.ContainsKey(product))
-                    throw new ShopException($"Product {product.Name} hasn't been added in the store! ");
-
-                if (_storedProducts[product].Cnt >= purchaseCnt)
-                {
-                    if (customer.Money >= _storedProducts[product].Price * purchaseCnt)
-                    {
-                        var productInfo = new ProductInfo(_storedProducts[product].Cnt - purchaseCnt, _storedProducts[product].Price);
-                        _storedProducts = _storedProducts.Remove(product);
-                        _storedProducts = _storedProducts.Add(product, productInfo);
-                        customer = new Customer(customer.Name, customer.Money - (_storedProducts[product].Price * purchaseCnt));
-                    }
-                    else
-                    {
-                        throw new ShopException("Not enough money need more!");
-                    }
-                }
-                else
-                {
-                    throw new ShopException("Not enough products need more!");
-                }
-            }
-        }
-
-        public override string ToString() { return Name + " " + Id; }
 
         public override int GetHashCode() { return Id.GetHashCode(); }
 
@@ -100,7 +29,82 @@ namespace Shops.Classes
         {
             if (obj != null && obj.GetType() != GetType()) return false;
             var other = (Shop)obj;
-            return other != null && Id == other.Id;
+            return other != null && Equals(Id, other.Id);
+        }
+
+        public ShopBuilder ToBuilder()
+        {
+            ShopBuilder shopBuilder = new ();
+            shopBuilder.WithId(Id);
+            shopBuilder.WithName(Name);
+            shopBuilder.WithProducts(StoredProducts);
+            return shopBuilder;
+        }
+
+        public class ShopBuilder
+        {
+            private StoredProducts _products;
+            private uint _id;
+            private string _name;
+
+            public ShopBuilder()
+            {
+                _products = new StoredProducts.StoredProductsBuilder()
+                    .Build();
+            }
+
+            public ShopBuilder WithProducts(StoredProducts storedProducts)
+            {
+                _products = storedProducts;
+                return this;
+            }
+
+            public ShopBuilder WithId(uint shopId)
+            {
+                _id = shopId;
+                return this;
+            }
+
+            public ShopBuilder WithName(string shopName)
+            {
+                _name = shopName;
+                return this;
+            }
+
+            public ShopBuilder AddProduct(Product productToAdd, ProductInfo productInfo)
+            {
+                _products = _products.ToBuilder()
+                    .AddProduct(productToAdd, productInfo)
+                    .Build();
+                return this;
+            }
+
+            public ShopBuilder AddProducts(List<Product> products, List<ProductInfo> productInfos)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    _products = _products.ToBuilder()
+                        .AddProduct(products[i], productInfos[i])
+                        .Build();
+                }
+
+                return this;
+            }
+
+            public ShopBuilder PurchaseProduct(Product productToPurchase, uint quantity)
+            {
+                _products = _products.ToBuilder()
+                    .PurchaseProduct(productToPurchase, quantity)
+                    .Build();
+
+                return this;
+            }
+
+            public Shop Build()
+            {
+                Shop finallyShop = new (_id, _name, _products);
+                return finallyShop;
+            }
         }
     }
 }
