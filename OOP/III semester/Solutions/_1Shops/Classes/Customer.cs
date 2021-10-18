@@ -1,8 +1,9 @@
+using Shops.Exceptions;
+
 namespace Shops.Classes
 {
     public class Customer
     {
-        private Customer() { }
         private Customer(string customerName, uint startMoney)
         {
             Name = customerName;
@@ -19,9 +20,10 @@ namespace Shops.Classes
 
         public CustomerBuilder ToBuilder()
         {
-            CustomerBuilder customerBuilder = new ();
-            customerBuilder.WithName(Name);
-            customerBuilder.WithMoney(Money);
+            CustomerBuilder customerBuilder = new CustomerBuilder()
+                .WithName(Name)
+                .WithMoney(Money);
+
             return customerBuilder;
         }
 
@@ -50,6 +52,9 @@ namespace Shops.Classes
                     .Build();
 
                 uint spendingMoney = (previousInfo.Quantity - quantity) * previousInfo.Price;
+                if (_money < spendingMoney)
+                    throw new ShopException("Not enough money!");
+
                 _money -= spendingMoney;
                 return this;
             }

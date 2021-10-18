@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Shops.Exceptions;
 
 namespace Shops.Classes
 {
@@ -6,10 +7,36 @@ namespace Shops.Classes
     {
         private readonly Dictionary<Product, ProductInfo> _storedProducts;
 
-        private StoredProducts() { }
+        public StoredProducts()
+        {
+            _storedProducts = new Dictionary<Product, ProductInfo>();
+        }
+
         private StoredProducts(Dictionary<Product, ProductInfo> products)
         {
             _storedProducts = products;
+        }
+
+        public StoredProductsBuilder ToBuilder()
+        {
+            StoredProductsBuilder newBuilder = new StoredProductsBuilder()
+                .WithStoredProducts(_storedProducts);
+
+            return newBuilder;
+        }
+
+        public int FakeBuy(Product productToBuy, uint quantity)
+        {
+            if (_storedProducts[productToBuy].Quantity < quantity)
+                return -1;
+
+            int fakeSpendingMoney = (int)(quantity * _storedProducts[productToBuy].Price);
+            return fakeSpendingMoney;
+        }
+
+        public ProductInfo GetProductInfo(Product product)
+        {
+            return _storedProducts[product];
         }
 
         public override string ToString()
@@ -33,28 +60,6 @@ namespace Shops.Classes
             return other != null && Equals(_storedProducts, other._storedProducts);
         }
 
-        public ProductInfo GetProductInfo(Product product)
-        {
-            return _storedProducts[product];
-        }
-
-        public StoredProductsBuilder ToBuilder()
-        {
-            StoredProductsBuilder newBuilder = new StoredProductsBuilder()
-                .WithStoredProducts(_storedProducts);
-
-            return newBuilder;
-        }
-
-        public int FakeBuy(Product productToBuy, uint quantity)
-        {
-            if (_storedProducts[productToBuy].Quantity < quantity)
-                return -1;
-
-            int fakeSpendingMoney = (int)(quantity * _storedProducts[productToBuy].Price);
-            return fakeSpendingMoney;
-        }
-
         public class StoredProductsBuilder
         {
             private Dictionary<Product, ProductInfo> _products;
@@ -62,6 +67,12 @@ namespace Shops.Classes
             public StoredProductsBuilder()
             {
                 _products = new Dictionary<Product, ProductInfo>();
+            }
+
+            public StoredProductsBuilder WithStoredProducts(Dictionary<Product, ProductInfo> products)
+            {
+                _products = products;
+                return this;
             }
 
             public StoredProductsBuilder AddProduct(Product product, ProductInfo productInfo)
@@ -80,15 +91,12 @@ namespace Shops.Classes
                 return this;
             }
 
-            public StoredProductsBuilder WithStoredProducts(Dictionary<Product, ProductInfo> products)
-            {
-                _products = products;
-                return this;
-            }
-
             public StoredProductsBuilder PurchaseProduct(Product product, uint quantity)
             {
                 uint previousQuantity = _products[product].Quantity;
+                if (previousQuantity < quantity)
+                    throw new ShopException("Not enough products!");
+
                 ProductInfo newProductInfo = _products[product].ToBuilder()
                     .WithQuantity(previousQuantity - quantity)
                     .Build();

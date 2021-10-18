@@ -1,20 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Shops.Exceptions;
+using Shops.Interfaces;
 
 namespace Shops.Classes
 {
-    public class ShopManager
+    public class ShopManager : IShopManager
     {
-        private List<Shop> _totalCreatedShops;
-        private List<Product> _totalRegisteredProducts;
+        private readonly List<Shop> _registeredShops;
+        private List<Product> _registeredProducts;
         private uint _issuedShopId;
         private uint _issuedProductId;
 
         public ShopManager()
         {
-            _totalCreatedShops = new List<Shop>();
-            _totalRegisteredProducts = new List<Product>();
+            _registeredShops = new List<Shop>();
+            _registeredProducts = new List<Product>();
             _issuedShopId = 100000;
             _issuedProductId = 100000;
         }
@@ -26,13 +28,14 @@ namespace Shops.Classes
                 .WithId(_issuedShopId++)
                 .Build();
 
-            _totalCreatedShops.Add(newShop); // ???
+            _registeredShops.Add(newShop); // ???
             return newShop;
         }
 
-        public List<Product> RegisterProduct(string productNameForRegistration)
+        public Product RegisterProduct(string productNameForRegistration)
         {
-            return RegisterProducts(new List<string> { productNameForRegistration });
+            List<Product> registered = RegisterProducts(new List<string> { productNameForRegistration });
+            return registered[0];
         }
 
         public List<Product> RegisterProducts(IEnumerable<string> productNamesForRegistration)
@@ -44,7 +47,7 @@ namespace Shops.Classes
                         .Build())
                     .ToList();
 
-            _totalRegisteredProducts = _totalRegisteredProducts.Concat(registeredProducts).ToList(); // ???
+            _registeredProducts = _registeredProducts.Concat(registeredProducts).ToList(); // ???
             return registeredProducts;
         }
 
@@ -57,6 +60,9 @@ namespace Shops.Classes
         {
             for (int i = 0; i < productToAdd.Count; i++)
             {
+                if (!_registeredProducts.Contains(productToAdd[i]))
+                    throw new ShopException("This product hasn't been registered!");
+
                 shop = shop.ToBuilder()
                     .AddProduct(productToAdd[i], productInfo[i])
                     .Build();
@@ -67,9 +73,15 @@ namespace Shops.Classes
 
         public uint PurchaseProducts(ref Customer customer, Shop shop, List<Product> productToPurchase, List<uint> quantities)
         {
+            if (_registeredShops.Contains(shop))
+                throw new ShopException("This shop hasn't been registered!");
+
             uint prevMoney = customer.Money;
             for (int i = 0; i < productToPurchase.Count; i++)
             {
+                if (!_registeredProducts.Contains(productToPurchase[i]))
+                    throw new ShopException("This product hasn't been registered!");
+
                 customer = customer.ToBuilder()
                     .PurchaseProduct(ref shop, productToPurchase[i], quantities[i])
                     .Build();
@@ -80,22 +92,25 @@ namespace Shops.Classes
 
         public Shop FindCheapestShop(List<Product> productsToBuyCheap, List<uint> quantities)
         {
+            if (productsToBuyCheap.Any(product => !_registeredProducts.Contains(product)))
+                throw new ShopException("This product hasn't been registered!");
+
             uint lowestPrice = (uint)1e9;
             Shop shopWithLowestPrice = null;
-            foreach (Shop shop in _totalCreatedShops)
+            foreach (Shop shop in _registeredShops)
             {
                 uint currentPrice = 0;
-                bool correctShop = true;
+                bool isCorrectShop = true;
                 for (int i = 0; i < productsToBuyCheap.Count; i++)
                 {
                     int fakeSpendingMoney = shop.StoredProducts.FakeBuy(productsToBuyCheap[i], quantities[i]);
                     if (fakeSpendingMoney == -1)
-                        correctShop = false;
+                        isCorrectShop = false;
 
                     currentPrice += (uint)fakeSpendingMoney;
                 }
 
-                if (!correctShop || currentPrice >= lowestPrice)
+                if (!isCorrectShop || currentPrice >= lowestPrice)
                     continue;
 
                 lowestPrice = currentPrice;
@@ -108,12 +123,12 @@ namespace Shops.Classes
         public void Info()
         {
             Console.WriteLine(" - Registered products:");
-            foreach (Product product in _totalRegisteredProducts)
+            foreach (Product product in _registeredProducts)
                 Console.WriteLine(product);
 
             Console.WriteLine();
             Console.WriteLine(" - Created shops:");
-            foreach (Shop shop in _totalCreatedShops)
+            foreach (Shop shop in _registeredShops)
                 Console.WriteLine(shop);
         }
     }

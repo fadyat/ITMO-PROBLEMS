@@ -4,7 +4,6 @@ namespace Shops.Classes
 {
     public class ProductInfo
     {
-        private ProductInfo() { }
         private ProductInfo(uint price, uint quantity)
         {
             Price = price;
@@ -34,8 +33,8 @@ namespace Shops.Classes
 
         public ProductInfoBuilder ToBuilder()
         {
-            ProductInfoBuilder productInfoBuilder = new ();
-            productInfoBuilder.WithPrice(Price)
+            ProductInfoBuilder productInfoBuilder = new ProductInfoBuilder()
+                .WithPrice(Price)
                 .WithQuantity(Quantity);
 
             return productInfoBuilder;

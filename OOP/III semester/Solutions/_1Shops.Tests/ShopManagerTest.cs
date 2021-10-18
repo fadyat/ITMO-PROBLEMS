@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shops.Classes;
-using Shops.Exceptions;
 
 namespace Shops.Tests
 {
@@ -37,8 +35,7 @@ namespace Shops.Tests
         public void AddingEqualsProductsToTheShop(string productName, List<ProductInfo> info)
         {
             Shop shop1 = _shopManager.CreateShop("Lenta");
-            List<Product> registeredProducts = _shopManager.RegisterProduct(productName);
-            Product myProduct = registeredProducts[0];
+            Product myProduct = _shopManager.RegisterProduct(productName);
             uint totalCnt = 0;
             uint lastPrice = 0;
             foreach (ProductInfo newInfo in info)
@@ -53,86 +50,55 @@ namespace Shops.Tests
 
         private static readonly object[] CheapData =
         {
-            new object[] { 
-                new List<(string, Dictionary<Product, ProductInfo>)> {
-                    ("shop0", new Dictionary<Product, ProductInfo>
+            new object[] {
+                new List<(string, List<ProductInfo>)> {
+                    ("shop0", new List<ProductInfo>
                     {
-                        {new Product("milk"), new ProductInfo(10, 5000)},
-                        {new Product("apple"), new ProductInfo(10, 800)}
+                        new ProductInfo.ProductInfoBuilder()
+                            .WithPrice(4000)
+                            .WithQuantity(25)
+                            .Build(),
+                        new ProductInfo.ProductInfoBuilder()
+                            .WithPrice(600)
+                            .WithQuantity(55)
+                            .Build()
                     }),
-                    ("shop1", new Dictionary<Product, ProductInfo>
+                    ("shop1", new List<ProductInfo>
                     {
-                        {new Product("milk"), new ProductInfo(10, 5100)},
-                        {new Product("apple"), new ProductInfo(10, 810)}
-                    })
+                        new ProductInfo.ProductInfoBuilder()
+                            .WithPrice(5000)
+                            .WithQuantity(25)
+                            .Build(),
+                        new ProductInfo.ProductInfoBuilder()
+                            .WithPrice(700)
+                            .WithQuantity(55)
+                            .Build()
+                    }),
                 },
-                new List<(Product, uint cheapCnt)> {
-                    (new Product("milk"), 5),
-                    (new Product("apple"), 5)
-                }
-            },
-            
-            new object[] { 
-                new List<(string, Dictionary<Product, ProductInfo>)> {
-                    ("shop0", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("milk"), new ProductInfo(10, 5000)}
-                    }),
-                    ("shop1", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("apple"), new ProductInfo(10, 5100)}
-                    })
-                },
-                new List<(Product, uint cheapCnt)> {
-                    (new Product("milk"), 5)
-                }
-            }, 
-            
-            new object[] { 
-                new List<(string, Dictionary<Product, ProductInfo>)> {
-                    ("shop0", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("milk"), new ProductInfo(10, 5900)},
-                        {new Product("sweet"), new ProductInfo(10, 200)}
-                    }),
-                    ("shop1", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("milk"), new ProductInfo(10, 5200)},
-                        {new Product("sweet"), new ProductInfo(3, 1000)}
-                    }),
-                    ("shop2", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("apple"), new ProductInfo(10, 5100)},
-                        {new Product("sweet"), new ProductInfo(3, 100)}
-                    }),
-                    ("shop3", new Dictionary<Product, ProductInfo>
-                    {
-                        {new Product("milk"), new ProductInfo(10, 5100)},
-                        {new Product("sweet"), new ProductInfo(2, 100)}
-                    })
-                },
-                new List<(Product, uint cheapCnt)> {
-                    (new Product("milk"), 3),
-                    (new Product("sweet"), 3)
-                }
+                new List<string> { "milk", "apple", "juice" },
+                new List<int> { 1, 2 },
+                new List<uint> { 10, 20 }
             }
         };
         
         [TestCaseSource(nameof(CheapData))]
-        public void CheapestShopFinding(List<(string, List<(string, List<ProductInfo>)>)> shopsWithProductsToRegister, 
-            List<(Product, uint quantities)> productsToBuyCheap)
+        public void CheapestShopFinding(List<(string shopName, List<ProductInfo> hisProductInfo)> shopsWithProductsInfo, 
+            List<string> productsToRegister, List<int> whichProductsPick, List<uint> hisQuantities)
         {
-            foreach ((string shopName, Dictionary<Product, ProductInfo> products) in shopsInfo)
+            /* `shop0` always cheapest */
+            List<Product> registeredProducts = _shopManager.RegisterProducts(productsToRegister);
+            var pickedProducts = registeredProducts
+                .Where((t, i) => whichProductsPick.Contains(i + 1))
+                .ToList();
+            
+            foreach ((string shopName, List<ProductInfo> productInfo) in shopsWithProductsInfo)
             {
-                Shop shop = _shopManager.CreateShop(shopName);
-                foreach ((Product product, ProductInfo productInfo) in products)
-                {
-                    shop.RegisterProduct(product.Name);
-                    shop.AddProducts(product, productInfo);
-                }
+                Shop currentShop = _shopManager.CreateShop(shopName);
+                _shopManager.AddProducts(currentShop, pickedProducts, productInfo);
             }
-            Shop cheapShop = _shopManager.CheapProductSearch(productsToBuyCheap);
-            Assert.AreEqual(cheapShop.Name, "shop0");
+
+            Shop cheapestShop = _shopManager.FindCheapestShop(pickedProducts, hisQuantities);
+            Assert.AreEqual(cheapestShop.Name, "shop0");
         }
 
         private static readonly object[] PurchaseData =
@@ -166,8 +132,8 @@ namespace Shops.Tests
             List<ProductInfo> hisProductsInfo, List<uint> hisQuantities)
         {
             Shop shop = _shopManager.CreateShop(shopName);
-            List<Product> registerProducts = _shopManager.RegisterProducts(productsToRegister);
-            var pickedProducts = registerProducts
+            List<Product> registeredProducts = _shopManager.RegisterProducts(productsToRegister);
+            var pickedProducts = registeredProducts
                 .Where((t, i) => whichProductsPick.Contains(i + 1))
                 .ToList();
             

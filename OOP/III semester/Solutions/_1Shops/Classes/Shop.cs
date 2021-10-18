@@ -1,36 +1,25 @@
 using System.Collections.Generic;
-using Shops.Exceptions;
 
 namespace Shops.Classes
 {
     public class Shop
     {
-        private Shop() { }
+        public Shop()
+        {
+            StoredProducts = new StoredProducts();
+        }
+
         private Shop(uint shopId, string shopName, StoredProducts storedProducts)
         {
             (Id, Name) = (shopId, shopName);
             StoredProducts = storedProducts;
         }
 
-        public StoredProducts StoredProducts { get; }
-
         public string Name { get; }
 
-        public uint Id { get; }
+        public StoredProducts StoredProducts { get; }
 
-        public override string ToString()
-        {
-            return " \t # " + Name + " " + Id + '\n' + StoredProducts;
-        }
-
-        public override int GetHashCode() { return Id.GetHashCode(); }
-
-        public override bool Equals(object obj)
-        {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (Shop)obj;
-            return other != null && Equals(Id, other.Id);
-        }
+        private uint Id { get; }
 
         public ShopBuilder ToBuilder()
         {
@@ -39,6 +28,23 @@ namespace Shops.Classes
             shopBuilder.WithName(Name);
             shopBuilder.WithProducts(StoredProducts);
             return shopBuilder;
+        }
+
+        public override string ToString()
+        {
+            return " \t # " + Name + " " + Id + '\n' + StoredProducts;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj.GetType() != GetType()) return false;
+            var other = (Shop)obj;
+            return other != null && Equals(Id, other.Id);
         }
 
         public class ShopBuilder
@@ -76,6 +82,7 @@ namespace Shops.Classes
                 _products = _products.ToBuilder()
                     .AddProduct(productToAdd, productInfo)
                     .Build();
+
                 return this;
             }
 
