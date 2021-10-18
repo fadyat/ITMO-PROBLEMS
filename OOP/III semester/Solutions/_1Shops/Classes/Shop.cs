@@ -21,6 +21,16 @@ namespace Shops.Classes
 
         private uint Id { get; }
 
+        public uint? GetPriceForMultipleProducts(Product productsToBuyCheap, uint quantity)
+        {
+            return StoredProducts.GetPriceForMultipleProducts(productsToBuyCheap, quantity);
+        }
+
+        public ProductInfo GetProductInfo(Product product)
+        {
+            return StoredProducts.GetProductInfo(product);
+        }
+
         public ShopBuilder ToBuilder()
         {
             ShopBuilder shopBuilder = new ();

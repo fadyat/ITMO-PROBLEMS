@@ -46,7 +46,7 @@ namespace Shops.Classes
 
             public CustomerBuilder PurchaseProduct(ref Shop shop, Product product, uint quantity)
             {
-                ProductInfo previousInfo = shop.StoredProducts.GetProductInfo(product);
+                ProductInfo previousInfo = shop.GetProductInfo(product);
                 shop = shop.ToBuilder()
                     .PurchaseProduct(product, quantity)
                     .Build();

@@ -28,7 +28,7 @@ namespace Shops.Classes
                 .WithId(_issuedShopId++)
                 .Build();
 
-            _registeredShops.Add(newShop); // ???
+            _registeredShops.Add(newShop);
             return newShop;
         }
 
@@ -47,7 +47,7 @@ namespace Shops.Classes
                         .Build())
                     .ToList();
 
-            _registeredProducts = _registeredProducts.Concat(registeredProducts).ToList(); // ???
+            _registeredProducts = _registeredProducts.Union(registeredProducts).ToList();
             return registeredProducts;
         }
 
@@ -90,7 +90,7 @@ namespace Shops.Classes
             return prevMoney - customer.Money;
         }
 
-        public Shop FindCheapestShop(List<Product> productsToBuyCheap, List<uint> quantities)
+        public Shop FindingTheCheapestShop(List<Product> productsToBuyCheap, List<uint> quantities)
         {
             if (productsToBuyCheap.Any(product => !_registeredProducts.Contains(product)))
                 throw new ShopException("This product hasn't been registered!");
@@ -103,11 +103,14 @@ namespace Shops.Classes
                 bool isCorrectShop = true;
                 for (int i = 0; i < productsToBuyCheap.Count; i++)
                 {
-                    int fakeSpendingMoney = shop.StoredProducts.FakeBuy(productsToBuyCheap[i], quantities[i]);
-                    if (fakeSpendingMoney == -1)
+                    uint? multiplePrice = shop.GetPriceForMultipleProducts(productsToBuyCheap[i], quantities[i]);
+                    if (Equals(multiplePrice, null))
+                    {
                         isCorrectShop = false;
+                        break;
+                    }
 
-                    currentPrice += (uint)fakeSpendingMoney;
+                    currentPrice += (uint)multiplePrice;
                 }
 
                 if (!isCorrectShop || currentPrice >= lowestPrice)

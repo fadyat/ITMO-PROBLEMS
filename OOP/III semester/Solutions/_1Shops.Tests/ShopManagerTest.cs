@@ -44,8 +44,8 @@ namespace Shops.Tests
                 totalCnt += newInfo.Quantity;
                 lastPrice = newInfo.Price;
             }
-            Assert.AreEqual(totalCnt, shop1.StoredProducts.GetProductInfo(myProduct).Quantity);
-            Assert.AreEqual(lastPrice, shop1.StoredProducts.GetProductInfo(myProduct).Price);
+            Assert.AreEqual(totalCnt, shop1.GetProductInfo(myProduct).Quantity);
+            Assert.AreEqual(lastPrice, shop1.GetProductInfo(myProduct).Price);
         }
 
         private static readonly object[] CheapData =
@@ -97,7 +97,7 @@ namespace Shops.Tests
                 _shopManager.AddProducts(currentShop, pickedProducts, productInfo);
             }
 
-            Shop cheapestShop = _shopManager.FindCheapestShop(pickedProducts, hisQuantities);
+            Shop cheapestShop = _shopManager.FindingTheCheapestShop(pickedProducts, hisQuantities);
             Assert.AreEqual(cheapestShop.Name, "shop0");
         }
 

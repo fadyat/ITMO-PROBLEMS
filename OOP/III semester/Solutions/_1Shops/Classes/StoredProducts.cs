@@ -25,13 +25,13 @@ namespace Shops.Classes
             return newBuilder;
         }
 
-        public int FakeBuy(Product productToBuy, uint quantity)
+        public uint? GetPriceForMultipleProducts(Product productToBuy, uint quantity)
         {
             if (_storedProducts[productToBuy].Quantity < quantity)
-                return -1;
+                return null;
 
-            int fakeSpendingMoney = (int)(quantity * _storedProducts[productToBuy].Price);
-            return fakeSpendingMoney;
+            uint multiplePrice = quantity * _storedProducts[productToBuy].Price;
+            return multiplePrice;
         }
 
         public ProductInfo GetProductInfo(Product product)

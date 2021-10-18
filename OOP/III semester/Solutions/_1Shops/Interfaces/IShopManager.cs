@@ -15,6 +15,6 @@ namespace Shops.Interfaces
 
         uint PurchaseProducts(ref Customer customer, Shop shop, List<Product> productToPurchase, List<uint> quantities);
 
-        Shop FindCheapestShop(List<Product> productsToBuyCheap, List<uint> quantities);
+        Shop FindingTheCheapestShop(List<Product> productsToBuyCheap, List<uint> quantities);
     }
 }
