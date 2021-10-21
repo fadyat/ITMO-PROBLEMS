@@ -18,20 +18,3 @@
 NB:
 
 - Можно не поддерживать разные цены для одного магазина. Как вариант, можно брать старую цену, если магазин уже содержит этот товар. Иначе брать цену указанную в поставке.
-- Пример ожидаемого формата тестов:
-
-```
-public void SomeTest(moneyBefore, productPrice, productCount, productToBuyCount)
-{
-	var person = new Person("name", moneyBefore);
-	var shopManager = new ShopManager();
-	var shop = shopManager.Create("shop name", ...);
-	var product = shopManager.RegisterProduct("product name");
-	
-	shop.AddProducts( ... );
-	shop.Buy(person, ...);
-	
-	Assert.AreEquals(moneyBefore - productPrice  * productToBuyCount, person.Money);
-	Assert.AreEquals(productCount - productToBuyCount , shop.GetProductInfo(product).Count);
-}
-```
