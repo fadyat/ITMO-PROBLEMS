@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Shops.Classes;
-using Shops.Interfaces;
 using Shops.Repositories;
+using Shops.Services.Interfaces;
 
 namespace Shops.Services
 {
