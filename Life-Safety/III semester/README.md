@@ -14,7 +14,7 @@
 
 <div>
   <a href = "./healthySleep"> 3. </a> #
-  <a href="./healthySleep/myResults.pdf"> Healthy sleep </a>
+  <a href="./healthySleep/solution/myResults.pdf"> Healthy sleep </a>
 </div>
 
 <div>
@@ -24,7 +24,7 @@
 
 <div>
   <a href = "./travelSafety"> 5. </a> #
-  <a href = "./travelSafety/myTrip.pdf"> Travel safety </a>
+  <a href = "./travelSafety/solution/myTrip.pdf"> Travel safety </a>
 </div>
 
 <div>
