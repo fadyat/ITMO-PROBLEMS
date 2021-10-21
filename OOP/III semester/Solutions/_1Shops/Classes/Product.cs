@@ -5,28 +5,32 @@ namespace Shops.Classes
     public class Product
     {
         private readonly string _name;
-        private readonly int _id;
-        private readonly int _shopId;
-        private readonly int _price;
-        private readonly int _quantity;
 
         private Product(string name, int id, int shopId, int price, int quantity)
         {
             _name = name;
-            _id = id;
-            _shopId = shopId;
-            _price = price;
-            _quantity = quantity;
+            Id = id;
+            ShopId = shopId;
+            Price = price;
+            Quantity = quantity;
         }
+
+        public int ShopId { get; }
+
+        public int Price { get; }
+
+        public int Quantity { get; }
+
+        public int Id { get; }
 
         public ProductBuilder ToBuilder()
         {
             ProductBuilder productBuilder = new ProductBuilder()
                 .WithName(_name)
-                .WithId(_id)
-                .WithShopId(_shopId)
-                .WithPrice(_price)
-                .WithQuantity(_quantity);
+                .WithId(Id)
+                .WithShopId(ShopId)
+                .WithPrice(Price)
+                .WithQuantity(Quantity);
 
             return productBuilder;
         }
@@ -36,14 +40,19 @@ namespace Shops.Classes
             if (obj is not Product item)
                 return false;
 
-            return Equals(_name, item._name)
-                   && Equals(_id, item._id)
-                   && Equals(_shopId, item._shopId);
+            return Equals(_name, item._name) &&
+                   Equals(Id, item.Id) &&
+                   Equals(ShopId, item.ShopId);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id, _name);
+            return HashCode.Combine(Id, _name);
+        }
+
+        public override string ToString()
+        {
+            return $"{_name} {Id} {ShopId} {Price} {Quantity}";
         }
 
         public class ProductBuilder

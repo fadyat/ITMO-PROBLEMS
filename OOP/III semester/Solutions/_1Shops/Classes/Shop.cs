@@ -5,19 +5,20 @@ namespace Shops.Classes
     public class Shop
     {
         private readonly string _name;
-        private readonly int _id;
 
         private Shop(string name, int id)
         {
             _name = name;
-            _id = id;
+            Id = id;
         }
+
+        public int Id { get; }
 
         public ShopBuilder ToBuilder()
         {
             ShopBuilder shopBuilder = new ShopBuilder()
                 .WithName(_name)
-                .WithId(_id);
+                .WithId(Id);
 
             return shopBuilder;
         }
@@ -28,12 +29,17 @@ namespace Shops.Classes
                 return false;
 
             return Equals(_name, item._name)
-                   && Equals(_id, item._id);
+                   && Equals(Id, item.Id);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id, _name);
+            return HashCode.Combine(Id, _name);
+        }
+
+        public override string ToString()
+        {
+            return $"{_name} {Id}";
         }
 
         public class ShopBuilder

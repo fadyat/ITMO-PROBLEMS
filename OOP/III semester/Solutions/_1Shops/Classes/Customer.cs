@@ -2,11 +2,11 @@ namespace Shops.Classes
 {
     public class Customer
     {
-        private int _price;
-
-        public Customer(int price)
+        public Customer(int cash)
         {
-            _price = price;
+            Cash = cash;
         }
+
+        public int Cash { get; }
     }
 }

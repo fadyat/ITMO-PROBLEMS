@@ -1,29 +1,40 @@
+using System;
 using System.Collections.Generic;
 using Shops.Classes;
 using Shops.Interfaces;
+using Shops.Repositories;
 
 namespace Shops.Services
 {
     public class ShopService : IShopService
     {
-        private List<Shop> _shops;
-        private int _issuedId;
+        private readonly ShopRepository _shopRepository;
+        private int _issuedShopId;
 
         public ShopService()
         {
-            _shops = new List<Shop>();
-            _issuedId = 100000;
+            _shopRepository = new ShopRepository();
+            _issuedShopId = 100000;
         }
 
-        public Shop AddShop(string shopName)
+        public IEnumerable<Shop> Shops => _shopRepository.GetAll();
+
+        public Shop CreateShop(string name)
         {
             Shop newShop = new Shop.ShopBuilder()
-                .WithName(shopName)
-                .WithId(_issuedId++)
+                .WithName(name)
+                .WithId(_issuedShopId++)
                 .Build();
 
-            _shops.Add(newShop);
+            _shopRepository.Save(newShop);
             return newShop;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(" # Shops:");
+            foreach (Shop shop in _shopRepository.GetAll())
+                Console.WriteLine($"\t{shop}");
         }
     }
 }
