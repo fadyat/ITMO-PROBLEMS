@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Shops.Classes;
 
 namespace Shops.Services.Interfaces
@@ -10,6 +11,6 @@ namespace Shops.Services.Interfaces
 
         int PurchaseProduct(ref Customer customer, Shop shop, Product product, int amount);
 
-        int FindTheCheapestProductShopId(Product product, int amount);
+        int CheapestShopIdFinding(List<Product> products, List<int> amounts);
     }
 }

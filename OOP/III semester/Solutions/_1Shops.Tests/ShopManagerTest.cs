@@ -55,17 +55,17 @@ namespace Shops.Tests
         {
             new object[]
             {
-                new List<(string, List<(int price, int quanitity)> supplies)>
+                new List<(string, List<(int price, int quantity)> supplies)>
                 {
-                    ("product1", new List<(int price, int quanitity)>
+                    ("product1", new List<(int price, int quantity)>
                     {
                         (10, 100),
                     }),
-                    ("product2", new List<(int price, int quanitity)>
+                    ("product2", new List<(int price, int quantity)>
                     {
                         (41, 200),
                     }),
-                    ("product2", new List<(int price, int quanitity)>
+                    ("product3", new List<(int price, int quantity)>
                     {
                         (60, 300),
                     })
@@ -73,16 +73,16 @@ namespace Shops.Tests
             },
             new object[]
             {
-                new List<(string, List<(int price, int quanitity)> supplies)>
+                new List<(string, List<(int price, int quantity)> supplies)>
                 {
-                    ("product1", new List<(int price, int quanitity)>
+                    ("product1", new List<(int price, int quantity)>
                     {
                         (10, 100),
                         (20, 200),
                         (10, 100),
                         (20, 200),
                     }),
-                    ("product2", new List<(int price, int quanitity)>
+                    ("product2", new List<(int price, int quantity)>
                     {
                         (41, 200),
                         (42, 4000),
@@ -92,11 +92,11 @@ namespace Shops.Tests
         };
 
         [TestCaseSource(nameof(AddingData))]
-        public void AddProducts(List<(string productName, List<(int price, int quanitity)> supplies)> products)
+        public void AddProducts(List<(string productName, List<(int price, int quantity)> supplies)> products)
         {
             Shop shop = _shopService.CreateShop("shop1");
             var lastStage = new List<Product>();
-            foreach ((string name, List<(int price, int quanitity)> data) in products)
+            foreach ((string name, List<(int price, int quantity)> data) in products)
             {
                 Product currentProduct = _productService.RegisterProduct(name);
                 int lastPrice = 0;
@@ -199,40 +199,50 @@ namespace Shops.Tests
         {
             new object[]
             {
-                new List<(string, List<(string, List<(int price, int quanitity)> supplies)>)>
+                new List<string> {"apple", "bread"},
+                new List<(string, List<(int price, int quantity)> supplies)>
                 {
-                    ("shop1", new List<(string, List<(int price, int quanitity)> supplies)>
+                    ("shop1", new List<(int price, int quantity)>
                     {
-                        ("product1", new List<(int price, int quanitity)>
-                        {
-                            (10, 100),
-                        }),
-                        ("product2", new List<(int price, int quanitity)>
-                        {
-                            (41, 200),
-                        }),
-                        ("product2", new List<(int price, int quanitity)>
-                        {
-                            (60, 300),
-                        })
+                        (10, 100),
+                        (20, 300),
                     }),
-                    ("shop2", new List<(string, List<(int price, int quanitity)> supplies)>
+                    ("shop2", new List<(int price, int quantity)>
                     {
-                        ("product1", new List<(int price, int quanitity)>
-                        {
-                            (10, 100),
-                        }),
-                        ("product2", new List<(int price, int quanitity)>
-                        {
-                            (41, 200),
-                        }),
-                        ("product2", new List<(int price, int quanitity)>
-                        {
-                            (60, 300),
-                        })
+                        (11, 100),
+                        (21, 300),
                     })
-                }
+                },
+                new List<int> {1},
+                new List<int> {10},
             }
         };
+
+        [TestCaseSource(nameof(FindCheapestShopIdData))]
+        public void FindTheCheapestShopId(
+            List<string> register, List<(string, List<(int, int)>)> shops, 
+            List<int> whichProductsBuy, List<int> amounts)
+        {
+            // `shop0`.id - the cheapest
+            foreach (string reg in register)
+            {
+                _productService.RegisterProduct(reg);
+            }
+
+            var registered = _productService.Registrations.GetAll().ToList();
+            foreach ((string name, List<(int price, int quantity)> lst) in shops)
+            {
+                Shop shop = _shopService.CreateShop(name);
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    _productService.AddProduct(shop, registered[i], lst[i].price, lst[i].quantity);
+                }
+            }
+
+            var products = _productService.ProductRepository.GetAll().ToList();
+            var buyThis = whichProductsBuy.Select(addThis => products[addThis]).ToList();
+            var id = _shopService.Shops.ToList();
+            Assert.AreEqual(_productService.CheapestShopIdFinding(buyThis, amounts), id[0].Id);
+        }
     }
 }

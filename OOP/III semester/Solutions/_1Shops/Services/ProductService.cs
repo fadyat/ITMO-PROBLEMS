@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using Shops.Classes;
 using Shops.Repositories;
 using Shops.Services.Interfaces;
@@ -91,19 +91,47 @@ namespace Shops.Services
             return expenses;
         }
 
-        public int FindTheCheapestProductShopId(Product product, int amount)
+        public int CheapestShopIdFinding(List<Product> products, List<int> amounts)
         {
-            int minimalPrice = (int)1e9;
-            int cheapestShopId = 0;
-            foreach (Product actual in ProductRepository.GetAll()
-                .Where(actual => Equals(actual.Id, product.Id))
-                .Where(actual => minimalPrice > actual.Price))
+            if (products.Count != amounts.Count)
+                throw new Exception(); // not enough data
+
+            var pricePerListInShop = new Dictionary<int, int?>();
+
+            for (int i = 0; i < products.Count; i++)
             {
-                minimalPrice = actual.Price;
-                cheapestShopId = actual.ShopId;
+                foreach (Product product in ProductRepository.GetAll())
+                {
+                    if (product.Id != products[i].Id) continue;
+
+                    if (!pricePerListInShop.ContainsKey(product.ShopId))
+                    {
+                        pricePerListInShop.Add(product.ShopId, 0);
+                    }
+
+                    if (product.Quantity < amounts[i])
+                    {
+                        pricePerListInShop[product.ShopId] = null;
+                    }
+
+                    if (pricePerListInShop[product.ShopId] != null)
+                    {
+                        pricePerListInShop[product.ShopId] += product.Price * amounts[i];
+                    }
+                }
             }
 
-            return cheapestShopId;
+            int id = 0;
+            int minPrice = (int)1e9;
+            foreach ((int shopId, int? price) in pricePerListInShop)
+            {
+                if (price == null || !(price < minPrice)) continue;
+                minPrice = (int)price;
+                id = shopId;
+            }
+
+            pricePerListInShop.Clear();
+            return id;
         }
 
         public void Print()
