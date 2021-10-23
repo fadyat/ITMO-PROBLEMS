@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
+using Shops.Exceptions;
 using Shops.Repositories.Interfaces;
 
 namespace Shops.Repositories
@@ -33,14 +33,7 @@ namespace Shops.Repositories
                 return shop;
             }
 
-            throw new Exception(); // fix
-        }
-
-        public void Print()
-        {
-            Console.WriteLine(" # Shops:");
-            foreach (Shop shop in _shops)
-                Console.WriteLine($"\t {shop}");
+            throw new ShopException("No such shop!");
         }
     }
 }

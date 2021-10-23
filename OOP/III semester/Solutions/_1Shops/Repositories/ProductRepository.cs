@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
+using Shops.Exceptions;
 using Shops.Repositories.Interfaces;
 
 namespace Shops.Repositories
@@ -34,7 +35,7 @@ namespace Shops.Repositories
                 return product;
             }
 
-            throw new Exception(); // fix
+            throw new ProductException("No such product!");
         }
 
         public Product FindProduct(int id, int shopId)

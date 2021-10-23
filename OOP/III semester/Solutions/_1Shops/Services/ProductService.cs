@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Shops.Classes;
+using Shops.Exceptions;
 using Shops.Repositories;
 using Shops.Services.Interfaces;
 
@@ -69,16 +70,14 @@ namespace Shops.Services
             var newOrder = new Order(product, amount, _issuedOrderId++);
             _orderRepository.Save(newOrder);
 
-            Product recentProduct = ProductRepository.FindProduct(product.Id, shop.Id);
-            if (recentProduct == null)
-                throw new Exception(); // no such product!
+            Product recentProduct = ProductRepository.GetProduct(product.Id, shop.Id);
 
             if (recentProduct.Quantity < amount)
-                throw new Exception(); // not enough products!
+                throw new ProductException("Not enough products!");
 
             int expenses = recentProduct.Price * amount;
             if (customer.Cash < expenses)
-                throw new Exception(); // not enough cash!
+                throw new ProductException("Not enough cash!");
 
             ProductRepository.Delete(recentProduct.Id, recentProduct.ShopId);
 
@@ -94,7 +93,7 @@ namespace Shops.Services
         public int CheapestShopIdFinding(List<Product> products, List<int> amounts)
         {
             if (products.Count != amounts.Count)
-                throw new Exception(); // not enough data
+                throw new ProductException("Not enough data!");
 
             var pricePerListInShop = new Dictionary<int, int?>();
 
