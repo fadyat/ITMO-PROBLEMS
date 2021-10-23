@@ -22,9 +22,7 @@ namespace Isu.Classes
 
     public class GroupName
     {
-        private readonly string _groupNumber;
-
-        public GroupName(uint courseNumber, string groupNumber, string facultyTag = "M3")
+        private GroupName(string facultyTag, uint courseNumber, string groupNumber)
         {
             if (!Enum.IsDefined(typeof(CorrectCourses), courseNumber))
                 throw new IsuException("Wrong course number format!");
@@ -35,22 +33,76 @@ namespace Isu.Classes
             if (facultyTag.First() is < 'A' or > 'Z')
                 throw new IsuException("Faculty tag should begin with letter!");
 
-            (Course, _groupNumber, FacultyTag) = (courseNumber, groupNumber, facultyTag);
+            (Course, GroupNumber, FacultyTag) = (courseNumber, groupNumber, facultyTag);
         }
 
         public uint Course { get; }
+
         public string FacultyTag { get; }
 
-        public override int GetHashCode() { return HashCode.Combine(Course, _groupNumber); }
+        private string GroupNumber { get; }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(FacultyTag, Course, GroupNumber);
+        }
 
         public override bool Equals(object obj)
         {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (GroupName)obj;
-            return other != null && Course == other.Course &&
-                   _groupNumber == other._groupNumber && FacultyTag == other.FacultyTag;
+            if (obj is not GroupName item)
+            {
+                return false;
+            }
+
+            return Equals(GroupNumber, item.GroupNumber)
+                   && Equals(FacultyTag, item.FacultyTag)
+                   && Equals(Course, item.Course);
         }
 
-        public override string ToString() { return FacultyTag + Course + _groupNumber; }
+        public override string ToString()
+        {
+            return FacultyTag + Course + GroupNumber;
+        }
+
+        public GroupNameBuilder ToBuilder()
+        {
+            GroupNameBuilder groupNameBuilder = new GroupNameBuilder()
+                .WithTag(FacultyTag)
+                .WithGroupNumber(GroupNumber)
+                .WithCourseNumber(Course);
+
+            return groupNameBuilder;
+        }
+
+        public class GroupNameBuilder
+        {
+            private string _facultyTag;
+            private string _groupNumber;
+            private uint _courseNumber;
+
+            public GroupNameBuilder WithTag(string tag)
+            {
+                _facultyTag = tag;
+                return this;
+            }
+
+            public GroupNameBuilder WithGroupNumber(string number)
+            {
+                _groupNumber = number;
+                return this;
+            }
+
+            public GroupNameBuilder WithCourseNumber(uint course)
+            {
+                _courseNumber = course;
+                return this;
+            }
+
+            public GroupName Build()
+            {
+                var finallyGroupName = new GroupName(_facultyTag, _courseNumber, _groupNumber);
+                return finallyGroupName;
+            }
+        }
     }
 }

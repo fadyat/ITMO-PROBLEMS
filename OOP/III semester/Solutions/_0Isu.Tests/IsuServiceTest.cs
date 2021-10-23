@@ -9,76 +9,122 @@ namespace Isu.Tests
         private IsuService _isuService;
 
         [SetUp]
-        public void Setup() { _isuService = new IsuService(); }
-        
+        public void Setup()
+        {
+            _isuService = new IsuService();
+        }
+
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group group = _isuService.AddGroup(new GroupName(1, "02"));
+            GroupName name = new GroupName.GroupNameBuilder()
+                .WithTag("M3")
+                .WithCourseNumber(2)
+                .WithGroupNumber("02")
+                .Build();
+
+            Group group = _isuService.AddGroup(name);
             Student alex = _isuService.AddStudent(group, "alex");
             Student tmpAlex = _isuService.FindStudent("alex");
             if (tmpAlex == null || !Equals(alex.Group, tmpAlex.Group))
+            {
                 Assert.Fail();
+            }
         }
 
-        [TestCase(1, "12", 1, "12")] [TestCase(0, "aa", 9, "bb")]
-        [TestCase(0, "03", 5, "03")] [TestCase(11, "01", 11, "02")]
+        [TestCase(1, "12", 1, "12")]
+        [TestCase(0, "aa", 9, "bb")]
+        [TestCase(0, "03", 5, "03")]
+        [TestCase(11, "01", 11, "02")]
         [Test]
         public void AddingGroupCheckExisting_ThrowException(byte crs1, string n1, byte crs2, string n2)
         {
             Assert.Catch<IsuException>(() =>
             {
-                _isuService.AddGroup(new GroupName(crs1, n1));
-                _isuService.AddGroup(new GroupName(crs2, n2));
+                GroupName name1 = new GroupName.GroupNameBuilder()
+                    .WithTag("M3")
+                    .WithCourseNumber(crs1)
+                    .WithGroupNumber(n1)
+                    .Build();
+
+                GroupName name2 = new GroupName.GroupNameBuilder()
+                    .WithTag("M3")
+                    .WithCourseNumber(crs2)
+                    .WithGroupNumber(n2)
+                    .Build();
+
+                _isuService.AddGroup(name1);
+                _isuService.AddGroup(name2);
             });
         }
-        /* my test */
-        [TestCase(1,"122")] [TestCase(123, "01")] [TestCase(2, "aa")]
+
+        [TestCase(1, "122")]
+        [TestCase(123, "01")]
+        [TestCase(2, "aa")]
         [Test]
         public void CreateGroupWithInvalidName_ThrowException(byte course, string groupNumber)
         {
             Assert.Catch<IsuException>(() =>
             {
-                _isuService.AddGroup(new GroupName(course, groupNumber));
+                GroupName name = new GroupName.GroupNameBuilder()
+                    .WithTag("M3")
+                    .WithCourseNumber(course)
+                    .WithGroupNumber(groupNumber)
+                    .Build();
+
+                _isuService.AddGroup(name);
             });
         }
-        
-        [TestCase(31)] [TestCase(77)]
+
+        [TestCase(31)]
+        [TestCase(77)]
         [Test]
         public void ReachMaxStudentPerGroup_ThrowException(int howMuchAdd)
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group m3102 = _isuService.AddGroup(new GroupName(1, "02"));
+                GroupName name = new GroupName.GroupNameBuilder()
+                    .WithTag("M3")
+                    .WithCourseNumber(1)
+                    .WithGroupNumber("02")
+                    .Build();
+
+                Group m3102 = _isuService.AddGroup(name);
                 for (int i = 0; i < howMuchAdd; i++)
                 {
-                    _isuService.AddStudent(m3102, i.ToString() + "Student");
+                    _isuService.AddStudent(m3102, i + "Student");
                 }
             });
         }
-        
-        /* In this test i'm not process Group, GroupName, CourseNumber, Student */ 
+
+
         [Test]
-        [TestCase(false, false)]
-        [TestCase(false, true)]
-        [TestCase(true, false)]
-        public void TransferStudentToAnotherGroup_GroupChanged(bool studentExist, bool newGroupExist)
+        public void TransferStudentToAnotherGroup()
         {
-            Assert.Catch<IsuException>(() =>
-            {
-                /* it's impossible to create students with equal id */
-                _isuService.AddGroup(new GroupName(1, "02"));
+            GroupName name1 = new GroupName.GroupNameBuilder()
+                .WithTag("M3")
+                .WithCourseNumber(1)
+                .WithGroupNumber("02")
+                .Build();
 
-                Student alex = _isuService.AddStudent(new Group(new GroupName(1, "02")), "Alex");
-                var newGroup = new Group(new GroupName(1, "03"));
-                if (!studentExist)
-                    alex = new Student("RandomNameOfStudent", 123123, newGroup);
+            Group group1 = _isuService.AddGroup(name1);
 
-                if (newGroupExist)
-                    _isuService.AddGroup(new GroupName(1, "03"));
+            GroupName name2 = new GroupName.GroupNameBuilder()
+                .WithTag("M3")
+                .WithCourseNumber(1)
+                .WithGroupNumber("03")
+                .Build();
 
-                _isuService.ChangeStudentGroup(alex, newGroup);
-            });
+            Group group2 = _isuService.AddGroup(name2);
+
+            Student student = _isuService.AddStudent(group1, "student1");
+            Assert.AreEqual(1, _isuService.Groups[group1]);
+            Assert.AreEqual(0, _isuService.Groups[group2]);
+            Assert.AreEqual(group1, student.Group);
+            _isuService.ChangeStudentGroup(ref student, group2);
+            Assert.AreEqual(0, _isuService.Groups[group1]);
+            Assert.AreEqual(1, _isuService.Groups[group2]);
+            Assert.AreEqual(group2, student.Group);
         }
     }
 }

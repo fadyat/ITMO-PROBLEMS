@@ -13,8 +13,11 @@ namespace Isu.Classes
         }
 
         public uint Id { get; }
+
         public string Name { get; }
+
         public Group Group { get; }
+
         public string FacultyTag => Group.Name.FacultyTag;
 
         public override int GetHashCode() { return Id.GetHashCode(); }
@@ -26,6 +29,9 @@ namespace Isu.Classes
             return other != null && Id == other.Id;
         }
 
-        public override string ToString() { return Group + ": " + Name + " " + Id; }
+        public override string ToString()
+        {
+            return Group + ": " + Name + " " + Id;
+        }
     }
 }
