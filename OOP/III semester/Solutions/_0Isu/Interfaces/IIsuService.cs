@@ -11,6 +11,8 @@ namespace Isu.Interfaces
 
         Student GetStudent(uint id);
 
+        Group GetGroup(GroupName groupName);
+
         Student FindStudent(string name);
 
         List<Student> FindStudents(GroupName groupName);

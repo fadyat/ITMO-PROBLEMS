@@ -117,17 +117,18 @@ namespace Isu.Tests
                 .Build();
 
             Group group2 = _isuService.AddGroup(name2);
-
             Student student = _isuService.AddStudent(group1, "student1");
             group1 = _isuService.GetGroup(group1.Name);
+            
             Assert.AreEqual(1, group1.Capacity);
             Assert.AreEqual(0, group2.Capacity);
             Assert.AreEqual(group1.Name, student.GroupName);
-            
+
             _isuService.ChangeStudentGroup(student, group2);
             group1 = _isuService.GetGroup(group1.Name);
             group2 = _isuService.GetGroup(group2.Name);
             student = _isuService.GetStudent(student.Id);
+
             Assert.AreEqual(0, group1.Capacity);
             Assert.AreEqual(1, group2.Capacity);
             Assert.AreEqual(group2.Name, student.GroupName);
