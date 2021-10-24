@@ -102,11 +102,17 @@ namespace Isu.Classes
                 .ToList();
         }
 
-        public void ChangeStudentGroup(Student student, Group newGroup)
+        public Student ChangeStudentGroup(Student student, Group newGroup)
         {
             Group prevGroup = GetGroup(student.GroupName);
             newGroup = GetGroup(newGroup.Name);
-            ChangeStudentGroupCheck(student, prevGroup, newGroup);
+            student = GetStudent(student.Id);
+
+            if (Equals(prevGroup, newGroup))
+                throw new Exception("Student is already in this group!");
+
+            if (newGroup.Capacity >= newGroup.MaxCapacity)
+                throw new IsuException("Can't add student, to new full group!");
 
             _groups = _groups.Remove(prevGroup);
             prevGroup = new Group(prevGroup, prevGroup.Capacity - 1);
@@ -119,24 +125,13 @@ namespace Isu.Classes
             _students = _students.Remove(student);
             student = new Student(student, newGroup.Name);
             _students = _students.Add(student);
+            return student;
         }
 
         public override string ToString()
         {
             return _students.Aggregate(string.Empty, (current, student) =>
                 current + (student.ToString() + '\n'));
-        }
-
-        private void ChangeStudentGroupCheck(Student student, Group prevGroup, Group newGroup)
-        {
-            if (!_students.Contains(student))
-                throw new IsuException("This student doesn't exist!");
-
-            if (Equals(prevGroup, newGroup))
-                throw new Exception("Student is already in this group!");
-
-            if (newGroup.Capacity >= newGroup.MaxCapacity)
-                throw new IsuException("Can't add student, to new full group!");
         }
     }
 }

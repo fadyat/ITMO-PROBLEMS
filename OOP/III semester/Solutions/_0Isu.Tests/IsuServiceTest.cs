@@ -124,10 +124,9 @@ namespace Isu.Tests
             Assert.AreEqual(0, group2.Capacity);
             Assert.AreEqual(group1.Name, student.GroupName);
 
-            _isuService.ChangeStudentGroup(student, group2);
+            student = _isuService.ChangeStudentGroup(student, group2);
             group1 = _isuService.GetGroup(group1.Name);
             group2 = _isuService.GetGroup(group2.Name);
-            student = _isuService.GetStudent(student.Id);
 
             Assert.AreEqual(0, group1.Capacity);
             Assert.AreEqual(1, group2.Capacity);
