@@ -20,8 +20,6 @@ namespace Isu.Classes
             _issuedStudentId = 100000;
         }
 
-        public IEnumerable<Group> Groups => _groups;
-
         public Group AddGroup(GroupName name)
         {
             var newGroup = new Group(name,  0);
