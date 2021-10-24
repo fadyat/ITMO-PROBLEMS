@@ -109,7 +109,7 @@ namespace Shops.Tests
                 }
 
                 Product productCondition =
-                    _productService.ProductRepository.FindProduct(currentProduct.Id, shop.Id);
+                    _productService.ProductRepository.GetProduct(currentProduct.Id, shop.Id);
                 lastStage.Add(productCondition);
 
                 Assert.AreEqual(productCondition.Price, lastPrice);
