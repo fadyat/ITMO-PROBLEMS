@@ -9,42 +9,40 @@ namespace Isu.Classes
 {
     public class IsuService : IIsuService
     {
-        private ImmutableDictionary<Group, uint> _groups;
+        private ImmutableList<Group> _groups;
         private ImmutableList<Student> _students;
         private uint _issuedStudentId;
 
         public IsuService()
         {
-            _groups = ImmutableDictionary<Group, uint>.Empty;
+            _groups = ImmutableList<Group>.Empty;
             _students = ImmutableList<Student>.Empty;
             _issuedStudentId = 100000;
         }
 
-        public IReadOnlyDictionary<Group, uint> Groups => _groups;
-        protected IEnumerable<Student> Students => _students;
+        public IEnumerable<Group> Groups => _groups;
 
         public Group AddGroup(GroupName name)
         {
-            var newGroup = new Group(name);
-            if (_groups.ContainsKey(newGroup))
+            var newGroup = new Group(name,  0);
+            if (_groups.Contains(newGroup))
                 throw new IsuException("Group is already exists!");
 
-            _groups = _groups.Add(newGroup, 0);
+            _groups = _groups.Add(newGroup);
             return newGroup;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            if (!_groups.ContainsKey(group))
-                throw new IsuException("Can't find group for student!");
-
-            if (_groups[group] >= group.MaxCapacity)
+            group = GetGroup(group.Name);
+            if (group.Capacity >= group.MaxCapacity)
                 throw new IsuException("Can't add student, full group!");
 
-            uint newCapacity = _groups[group] + 1;
             _groups = _groups.Remove(group);
-            _groups = _groups.Add(group, newCapacity);
-            var newStudent = new Student(name, _issuedStudentId++, group);
+            group = new Group(group, group.Capacity + 1);
+            _groups = _groups.Add(group);
+
+            var newStudent = new Student(name, _issuedStudentId++, group.Name);
             _students = _students.Add(newStudent);
             return newStudent;
         }
@@ -53,9 +51,22 @@ namespace Isu.Classes
         {
             foreach (Student student in _students
                 .Where(student => Equals(student.Id, id)))
+            {
                 return student;
+            }
 
             throw new IsuException("Can't get student!");
+        }
+
+        public Group GetGroup(GroupName groupName)
+        {
+            foreach (Group group in _groups
+                .Where(group => Equals(group.Name, groupName)))
+            {
+                return group;
+            }
+
+            throw new IsuException("Can't get group!");
         }
 
         public Student FindStudent(string name)
@@ -67,44 +78,46 @@ namespace Isu.Classes
         public List<Student> FindStudents(GroupName groupName)
         {
             return _students
-                .Where(student => Equals(student.Group.Name, groupName))
+                .Where(student => Equals(student.GroupName, groupName))
                 .ToList();
         }
 
         public List<Student> FindStudents(uint courseNumber)
         {
             return _students
-                .Where(student => Equals(student.Group.Name.Course, courseNumber))
+                .Where(student => Equals(student.GroupName.Course, courseNumber))
                 .ToList();
         }
 
         public Group FindGroup(GroupName groupName)
         {
-            return _groups.Keys
+            return _groups
                 .FirstOrDefault(group => Equals(group.Name, groupName));
         }
 
         public List<Group> FindGroups(uint courseNumber)
         {
-            return _groups.Keys
+            return _groups
                 .Where(group => Equals(group.Name.Course, courseNumber))
                 .ToList();
         }
 
-        public void ChangeStudentGroup(ref Student student, Group newGroup)
+        public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            ChangeStudentGroupCheck(student, newGroup);
+            Group prevGroup = GetGroup(student.GroupName);
+            newGroup = GetGroup(newGroup.Name);
+            ChangeStudentGroupCheck(student, prevGroup, newGroup);
 
-            uint prevCapacity = _groups[student.Group] - 1;
-            _groups = _groups.Remove(student.Group);
-            _groups = _groups.Add(student.Group, prevCapacity);
+            _groups = _groups.Remove(prevGroup);
+            prevGroup = new Group(prevGroup, prevGroup.Capacity - 1);
+            _groups = _groups.Add(prevGroup);
 
-            uint newCapacity = _groups[newGroup] + 1;
             _groups = _groups.Remove(newGroup);
-            _groups = _groups.Add(newGroup, newCapacity);
+            newGroup = new Group(newGroup, newGroup.Capacity + 1);
+            _groups = _groups.Add(newGroup);
 
             _students = _students.Remove(student);
-            student = new Student(student, newGroup);
+            student = new Student(student, newGroup.Name);
             _students = _students.Add(student);
         }
 
@@ -114,21 +127,15 @@ namespace Isu.Classes
                 current + (student.ToString() + '\n'));
         }
 
-        private void ChangeStudentGroupCheck(Student student, Group newGroup)
+        private void ChangeStudentGroupCheck(Student student, Group prevGroup, Group newGroup)
         {
             if (!_students.Contains(student))
                 throw new IsuException("This student doesn't exist!");
 
-            if (!_groups.ContainsKey(student.Group))
-                throw new IsuException("Previous group doesn't exist!");
-
-            if (!_groups.ContainsKey(newGroup))
-                throw new IsuException("New group doesn't exist!");
-
-            if (Equals(student.Group, newGroup))
+            if (Equals(prevGroup, newGroup))
                 throw new Exception("Student is already in this group!");
 
-            if (_groups[newGroup] >= newGroup.MaxCapacity)
+            if (newGroup.Capacity >= newGroup.MaxCapacity)
                 throw new IsuException("Can't add student, to new full group!");
         }
     }

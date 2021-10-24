@@ -10,18 +10,26 @@ namespace IsuExtra.Classes.New
         }
 
         public string FacultyTag { get; }
+
         public Lesson Info { get; }
+
         public uint MaxCapacity { get; }
 
         public override bool Equals(object obj)
         {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (Course)obj;
-            return other != null && Equals(FacultyTag, other.FacultyTag)
-                                 && Equals(Info, other.Info);
+            if (obj is not Course item)
+            {
+                return false;
+            }
+
+            return Equals(FacultyTag, item.FacultyTag) &&
+                   Equals(Info, item.Info);
         }
 
-        public override int GetHashCode() { return FacultyTag.GetHashCode(); }
+        public override int GetHashCode()
+        {
+            return FacultyTag.GetHashCode();
+        }
 
         public override string ToString()
         {

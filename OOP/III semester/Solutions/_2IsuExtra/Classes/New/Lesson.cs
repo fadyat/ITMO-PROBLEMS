@@ -4,17 +4,20 @@ namespace IsuExtra.Classes.New
 {
     public class Lesson
     {
-        public Lesson(string lessonName, TimeInterval time, string teacher, uint auditory)
+        public Lesson(string name, TimeInterval time, string teacher, uint auditory)
         {
-            Name = lessonName;
+            Name = name;
             DTime = time;
             Teacher = teacher;
             Auditory = auditory;
         }
 
         public TimeInterval DTime { get; }
+
         private string Name { get; }
+
         private string Teacher { get; }
+
         private uint Auditory { get; }
 
         public bool CrossingTime(Lesson other)
@@ -37,13 +40,21 @@ namespace IsuExtra.Classes.New
 
         public override bool Equals(object obj)
         {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (Lesson)obj;
-            return other != null && Equals(Name, other.Name) && Equals(DTime, other.DTime)
-                   && Equals(Teacher, other.Teacher) && Equals(Auditory, other.Auditory);
+            if (obj is not Lesson item)
+            {
+                return false;
+            }
+
+            return Equals(Name, item.Name) &&
+                   Equals(DTime, item.DTime) &&
+                   Equals(Teacher, item.Teacher) &&
+                   Equals(Auditory, item.Auditory);
         }
 
-        public override int GetHashCode() { return HashCode.Combine(Name, DTime); }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, DTime);
+        }
 
         public override string ToString()
         {

@@ -2,25 +2,26 @@ namespace Isu.Classes
 {
     public class Student
     {
-        public Student(Student copyStudent, Group copyGroup)
-            : this(copyStudent.Name, copyStudent.Id, copyGroup) { }
+        public Student(Student copyStudent, GroupName newGroupName)
+            : this(copyStudent.Name, copyStudent.Id, newGroupName) { }
 
-        public Student(string studentName, uint studentId, Group studentGroup)
+        public Student(string name, uint id, GroupName groupName)
         {
-            Name = studentName;
-            Id = studentId;
-            Group = studentGroup;
+            Name = name;
+            Id = id;
+            GroupName = groupName;
         }
 
         public uint Id { get; }
 
         public string Name { get; }
 
-        public Group Group { get; }
+        public GroupName GroupName { get; }
 
-        public string FacultyTag => Group.Name.FacultyTag;
-
-        public override int GetHashCode() { return Id.GetHashCode(); }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
 
         public override bool Equals(object obj)
         {
@@ -31,7 +32,7 @@ namespace Isu.Classes
 
         public override string ToString()
         {
-            return Group + ": " + Name + " " + Id;
+            return GroupName + ": " + Name + " " + Id;
         }
     }
 }

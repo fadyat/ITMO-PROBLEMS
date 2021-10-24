@@ -34,16 +34,19 @@ namespace IsuExtra.Classes.New
         {
             if (!Enum.IsDefined(typeof(Days), dayOfWeek))
                 throw new IsuExtraException("This day of week doesn't exist!");
-            DayOfWeek = dayOfWeek;
 
+            DayOfWeek = dayOfWeek;
             Start = new DateTime(1, 1, 1, sHours, sMinutes, 0);
             End = new DateTime(1, 1, 1, eHours, eMinutes, 0);
+
             if (Start.CompareTo(End) >= 0)
                 throw new IsuExtraException("The start time can't be later than the end!");
         }
 
         private DateTime Start { get; }
+
         private DateTime End { get; }
+
         private string DayOfWeek { get; }
 
         public bool CrossingIntervals(TimeInterval secondInterval)
@@ -59,13 +62,20 @@ namespace IsuExtra.Classes.New
 
         public override bool Equals(object obj)
         {
-            if (obj != null && obj.GetType() != GetType()) return false;
-            var other = (TimeInterval)obj;
-            return other != null && Equals(Start, other.Start) && Equals(End, other.End)
-                   && Equals(DayOfWeek, other.DayOfWeek);
+            if (obj is not TimeInterval item)
+            {
+                return false;
+            }
+
+            return Equals(Start, item.Start) &&
+                   Equals(End, item.End) &&
+                   Equals(DayOfWeek, item.DayOfWeek);
         }
 
-        public override int GetHashCode() { return HashCode.Combine(Start, End, DayOfWeek); }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Start, End, DayOfWeek);
+        }
 
         public override string ToString()
         {

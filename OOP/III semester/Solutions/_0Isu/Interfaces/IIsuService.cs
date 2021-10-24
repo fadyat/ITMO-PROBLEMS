@@ -21,6 +21,6 @@ namespace Isu.Interfaces
 
         List<Group> FindGroups(uint courseNumber);
 
-        void ChangeStudentGroup(ref Student student, Group newGroup);
+        void ChangeStudentGroup(Student student, Group newGroup);
     }
 }

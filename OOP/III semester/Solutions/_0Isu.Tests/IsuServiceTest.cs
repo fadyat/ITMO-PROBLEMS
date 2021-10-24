@@ -26,7 +26,7 @@ namespace Isu.Tests
             Group group = _isuService.AddGroup(name);
             Student alex = _isuService.AddStudent(group, "alex");
             Student tmpAlex = _isuService.FindStudent("alex");
-            if (tmpAlex == null || !Equals(alex.Group, tmpAlex.Group))
+            if (tmpAlex == null || !Equals(alex.GroupName, tmpAlex.GroupName))
             {
                 Assert.Fail();
             }
@@ -93,6 +93,7 @@ namespace Isu.Tests
                 for (int i = 0; i < howMuchAdd; i++)
                 {
                     _isuService.AddStudent(m3102, i + "Student");
+                    m3102 = _isuService.GetGroup(m3102.Name);
                 }
             });
         }
@@ -118,13 +119,18 @@ namespace Isu.Tests
             Group group2 = _isuService.AddGroup(name2);
 
             Student student = _isuService.AddStudent(group1, "student1");
-            Assert.AreEqual(1, _isuService.Groups[group1]);
-            Assert.AreEqual(0, _isuService.Groups[group2]);
-            Assert.AreEqual(group1, student.Group);
-            _isuService.ChangeStudentGroup(ref student, group2);
-            Assert.AreEqual(0, _isuService.Groups[group1]);
-            Assert.AreEqual(1, _isuService.Groups[group2]);
-            Assert.AreEqual(group2, student.Group);
+            group1 = _isuService.GetGroup(group1.Name);
+            Assert.AreEqual(1, group1.Capacity);
+            Assert.AreEqual(0, group2.Capacity);
+            Assert.AreEqual(group1.Name, student.GroupName);
+            
+            _isuService.ChangeStudentGroup(student, group2);
+            group1 = _isuService.GetGroup(group1.Name);
+            group2 = _isuService.GetGroup(group2.Name);
+            student = _isuService.GetStudent(student.Id);
+            Assert.AreEqual(0, group1.Capacity);
+            Assert.AreEqual(1, group2.Capacity);
+            Assert.AreEqual(group2.Name, student.GroupName);
         }
     }
 }
