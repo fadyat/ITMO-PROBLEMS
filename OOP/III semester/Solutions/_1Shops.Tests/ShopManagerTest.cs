@@ -12,16 +12,19 @@ namespace Shops.Tests
     public class ShopManagerTest
     {
         private ShopService _shopService;
+        private ProductService _productService;
 
         [SetUp]
         public void SetUp()
         {
+            _productService = new ProductService(
+                new ProductRepository(),
+                new OrderRepository(),
+                new SupplyRepository());
+
             _shopService = new ShopService(
-                new ShopRepository(),
-                new ProductService(
-                    new ProductRepository(),
-                    new OrderRepository(),
-                    new SupplyRepository()));
+                new ShopRepository(), 
+                _productService.ProductRepository);
         }
 
         private static readonly object[] ShopCreationData =
@@ -50,12 +53,12 @@ namespace Shops.Tests
         public void RegisterProduct(string shopName, List<string> productNames)
         {
             var products = productNames
-                .Select(productName => _shopService.ProductService.RegisterProduct(productName))
+                .Select(productName => _productService.RegisterProduct(productName))
                 .ToList();
 
             foreach (Product product in products)
             {
-                _shopService.ProductService.ProductRepository.CheckProduct(product.Id);
+                _productService.ProductRepository.CheckProduct(product.Id);
             }
         }
 
@@ -107,26 +110,26 @@ namespace Shops.Tests
             var lastStage = new List<Product>();
             foreach ((string name, List<(int price, int quantity)> data) in products)
             {
-                Product currentProduct = _shopService.ProductService.RegisterProduct(name);
+                Product currentProduct = _productService.RegisterProduct(name);
                 lastStage.Add(currentProduct);
                 int lastPrice = 0;
                 int totalQuantity = 0;
                 foreach ((int price, int quantity) in data)
                 {
-                    _shopService.ProductService.AddProduct(shop, currentProduct, price, quantity);
+                    _productService.AddProduct(shop, currentProduct, price, quantity);
                     lastPrice = price;
                     totalQuantity += quantity;
                 }
 
-                Product productCondition =
-                    _shopService.ProductService.ProductRepository.GetProduct(currentProduct.Id, shop.Id);
+                Product productCondition = 
+                    _productService.ProductRepository.GetProduct(currentProduct.Id, shop.Id);
                 lastStage.Add(productCondition);
 
                 Assert.AreEqual(productCondition.Price, lastPrice);
                 Assert.AreEqual(productCondition.Quantity, totalQuantity);
             }
 
-            Assert.True(lastStage.SequenceEqual(_shopService.ProductService.ProductRepository.GetAll()));
+            Assert.True(lastStage.SequenceEqual(_productService.ProductRepository.GetAll()));
         }
 
         private static readonly object[] AddDifferentProductsData =
@@ -159,16 +162,16 @@ namespace Shops.Tests
             var quantities = new List<int>();
             foreach ((string productName, int price, int quantity) in products)
             {
-                Product product = _shopService.ProductService.RegisterProduct(productName);
+                Product product = _productService.RegisterProduct(productName);
                 registered.Add(product);
                 prices.Add(price);
                 quantities.Add(quantity);
             }
 
-            _shopService.ProductService.AddProducts(shop, registered, prices, quantities);
+            _productService.AddProducts(shop, registered, prices, quantities);
             for (int i = 0; i < registered.Count; i++)
             {
-                Product product = _shopService.ProductService.ProductRepository.GetProduct(registered[i].Id, shop.Id);
+                Product product = _productService.ProductRepository.GetProduct(registered[i].Id, shop.Id);
                 Assert.AreEqual(prices[i], product.Price);
                 Assert.AreEqual(quantities[i], product.Quantity);
             }
@@ -199,11 +202,11 @@ namespace Shops.Tests
             int quantity, int amount)
         {
             Shop shop = _shopService.CreateShop("shop1");
-            Product product = _shopService.ProductService.RegisterProduct(productName);
-            _shopService.ProductService.AddProduct(shop, product, price, quantity);
+            Product product = _productService.RegisterProduct(productName);
+            _productService.AddProduct(shop, product, price, quantity);
             int prevCash = customer.Cash;
-            int expenses = _shopService.ProductService.PurchaseProduct(ref customer, shop, product, amount);
-            Product productCondition = _shopService.ProductService.ProductRepository.GetProduct(product.Id, shop.Id);
+            int expenses = _productService.PurchaseProduct(ref customer, shop, product, amount);
+            Product productCondition = _productService.ProductRepository.GetProduct(product.Id, shop.Id);
             Assert.AreEqual(quantity - amount, productCondition.Quantity);
             Assert.AreEqual(expenses, price * amount);
             Assert.AreEqual(customer.Cash + expenses, prevCash);
@@ -244,9 +247,9 @@ namespace Shops.Tests
             Assert.Catch<Exception>(() =>
             {
                 Shop shop = _shopService.CreateShop("shop1");
-                Product product = _shopService.ProductService.RegisterProduct(productName);
-                _shopService.ProductService.AddProduct(shop, product, price, quantity);
-                _shopService.ProductService.PurchaseProduct(ref customer, shop, product, amount);
+                Product product = _productService.RegisterProduct(productName);
+                _productService.AddProduct(shop, product, price, quantity);
+                _productService.PurchaseProduct(ref customer, shop, product, amount);
             });
         }
 
@@ -280,7 +283,7 @@ namespace Shops.Tests
         {
             // shop0 - the cheapest
             var registered = register
-                .Select(reg => _shopService.ProductService.RegisterProduct(reg))
+                .Select(reg => _productService.RegisterProduct(reg))
                 .ToList();
 
             foreach ((string name, List<(int price, int quantity)> lst) in shops)
@@ -288,11 +291,11 @@ namespace Shops.Tests
                 Shop shop = _shopService.CreateShop(name);
                 for (int i = 0; i < lst.Count; i++)
                 {
-                    _shopService.ProductService.AddProduct(shop, registered[i], lst[i].price, lst[i].quantity);
+                    _productService.AddProduct(shop, registered[i], lst[i].price, lst[i].quantity);
                 }
             }
 
-            var products = _shopService.ProductService.ProductRepository.GetAll().ToList();
+            var products = _productService.ProductRepository.GetAll().ToList();
             var buyThis = whichProductsBuy.Select(addThis => products[addThis]).ToList();
             var id = _shopService.Shops.GetAll().ToList();
             Assert.AreEqual(_shopService.CheapestShopFinding(buyThis, amounts), id[0]);

@@ -12,16 +12,16 @@ namespace Shops.Services
 
         public ShopService(
             IShopRepository shopRepository,
-            IProductService productService)
+            IProductRepository productRepository)
         {
             Shops = shopRepository;
-            ProductService = productService;
+            ProductRepository = productRepository;
             _issuedShopId = 100000;
         }
 
         public IShopRepository Shops { get; }
 
-        public IProductService ProductService { get; }
+        private IProductRepository ProductRepository { get; }
 
         public Shop CreateShop(string name)
         {
@@ -42,7 +42,7 @@ namespace Shops.Services
             var pricePerListInShop = new Dictionary<int, int?>();
             for (int i = 0; i < products.Count; i++)
             {
-                foreach (Product product in ProductService.ProductRepository.GetAll())
+                foreach (Product product in ProductRepository.GetAll())
                 {
                     if (product.Id != products[i].Id) continue;
 

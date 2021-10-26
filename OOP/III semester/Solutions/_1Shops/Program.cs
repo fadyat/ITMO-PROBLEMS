@@ -10,22 +10,24 @@ namespace Shops
     {
         private static void Main()
         {
-            var a = new ShopService(
-                new ShopRepository(),
-                new ProductService(
-                    new ProductRepository(),
-                    new OrderRepository(),
-                    new SupplyRepository()));
+            var productService = new ProductService(
+                new ProductRepository(),
+                new OrderRepository(),
+                new SupplyRepository());
 
-            Shop shop = a.CreateShop("shop1");
-            Product product1 = a.ProductService.RegisterProduct("product1");
-            Product product2 = a.ProductService.RegisterProduct("product2");
-            Product product3 = a.ProductService.RegisterProduct("product3");
-            a.ProductService.AddProduct(shop, product1, 10, 10);
-            a.ProductService.AddProduct(shop, product1, 20, 20);
-            a.ProductService.AddProduct(shop, product2, 30, 30);
-            a.ProductService.AddProduct(shop, product3, 40, 40);
-            a.ProductService.AddProducts(
+            var shopService = new ShopService(
+                new ShopRepository(),
+                productService.ProductRepository);
+
+            Shop shop = shopService.CreateShop("shop1");
+            Product product1 = productService.RegisterProduct("product1");
+            Product product2 = productService.RegisterProduct("product2");
+            Product product3 = productService.RegisterProduct("product3");
+            productService.AddProduct(shop, product1, 10, 10);
+            productService.AddProduct(shop, product1, 20, 20);
+            productService.AddProduct(shop, product2, 30, 30);
+            productService.AddProduct(shop, product3, 40, 40);
+            productService.AddProducts(
                 shop,
                 new List<Product>
                 {
@@ -42,17 +44,17 @@ namespace Shops
                     30,
                     40,
                 });
-            a.ProductService.ProductRepository.Print();
+            productService.ProductRepository.Print();
             Console.WriteLine();
 
-            a.ProductService.SupplyRepository.Print();
+            productService.SupplyRepository.Print();
             Console.WriteLine();
 
             var me = new Customer(10000);
             Console.WriteLine(me.Cash);
-            a.ProductService.PurchaseProduct(ref me, shop, product1, 5);
-            a.ProductService.PurchaseProduct(ref me, shop, product2, 5);
-            a.ProductService.PurchaseProducts(
+            productService.PurchaseProduct(ref me, shop, product1, 5);
+            productService.PurchaseProduct(ref me, shop, product2, 5);
+            productService.PurchaseProducts(
                 ref me,
                 shop,
                 new List<Product>
@@ -66,7 +68,7 @@ namespace Shops
                     20,
                 });
 
-            a.ProductService.OrderRepository.Print();
+            productService.OrderRepository.Print();
             Console.WriteLine(me.Cash);
         }
     }

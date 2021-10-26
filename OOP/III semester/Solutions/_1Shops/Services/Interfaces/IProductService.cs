@@ -1,17 +1,10 @@
 using System.Collections.Generic;
 using Shops.Classes;
-using Shops.Repositories.Interfaces;
 
 namespace Shops.Services.Interfaces
 {
     public interface IProductService
     {
-        IProductRepository ProductRepository { get; }
-
-        ISupplyRepository SupplyRepository { get; }
-
-        IOrderRepository OrderRepository { get; }
-
         Product RegisterProduct(string name);
 
         void AddProduct(Shop shop, Product product, int price, int quantity);
