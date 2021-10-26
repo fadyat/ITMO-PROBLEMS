@@ -1,23 +1,27 @@
-using System;
 using System.Collections.Generic;
 using Shops.Classes;
-using Shops.Repositories;
+using Shops.Exceptions;
+using Shops.Repositories.Interfaces;
 using Shops.Services.Interfaces;
 
 namespace Shops.Services
 {
     public class ShopService : IShopService
     {
-        private readonly ShopRepository _shopRepository;
         private int _issuedShopId;
 
-        public ShopService()
+        public ShopService(
+            IShopRepository shopRepository,
+            IProductService productService)
         {
-            _shopRepository = new ShopRepository();
+            Shops = shopRepository;
+            ProductService = productService;
             _issuedShopId = 100000;
         }
 
-        public IEnumerable<Shop> Shops => _shopRepository.GetAll();
+        public IShopRepository Shops { get; }
+
+        public IProductService ProductService { get; }
 
         public Shop CreateShop(string name)
         {
@@ -26,15 +30,49 @@ namespace Shops.Services
                 .WithId(_issuedShopId++)
                 .Build();
 
-            _shopRepository.Save(newShop);
+            Shops.Save(newShop);
             return newShop;
         }
 
-        public void Print()
+        public Shop CheapestShopFinding(List<Product> products, List<int> amounts)
         {
-            Console.WriteLine(" # Shops:");
-            foreach (Shop shop in _shopRepository.GetAll())
-                Console.WriteLine($"\t{shop}");
+            if (products.Count != amounts.Count)
+                throw new ProductException("Not enough data!");
+
+            var pricePerListInShop = new Dictionary<int, int?>();
+            for (int i = 0; i < products.Count; i++)
+            {
+                foreach (Product product in ProductService.ProductRepository.GetAll())
+                {
+                    if (product.Id != products[i].Id) continue;
+
+                    if (!pricePerListInShop.ContainsKey(product.ShopId))
+                    {
+                        pricePerListInShop.Add(product.ShopId, 0);
+                    }
+
+                    if (product.Quantity < amounts[i])
+                    {
+                        pricePerListInShop[product.ShopId] = null;
+                    }
+
+                    if (pricePerListInShop[product.ShopId] != null)
+                    {
+                        pricePerListInShop[product.ShopId] += product.Price * amounts[i];
+                    }
+                }
+            }
+
+            int id = 0;
+            int minPrice = (int)1e9;
+            foreach ((int shopId, int? price) in pricePerListInShop)
+            {
+                if (price == null || !(price < minPrice)) continue;
+                minPrice = (int)price;
+                id = shopId;
+            }
+
+            return Shops.GetShop(id);
         }
     }
 }

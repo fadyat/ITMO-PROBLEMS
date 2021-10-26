@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
@@ -34,6 +35,17 @@ namespace Shops.Repositories
             }
 
             throw new SupplyException("No such supply!");
+        }
+
+        public void Print()
+        {
+            foreach (Supply supply in _supplies)
+            {
+                foreach (SupplyItem supplyItem in supply.Supplies)
+                {
+                    Console.WriteLine($"{supplyItem}, {supply.Id}");
+                }
+            }
         }
     }
 }

@@ -14,5 +14,9 @@ namespace Shops.Repositories.Interfaces
         Product FindProduct(int id, int shopId);
 
         void Delete(int id, int shopId);
+
+        void Print();
+
+        void CheckProduct(int id);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
@@ -34,6 +35,17 @@ namespace Shops.Repositories
             }
 
             throw new OrderException("No such order!");
+        }
+
+        public void Print()
+        {
+            foreach (Order order in _orders)
+            {
+                foreach (OrderItem orderItem in order.Orders)
+                {
+                    Console.WriteLine($"{orderItem}, {order.Id}");
+                }
+            }
         }
     }
 }

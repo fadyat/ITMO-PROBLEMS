@@ -1,16 +1,16 @@
+using System.Collections.Generic;
+
 namespace Shops.Classes
 {
     public class Order
     {
-        private Product _product;
-        private int _amount;
-
-        public Order(Product product, int amount, int id)
+        public Order(List<OrderItem> newOrders, int id)
         {
-            _product = product;
-            _amount = amount;
+            Orders = newOrders;
             Id = id;
         }
+
+        public List<OrderItem> Orders { get; }
 
         public int Id { get; }
     }

@@ -1,34 +1,35 @@
-using System;
 using System.Collections.Generic;
 using Shops.Classes;
 using Shops.Exceptions;
-using Shops.Repositories;
+using Shops.Repositories.Interfaces;
 using Shops.Services.Interfaces;
 
 namespace Shops.Services
 {
     public class ProductService : IProductService
     {
-        private readonly OrderRepository _orderRepository;
-        private readonly SupplyRepository _supplyRepository;
         private int _issuedProductId;
         private int _issuedOrderId;
         private int _issuedSupplyId;
 
-        public ProductService()
+        public ProductService(
+            IProductRepository productRepository,
+            IOrderRepository orderRepository,
+            ISupplyRepository supplyRepository)
         {
-            ProductRepository = new ProductRepository();
-            _orderRepository = new OrderRepository();
-            _supplyRepository = new SupplyRepository();
-            Registrations = new RegisteredProductRepository();
+            ProductRepository = productRepository;
+            OrderRepository = orderRepository;
+            SupplyRepository = supplyRepository;
             _issuedProductId = 100000;
             _issuedOrderId = 100000;
             _issuedSupplyId = 100000;
         }
 
-        public RegisteredProductRepository Registrations { get; }
+        public IProductRepository ProductRepository { get; }
 
-        public ProductRepository ProductRepository { get; }
+        public ISupplyRepository SupplyRepository { get; }
+
+        public IOrderRepository OrderRepository { get; }
 
         public Product RegisterProduct(string name)
         {
@@ -37,111 +38,89 @@ namespace Shops.Services
                 .WithId(_issuedProductId++)
                 .Build();
 
-            Registrations.Save(newProduct);
+            ProductRepository.Save(newProduct);
             return newProduct;
         }
 
         public void AddProduct(Shop shop, Product product, int price, int quantity)
         {
-            Registrations.GetProduct(product.Id);
-            var newSupply = new Supply(product, price, quantity, _issuedSupplyId++);
-            _supplyRepository.Save(newSupply);
+            AddProducts(shop, new List<Product> { product }, new List<int> { price }, new List<int> { quantity });
+        }
 
-            Product recentProduct = ProductRepository.FindProduct(product.Id, shop.Id);
-            int newQuantity = quantity;
-            if (recentProduct != null)
+        public void AddProducts(Shop shop, List<Product> products, List<int> prices, List<int> quantities)
+        {
+            if (products.Count != prices.Count || products.Count != quantities.Count)
+                throw new ProductException("Not enough data!");
+
+            var supplyItems = new List<SupplyItem>();
+            for (int i = 0; i < products.Count; i++)
             {
-                newQuantity += recentProduct.Quantity;
-                ProductRepository.Delete(product.Id, shop.Id);
+                ProductRepository.CheckProduct(products[i].Id);
+                Product recentProduct = ProductRepository.FindProduct(products[i].Id, shop.Id);
+                int newQuantity = quantities[i];
+                if (recentProduct != null)
+                {
+                    newQuantity += recentProduct.Quantity;
+                    ProductRepository.Delete(products[i].Id, shop.Id);
+                }
+
+                Product newProduct = products[i].ToBuilder()
+                    .WithPrice(prices[i])
+                    .WithShopId(shop.Id)
+                    .WithQuantity(newQuantity)
+                    .Build();
+
+                ProductRepository.Save(newProduct);
+                var supplyItem = new SupplyItem(products[i], prices[i], quantities[i]);
+                supplyItems.Add(supplyItem);
             }
 
-            Product newProduct = product.ToBuilder()
-                .WithPrice(price)
-                .WithShopId(shop.Id)
-                .WithQuantity(newQuantity)
-                .Build();
-
-            ProductRepository.Save(newProduct);
+            var supply = new Supply(new List<SupplyItem>(supplyItems), _issuedSupplyId++);
+            SupplyRepository.Save(supply);
         }
 
         public int PurchaseProduct(ref Customer customer, Shop shop, Product product, int amount)
         {
-            Registrations.GetProduct(product.Id);
-            var newOrder = new Order(product, amount, _issuedOrderId++);
-            _orderRepository.Save(newOrder);
-
-            Product recentProduct = ProductRepository.GetProduct(product.Id, shop.Id);
-
-            if (recentProduct.Quantity < amount)
-                throw new ProductException("Not enough products!");
-
-            int expenses = recentProduct.Price * amount;
-            if (customer.Cash < expenses)
-                throw new ProductException("Not enough cash!");
-
-            ProductRepository.Delete(recentProduct.Id, recentProduct.ShopId);
-
-            recentProduct = recentProduct.ToBuilder()
-                .WithQuantity(recentProduct.Quantity - amount)
-                .Build();
-
-            ProductRepository.Save(recentProduct);
-            customer = new Customer(customer.Cash - expenses);
-            return expenses;
+            return PurchaseProducts(ref customer, shop, new List<Product> { product }, new List<int> { amount });
         }
 
-        public int CheapestShopIdFinding(List<Product> products, List<int> amounts)
+        public int PurchaseProducts(ref Customer customer, Shop shop, List<Product> products, List<int> amounts)
         {
             if (products.Count != amounts.Count)
                 throw new ProductException("Not enough data!");
 
-            var pricePerListInShop = new Dictionary<int, int?>();
-
+            var orderItems = new List<OrderItem>();
+            int totalExpenses = 0;
             for (int i = 0; i < products.Count; i++)
             {
-                foreach (Product product in ProductRepository.GetAll())
-                {
-                    if (product.Id != products[i].Id) continue;
+                ProductRepository.CheckProduct(products[i].Id);
+                Product recentProduct = ProductRepository.GetProduct(products[i].Id, shop.Id);
 
-                    if (!pricePerListInShop.ContainsKey(product.ShopId))
-                    {
-                        pricePerListInShop.Add(product.ShopId, 0);
-                    }
+                if (recentProduct.Quantity < amounts[i])
+                    throw new ProductException("Not enough products!");
 
-                    if (product.Quantity < amounts[i])
-                    {
-                        pricePerListInShop[product.ShopId] = null;
-                    }
+                int expenses = recentProduct.Price * amounts[i];
+                if (customer.Cash < expenses)
+                    throw new ProductException("Not enough cash!");
 
-                    if (pricePerListInShop[product.ShopId] != null)
-                    {
-                        pricePerListInShop[product.ShopId] += product.Price * amounts[i];
-                    }
-                }
+                ProductRepository.Delete(recentProduct.Id, recentProduct.ShopId);
+
+                recentProduct = recentProduct.ToBuilder()
+                    .WithQuantity(recentProduct.Quantity - amounts[i])
+                    .Build();
+
+                ProductRepository.Save(recentProduct);
+                customer = new Customer(customer.Cash - expenses);
+                totalExpenses += expenses;
+
+                var orderItem = new OrderItem(products[i], amounts[i]);
+                orderItems.Add(orderItem);
             }
 
-            int id = 0;
-            int minPrice = (int)1e9;
-            foreach ((int shopId, int? price) in pricePerListInShop)
-            {
-                if (price == null || !(price < minPrice)) continue;
-                minPrice = (int)price;
-                id = shopId;
-            }
+            var order = new Order(new List<OrderItem>(orderItems), _issuedOrderId++);
+            OrderRepository.Save(order);
 
-            pricePerListInShop.Clear();
-            return id;
-        }
-
-        public void Print()
-        {
-            Console.WriteLine(" # Registered products:");
-            foreach (Product product in Registrations.GetAll())
-                Console.WriteLine($"\t {product}");
-
-            Console.WriteLine(" # Products:");
-            foreach (Product product in ProductRepository.GetAll())
-                Console.WriteLine($"\t {product}");
+            return totalExpenses;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
@@ -51,6 +52,24 @@ namespace Shops.Repositories
             {
                 _products.Remove(product);
                 break;
+            }
+        }
+
+        public void CheckProduct(int id)
+        {
+            if (_products.Any(product => Equals(product.Id, id)))
+            {
+                return;
+            }
+
+            throw new ProductException("No such product!");
+        }
+
+        public void Print()
+        {
+            foreach (Product product in _products)
+            {
+                Console.WriteLine(product);
             }
         }
     }

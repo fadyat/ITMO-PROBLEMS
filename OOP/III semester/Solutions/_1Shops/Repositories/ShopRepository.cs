@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shops.Classes;
@@ -34,6 +35,14 @@ namespace Shops.Repositories
             }
 
             throw new ShopException("No such shop!");
+        }
+
+        public void Print()
+        {
+            foreach (Shop shop in _shops)
+            {
+                Console.WriteLine(shop);
+            }
         }
     }
 }

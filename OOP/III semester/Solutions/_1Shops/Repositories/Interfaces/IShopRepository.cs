@@ -10,5 +10,7 @@ namespace Shops.Repositories.Interfaces
         IEnumerable<Shop> GetAll();
 
         Shop GetShop(int id);
+
+        void Print();
     }
 }

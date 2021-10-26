@@ -1,18 +1,16 @@
+using System.Collections.Generic;
+
 namespace Shops.Classes
 {
     public class Supply
     {
-        private Product _product;
-        private int _price;
-        private int _quantity;
-
-        public Supply(Product product, int price, int quantity, int id)
+        public Supply(List<SupplyItem> newSupplies, int id)
         {
-            _product = product;
-            _price = price;
-            _quantity = quantity;
+            Supplies = newSupplies;
             Id = id;
         }
+
+        public List<SupplyItem> Supplies { get; }
 
         public int Id { get; }
     }
