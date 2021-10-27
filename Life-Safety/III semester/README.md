@@ -29,7 +29,7 @@
 
 <div>
   <a href = "./ecoFriendlyLifestyle"> 6. </a> #
-  Conscious consumption & eco-friendly lifestyle
+  <a href = "./ecoFriendlyLifestyle/solution/solution.pdf"> Conscious consumption & eco-friendly lifestyle </a>
 </div>
 
 <div>
