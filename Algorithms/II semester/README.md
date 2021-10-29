@@ -39,14 +39,21 @@
 
 <a href = "./II%20semester/Problems/problemss12.pdf"> 12. </a> # Dynamic programming
 <ul> 
-  <li><a href = ""> </a></li>
-  <li><a href = ""> </a></li>
-  <li><a href = ""> </a></li>
+  <li><a href = "./II%20semester/Labs/DP/LIS.cpp"> Longest increasing subsequence </a></li>
+  <li><a href = "./II%20semester/Labs/DP/LIS2.cpp"> Longest increasing subsequence 2 </a></li>
+  <li> Longest common subsequence </li>
+  <li><a href = "./II%20semester/Labs/DP/knightMove.cpp"> Knight's move </a></li>
+  <li> Selection of tree vertices </li>
+  <li> Tree (amount) </li>
+  <li><a href = "./II%20semester/Labs/DP/backpack.cpp"> Backpack</a></li>
+  <li> T-shirts </li>
 </ul>
 
 <a href = "./II%20semester/Problems/problemss13.pdf"> 13. </a> # Substring search
 <ul> 
-  <li><a href = ""> </a></li>
-  <li><a href = ""> </a></li>
-  <li><a href = ""> </a></li>
+  <li><a href = "./II%20semester/Labs/strings/naiveSubstring.cpp"> Naive search for a substring in a string </a></li>
+  <li><a href = "./II%20semester/Labs/strings/KMP-algo.cpp"> Quick search for a substring in a string </a></li>
+  <li><a href = "./II%20semester/Labs/strings/prefix-function.cpp"> Prefix function </a></li>
+  <li> Knuth–Morris–Pratt machine </li>
+  <li> Multiple search </li>
 </ul>
