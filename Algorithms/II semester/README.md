@@ -41,7 +41,7 @@
 <ul> 
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/LIS.cpp"> Longest increasing subsequence </a></li>
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/LIS2.cpp"> Longest increasing subsequence 2 </a></li>
-  <li> Longest common subsequence </li>
+  <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/LCS.cpp"> Longest common subsequence </a></li>
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/knightMove.cpp"> Knight's move </a></li>
   <li> Selection of tree vertices </li>
   <li> Tree (amount) </li>
