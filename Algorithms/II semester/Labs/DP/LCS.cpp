@@ -5,14 +5,7 @@
 using namespace std;
 
 string LCS(string s1, string s2, int n, int m) {
-    if (n > m) {
-        swap(n, m);
-        swap(s1, s2);
-    }
     vector<vector<bool>> left(n + 1, vector<bool> (m + 1, false));
-    for (int j = 0; j < m + 1; j++) {
-        left[0][j] = true;
-    }
     vector<vector<int>> lcs(2, vector<int> (m + 1, 0));
     for (int i = 1; i < n + 1; i++) {
         lcs[1][0] = 0;
