@@ -43,8 +43,8 @@
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/LIS2.cpp"> Longest increasing subsequence 2 </a></li>
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/LCS.cpp"> Longest common subsequence </a></li>
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/knightMove.cpp"> Knight's move </a></li>
-  <li> Selection of tree vertices </li>
-  <li> Tree (amount) </li>
+  <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/getIndependentSet.cpp"> Selection of tree vertices </a></li>
+  <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/independentSetSum.cpp"> Tree (amount) </a></li>
   <li><a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Algorithms/II%20semester/Labs/DP/backpack.cpp"> Backpack</a></li>
   <li> T-shirts </li>
 </ul>
