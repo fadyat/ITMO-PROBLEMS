@@ -34,7 +34,7 @@
 
 <div>
    <a href = "./psychologicalSafety"> 7. </a> #
-  Psychological safety
+   <a href = "./psychologicalSafety/solution.pdf"> Psychological safety </a>
 </div>
 
 
