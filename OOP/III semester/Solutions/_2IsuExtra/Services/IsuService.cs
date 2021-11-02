@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Isu.Classes;
 using IsuExtra.Classes;
 
 namespace IsuExtra.Services
@@ -9,10 +8,39 @@ namespace IsuExtra.Services
     public class IsuService : Isu.Classes.IsuService
     {
         private readonly StudentStreamService _streams;
+        private readonly List<Student> _students;
+        private uint _issuedStudentId;
 
         public IsuService(StudentStreamService streams)
         {
             _streams = streams;
+            _students = new List<Student>();
+            _issuedStudentId = 100000;
+        }
+
+        public new Student AddStudent(Isu.Classes.Group group, string name)
+        {
+            group = GetGroup(group.Name);
+            if (group.Capacity >= group.MaxCapacity)
+                throw new Exception("Can't add student, full group!"); // ...
+
+            group = new Isu.Classes.Group(group, group.Capacity + 1);
+            UpdateGroup(group);
+
+            var newStudent = new Student(name, _issuedStudentId++, group.Name);
+            _students.Add(newStudent);
+            return newStudent;
+        }
+
+        public new Student GetStudent(uint id)
+        {
+            foreach (Student student in _students
+                .Where(student => Equals(student.Id, id)))
+            {
+                return student;
+            }
+
+            throw new Exception("Can't get student!"); // ...
         }
 
         public Student AddStudentToStream(Student student, StudentStream stream)
@@ -89,15 +117,15 @@ namespace IsuExtra.Services
         {
             return (from streamId in electiveCourse.StreamsIds
                 where Equals(streamId, stream.Id)
-                from student in Students
+                from student in _students
                 where student.PickedCourses.Contains(electiveCourse.Id) &&
                       student.PickedStreams.Contains(streamId)
                 select student).ToList();
         }
 
-        public List<Student> FindStudentsNotPickedElectiveCourse(GroupName groupName)
+        public List<Student> FindStudentsNotPickedElectiveCourse(Isu.Classes.GroupName groupName)
         {
-            return Students.Where(student => Equals(student.GroupName, groupName) &&
+            return _students.Where(student => Equals(student.GroupName, groupName) &&
                                              student.PickedCourses.Count != 2)
                 .ToList();
         }

@@ -20,8 +20,6 @@ namespace Isu.Classes
             _issuedStudentId = 100000;
         }
 
-        protected IEnumerable<Student> Students => _students;
-
         public Group AddGroup(GroupName name)
         {
             var newGroup = new Group(name,  0);
@@ -38,9 +36,8 @@ namespace Isu.Classes
             if (group.Capacity >= group.MaxCapacity)
                 throw new IsuException("Can't add student, full group!");
 
-            _groups = _groups.Remove(group);
             group = new Group(group, group.Capacity + 1);
-            _groups = _groups.Add(group);
+            UpdateGroup(group);
 
             var newStudent = new Student(name, _issuedStudentId++, group.Name);
             _students = _students.Add(newStudent);

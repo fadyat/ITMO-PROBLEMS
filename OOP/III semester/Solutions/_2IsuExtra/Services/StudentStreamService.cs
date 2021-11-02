@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Isu.Classes;
 using IsuExtra.Classes;
 
 namespace IsuExtra.Services
@@ -9,16 +8,15 @@ namespace IsuExtra.Services
     public class StudentStreamService
     {
         private readonly ScheduleService _schedules;
+        private readonly List<StudentStream> _streams;
         private int _issuedStudentStreamId;
 
         public StudentStreamService(ScheduleService schedules)
         {
-            Streams = new List<StudentStream>();
+            _streams = new List<StudentStream>();
             _schedules = schedules;
             _issuedStudentStreamId = 100000;
         }
-
-        public List<StudentStream> Streams { get; }
 
         public StudentStream CreateStream(Lesson lesson, int maxCapacity, List<Student> students)
         {
@@ -38,13 +36,13 @@ namespace IsuExtra.Services
             CheckCrossingStreams(newStream);
             _schedules.CheckCrossingStream(newStream);
 
-            Streams.Add(newStream);
+            _streams.Add(newStream);
             return newStream;
         }
 
         public StudentStream GetStream(int id)
         {
-            foreach (StudentStream stream in Streams
+            foreach (StudentStream stream in _streams
                 .Where(stream => Equals(stream.Id, id)))
             {
                 return stream;
@@ -56,13 +54,13 @@ namespace IsuExtra.Services
         public void UpdateStream(StudentStream newStream)
         {
             StudentStream prevStatus = GetStream(newStream.Id);
-            Streams.Remove(prevStatus);
-            Streams.Add(newStream);
+            _streams.Remove(prevStatus);
+            _streams.Add(newStream);
         }
 
         public void CheckCrossingStreams(StudentStream newStream)
         {
-            if (Streams.Any(stream => stream.Info.CrossingTime(newStream.Info) &&
+            if (_streams.Any(stream => stream.Info.CrossingTime(newStream.Info) &&
                                        (stream.Info.CrossingTeacher(newStream.Info) ||
                                         stream.Info.CrossingAuditory(newStream.Info))))
             {
