@@ -20,10 +20,7 @@ namespace IsuExtra.Services
 
         public List<StudentStream> Streams { get; }
 
-        public StudentStream CreateStream(
-            Lesson lesson,
-            int maxCapacity,
-            List<Student> students)
+        public StudentStream CreateStream(Lesson lesson, int maxCapacity, List<Student> students)
         {
             var studentsId = new HashSet<uint>();
             foreach (Student student in students)

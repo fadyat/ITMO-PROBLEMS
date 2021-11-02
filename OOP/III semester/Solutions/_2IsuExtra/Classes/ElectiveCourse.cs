@@ -4,11 +4,7 @@ namespace IsuExtra.Classes
 {
     public class ElectiveCourse
     {
-        public ElectiveCourse(
-            int id,
-            string facultyTag,
-            string name,
-            List<StudentStream> streams)
+        public ElectiveCourse(int id, string facultyTag, string name, List<StudentStream> streams)
         {
             Id = id;
             FacultyTag = facultyTag;

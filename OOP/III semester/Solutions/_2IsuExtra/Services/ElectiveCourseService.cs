@@ -18,10 +18,7 @@ namespace IsuExtra.Services
             _courses = new List<ElectiveCourse>();
         }
 
-        public ElectiveCourse CreateElectiveCourse(
-            string facultyTag,
-            string name,
-            List<StudentStream> streams)
+        public ElectiveCourse CreateElectiveCourse(string facultyTag, string name, List<StudentStream> streams)
         {
             var electiveCourse = new ElectiveCourse(
                 _issuedCourseId++,
