@@ -9,8 +9,8 @@ namespace Isu.Classes
 {
     public class IsuService : IIsuService
     {
-        private ImmutableList<Group> _groups;
         private ImmutableList<Student> _students;
+        private ImmutableList<Group> _groups;
         private uint _issuedStudentId;
 
         public IsuService()
@@ -19,6 +19,8 @@ namespace Isu.Classes
             _students = ImmutableList<Student>.Empty;
             _issuedStudentId = 100000;
         }
+
+        protected IEnumerable<Student> Students => _students;
 
         public Group AddGroup(GroupName name)
         {
@@ -112,18 +114,30 @@ namespace Isu.Classes
             if (newGroup.Capacity >= newGroup.MaxCapacity)
                 throw new IsuException("Can't add student, to new full group!");
 
-            _groups = _groups.Remove(prevGroup);
             prevGroup = new Group(prevGroup, prevGroup.Capacity - 1);
-            _groups = _groups.Add(prevGroup);
+            UpdateGroup(prevGroup);
 
-            _groups = _groups.Remove(newGroup);
             newGroup = new Group(newGroup, newGroup.Capacity + 1);
-            _groups = _groups.Add(newGroup);
+            UpdateGroup(newGroup);
 
-            _students = _students.Remove(student);
             student = new Student(student, newGroup.Name);
-            _students = _students.Add(student);
+            UpdateStudent(student);
+
             return student;
+        }
+
+        public void UpdateStudent(Student student)
+        {
+            Student prevStatus = GetStudent(student.Id);
+            _students = _students.Remove(prevStatus);
+            _students = _students.Add(student);
+        }
+
+        public void UpdateGroup(Group group)
+        {
+            Group prevStatus = GetGroup(group.Name);
+            _groups = _groups.Remove(prevStatus);
+            _groups = _groups.Add(group);
         }
 
         public override string ToString()

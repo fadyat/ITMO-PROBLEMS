@@ -1,7 +1,7 @@
 using System;
 using IsuExtra.Exceptions;
 
-namespace IsuExtra.Classes.New
+namespace IsuExtra.Classes
 {
     /// <summary> Days of the week. </summary>
     public enum Days : uint
