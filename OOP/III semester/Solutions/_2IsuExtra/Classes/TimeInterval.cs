@@ -30,7 +30,7 @@ namespace IsuExtra.Classes
 
     public class TimeInterval
     {
-        public TimeInterval(string dayOfWeek, int sHours, int sMinutes, int eHours, int eMinutes)
+        private TimeInterval(string dayOfWeek, int sHours, int sMinutes, int eHours, int eMinutes)
         {
             if (!Enum.IsDefined(typeof(Days), dayOfWeek))
                 throw new IsuExtraException("This day of week doesn't exist!");
@@ -80,6 +80,69 @@ namespace IsuExtra.Classes
         public override string ToString()
         {
             return DayOfWeek + " " + Start.ToString("H:mm") + " " + End.ToString("H:mm");
+        }
+
+        public TimeIntervalBuilder ToBuilder()
+        {
+            TimeIntervalBuilder builder = new TimeIntervalBuilder()
+                .WithDay(DayOfWeek)
+                .WithStartHours(Start.Hour)
+                .WithStartMinutes(Start.Minute)
+                .WithEndHours(End.Hour)
+                .WithEndMinutes(End.Minute);
+
+            return builder;
+        }
+
+        public class TimeIntervalBuilder
+        {
+            private string _day;
+            private int _startHours;
+            private int _startMinutes;
+            private int _endHours;
+            private int _endMinute;
+
+            public TimeIntervalBuilder WithDay(string day)
+            {
+                _day = day;
+                return this;
+            }
+
+            public TimeIntervalBuilder WithStartHours(int startHours)
+            {
+                _startHours = startHours;
+                return this;
+            }
+
+            public TimeIntervalBuilder WithStartMinutes(int startMinutes)
+            {
+                _startMinutes = startMinutes;
+                return this;
+            }
+
+            public TimeIntervalBuilder WithEndHours(int endHours)
+            {
+                _endHours = endHours;
+                return this;
+            }
+
+            public TimeIntervalBuilder WithEndMinutes(int endMinutes)
+            {
+                _endMinute = endMinutes;
+                return this;
+            }
+
+            public TimeInterval Build()
+            {
+                var finallyVersion = new TimeInterval(
+                    _day,
+                    _startHours,
+                    _startMinutes,
+                    _endHours,
+                    _endMinute);
+
+                return finallyVersion;
+            }
         }
     }
 }

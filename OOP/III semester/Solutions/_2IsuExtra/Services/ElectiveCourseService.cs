@@ -1,17 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsuExtra.Classes;
+using IsuExtra.Exceptions;
+using IsuExtra.Interfaces;
 
 namespace IsuExtra.Services
 {
-    public class ElectiveCourseService
+    public class ElectiveCourseService : IElectiveCourseService
     {
         private readonly List<ElectiveCourse> _courses;
-        private readonly StudentStreamService _streamService;
+        private readonly IStudentStreamService _streamService;
         private int _issuedCourseId;
 
-        public ElectiveCourseService(StudentStreamService streamService)
+        public ElectiveCourseService(IStudentStreamService streamService)
         {
             _issuedCourseId = 100000;
             _streamService = streamService;
@@ -38,7 +39,7 @@ namespace IsuExtra.Services
                 return course;
             }
 
-            throw new Exception(); // no such course!
+            throw new ElectiveCourseException("No such course!");
         }
 
         public void UpdateElectiveCourse(ElectiveCourse electiveCourse)

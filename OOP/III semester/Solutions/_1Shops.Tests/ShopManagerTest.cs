@@ -23,7 +23,7 @@ namespace Shops.Tests
                 new SupplyRepository());
 
             _shopService = new ShopService(
-                new ShopRepository(), 
+                new ShopRepository(),
                 _productService.ProductRepository);
         }
 
@@ -121,7 +121,7 @@ namespace Shops.Tests
                     totalQuantity += quantity;
                 }
 
-                Product productCondition = 
+                Product productCondition =
                     _productService.ProductRepository.GetProduct(currentProduct.Id, shop.Id);
                 lastStage.Add(productCondition);
 
@@ -152,7 +152,7 @@ namespace Shops.Tests
                 }
             }
         };
-        
+
         [TestCaseSource(nameof(AddDifferentProductsData))]
         public void AddDifferentProducts(List<(string productName, int price, int quantity)> products)
         {

@@ -1,31 +1,26 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsuExtra.Classes;
+using IsuExtra.Exceptions;
+using IsuExtra.Interfaces;
 
 namespace IsuExtra.Services
 {
-    public class StudentStreamService
+    public class StudentStreamService : IStudentStreamService
     {
-        private readonly ScheduleService _schedules;
+        private readonly IScheduleService _schedules;
         private readonly List<StudentStream> _streams;
         private int _issuedStudentStreamId;
 
-        public StudentStreamService(ScheduleService schedules)
+        public StudentStreamService(IScheduleService schedules)
         {
             _streams = new List<StudentStream>();
             _schedules = schedules;
             _issuedStudentStreamId = 100000;
         }
 
-        public StudentStream CreateStream(Lesson lesson, int maxCapacity, List<Student> students)
+        public StudentStream CreateStream(Lesson lesson, int maxCapacity = 30)
         {
-            var studentsId = new HashSet<uint>();
-            foreach (Student student in students)
-            {
-                studentsId.Add(student.Id);
-            }
-
             StudentStream newStream = new StudentStream.StudentStreamBuilder()
                 .WithId(_issuedStudentStreamId++)
                 .WithLesson(lesson)
@@ -33,8 +28,15 @@ namespace IsuExtra.Services
                 .WithCapacity(0)
                 .Build();
 
-            CheckCrossingStreams(newStream);
-            _schedules.CheckCrossingStream(newStream);
+            if (CheckCrossingStreams(newStream))
+            {
+                throw new StudentStreamException("Stream crossing with another stream");
+            }
+
+            if (_schedules.CheckCrossingStream(newStream))
+            {
+                throw new ScheduleException("Stream crossing with some of schedule");
+            }
 
             _streams.Add(newStream);
             return newStream;
@@ -48,7 +50,7 @@ namespace IsuExtra.Services
                 return stream;
             }
 
-            throw new Exception(); // no such stream
+            throw new StudentStreamException("No such stream");
         }
 
         public void UpdateStream(StudentStream newStream)
@@ -58,14 +60,11 @@ namespace IsuExtra.Services
             _streams.Add(newStream);
         }
 
-        public void CheckCrossingStreams(StudentStream newStream)
+        private bool CheckCrossingStreams(StudentStream newStream)
         {
-            if (_streams.Any(stream => stream.Info.CrossingTime(newStream.Info) &&
-                                       (stream.Info.CrossingTeacher(newStream.Info) ||
-                                        stream.Info.CrossingAuditory(newStream.Info))))
-            {
-                throw new Exception(); // crossing
-            }
+            return _streams.Any(stream => stream.Info.CrossingTime(newStream.Info) &&
+                                          (stream.Info.CrossingTeacher(newStream.Info) ||
+                                           stream.Info.CrossingAuditory(newStream.Info)));
         }
     }
 }

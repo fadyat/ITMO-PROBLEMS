@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using IsuExtra.Exceptions;
 
 namespace IsuExtra.Classes
 {
@@ -7,6 +9,9 @@ namespace IsuExtra.Classes
         public ElectiveCourse(int id, string facultyTag, string name, List<StudentStream> streams)
         {
             Id = id;
+            if (facultyTag.First() is < 'A' or > 'Z')
+                throw new IsuExtraException("Faculty tag should begin with letter!");
+
             FacultyTag = facultyTag;
             Name = name;
             StreamsIds = new List<int>();

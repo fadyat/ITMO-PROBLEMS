@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Isu.Classes;
+using IsuExtra.Exceptions;
 
 namespace IsuExtra.Classes
 {
@@ -26,7 +27,7 @@ namespace IsuExtra.Classes
                 {
                     if (ScheduleLessons[i].CrossingTime(ScheduleLessons[j]))
                     {
-                        throw new Exception(); // Incorrect data!
+                        throw new ScheduleException("Incorrect data!");
                     }
                 }
             }

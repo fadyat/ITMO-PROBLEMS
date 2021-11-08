@@ -2,16 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsuExtra.Classes;
+using IsuExtra.Exceptions;
+using IsuExtra.Interfaces;
 
 namespace IsuExtra.Services
 {
-    public class IsuService : Isu.Classes.IsuService
+    public class IsuService : Isu.Classes.IsuService, IIsuService
     {
-        private readonly StudentStreamService _streams;
+        private readonly IStudentStreamService _streams;
         private readonly List<Student> _students;
         private uint _issuedStudentId;
 
-        public IsuService(StudentStreamService streams)
+        public IsuService(IStudentStreamService streams)
         {
             _streams = streams;
             _students = new List<Student>();
@@ -22,7 +24,7 @@ namespace IsuExtra.Services
         {
             group = GetGroup(group.Name);
             if (group.Capacity >= group.MaxCapacity)
-                throw new Exception("Can't add student, full group!"); // ...
+                throw new Exception("Can't add student, full group!");
 
             group = new Isu.Classes.Group(group, group.Capacity + 1);
             UpdateGroup(group);
@@ -40,14 +42,14 @@ namespace IsuExtra.Services
                 return student;
             }
 
-            throw new Exception("Can't get student!"); // ...
+            throw new IsuExtraException("Can't get student!");
         }
 
         public Student AddStudentToStream(Student student, StudentStream stream)
         {
             if (student.PickedStreams.Count == 2)
             {
-                throw new Exception(); // already reached pick of streams
+                throw new StudentStreamException("Already reached pick of streams");
             }
 
             student.JoinStream(stream.Id);
@@ -78,20 +80,18 @@ namespace IsuExtra.Services
         {
             if (student.PickedCourses.Count == 2)
             {
-                throw new Exception(); // already reached pick of courses
+                throw new ElectiveCourseException("Already reached pick of courses!");
             }
 
             if (Equals(electiveCourse.FacultyTag, student.GroupName.FacultyTag))
             {
-                throw new Exception(); // student can't join his faculty course
+                throw new IsuExtraException("Student can't join his faculty course!");
             }
 
-            bool correct = electiveCourse.StreamsIds
-                .Any(streamId => student.PickedStreams.Contains(streamId));
-
-            if (!correct)
+            if (!electiveCourse.StreamsIds
+                .Any(streamId => student.PickedStreams.Contains(streamId)))
             {
-                throw new Exception(); // can't compare student and courses flows
+                throw new StudentStreamException("Can't compare student and courses flows");
             }
 
             student.JoinCourse(electiveCourse.Id);
@@ -126,8 +126,15 @@ namespace IsuExtra.Services
         public List<Student> FindStudentsNotPickedElectiveCourse(Isu.Classes.GroupName groupName)
         {
             return _students.Where(student => Equals(student.GroupName, groupName) &&
-                                             student.PickedCourses.Count != 2)
+                                              student.PickedCourses.Count != 2)
                 .ToList();
+        }
+
+        private void UpdateStudent(Student student)
+        {
+            Student prevStatus = GetStudent(student.Id);
+            _students.Remove(prevStatus);
+            _students.Add(student);
         }
     }
 }
