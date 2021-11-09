@@ -136,11 +136,5 @@ namespace Isu.Classes
             _groups = _groups.Remove(prevStatus);
             _groups = _groups.Add(group);
         }
-
-        public override string ToString()
-        {
-            return _students.Aggregate(string.Empty, (current, student) =>
-                current + (student.ToString() + '\n'));
-        }
     }
 }
