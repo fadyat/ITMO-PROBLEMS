@@ -17,9 +17,9 @@ namespace Backups.Services
             _issuedBackupId = 100000;
         }
 
-        public BackupJob CreateBackup(string name, HashSet<string> filePaths)
+        public BackupJob CreateBackup(HashSet<string> filePaths)
         {
-            var backupJob = new BackupJob(name, _issuedBackupId++, _location, filePaths);
+            var backupJob = new BackupJob(_issuedBackupId++, _location, filePaths);
             _backups.Add(backupJob);
             return backupJob;
         }

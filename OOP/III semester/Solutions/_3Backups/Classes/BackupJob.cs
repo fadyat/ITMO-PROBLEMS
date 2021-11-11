@@ -6,10 +6,11 @@ namespace Backups.Classes
     {
         private readonly HashSet<string> _filePaths;
 
-        public BackupJob(string name, int id, string path, HashSet<string> filePaths)
+        public BackupJob(int id, string path, HashSet<string> filePaths)
         {
             Id = id;
-            Path = System.IO.Path.Combine(path, name);
+            string backupJobName = "backupJob" + Id;
+            Path = System.IO.Path.Combine(path, backupJobName);
             System.IO.Directory.CreateDirectory(Path);
             _filePaths = filePaths;
         }

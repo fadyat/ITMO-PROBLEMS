@@ -7,7 +7,7 @@ namespace Backups.Classes.StorageAlgorithms
         public List<Storage> Compression(string path, IEnumerable<string> filePaths)
         {
             var storages = new List<Storage>();
-            var newStorage = new Storage("SingleStorage", path, filePaths);
+            var newStorage = new Storage("Single", path, filePaths);
             storages.Add(newStorage);
             return storages;
         }

@@ -10,7 +10,7 @@ namespace Backups.Classes.StorageAlgorithms
         {
             return (from filePath in filePaths
                     let fileName = Path.GetFileName(filePath)
-                    select new Storage(fileName, path, new List<string> { filePath }))
+                    select new Storage("Split_" + fileName, path, new List<string> { filePath }))
                 .ToList();
         }
     }

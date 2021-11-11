@@ -17,7 +17,7 @@ namespace Backups
                 .FullName;
 
             var backupJobService = new BackupJobService("test", position);
-            BackupJob backupJob = backupJobService.CreateBackup("lol1", new HashSet<string>
+            BackupJob backupJob = backupJobService.CreateBackup(new HashSet<string>
             {
                 "/Users/artyomfadeyev/Documents/a.txt",
                 "/Users/artyomfadeyev/Documents/b.txt",
@@ -25,9 +25,13 @@ namespace Backups
             });
 
             var restorePointService = new RestorePointService();
-            restorePointService.CreateRestorePoint("mem1", backupJob, new SplitStorages());
+            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
             backupJob.RemoveFile("/Users/artyomfadeyev/Documents/b.txt");
-            restorePointService.CreateRestorePoint("mem2", backupJob, new SingleStorage());
+            backupJob.AddFile("/Users/artyomfadeyev/Documents/b.txt");
+            backupJob.AddFile("/Users/artyomfadeyev/Documents/b.txt");
+            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
+            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
+            restorePointService.CreateRestorePoint(backupJob, new SingleStorage());
         }
     }
 }

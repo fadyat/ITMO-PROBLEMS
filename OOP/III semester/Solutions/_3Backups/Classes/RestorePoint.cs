@@ -13,14 +13,14 @@ namespace Backups.Classes
         private DateTime _time;
 
         public RestorePoint(
-            string name,
             int id,
             BackupJob backupJob,
             IStorageAlgorithm storageAlgorithm)
         {
             _id = id;
             _backupId = backupJob.Id;
-            _path = System.IO.Path.Combine(backupJob.Path, name);
+            string restorePointName = "restorePoint" + _id;
+            _path = System.IO.Path.Combine(backupJob.Path, restorePointName);
             System.IO.Directory.CreateDirectory(_path);
             _storages = storageAlgorithm.Compression(_path, backupJob.FilePaths);
             _time = DateTime.Now;

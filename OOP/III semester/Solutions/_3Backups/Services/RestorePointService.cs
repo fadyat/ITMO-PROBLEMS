@@ -17,11 +17,10 @@ namespace Backups.Services
         }
 
         public RestorePoint CreateRestorePoint(
-            string name,
             BackupJob backupJob,
             IStorageAlgorithm storageAlgorithm)
         {
-            var restorePoint = new RestorePoint(name, _issuedRestorePointId++, backupJob, storageAlgorithm);
+            var restorePoint = new RestorePoint(_issuedRestorePointId++, backupJob, storageAlgorithm);
             _restorePoints.Add(restorePoint);
             return restorePoint;
         }
