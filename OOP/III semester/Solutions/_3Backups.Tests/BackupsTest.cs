@@ -25,7 +25,7 @@ namespace Backups.Tests
                 .Parent?
                 .FullName;
 
-            _fileSystemStorage = new FileSystemStorage();
+            _fileSystemStorage = new AbstractFileSystemStorage(); // IStorageMethod 
             _backupJobService = new BackupJobService(
                 _position,
                 _fileSystemStorage,
