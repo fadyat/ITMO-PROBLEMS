@@ -1,29 +1,33 @@
-using System;
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
+using Backups.Classes.StorageMethods;
 
 namespace Backups.Classes
 {
     public class RestorePoint
     {
         private readonly List<Storage> _storages;
-        private int _id;
-        private int _backupId;
-        private string _path;
-        private DateTime _time;
 
         public RestorePoint(
             int id,
             BackupJob backupJob,
-            IStorageAlgorithm storageAlgorithm)
+            IStorageAlgorithm storageAlgorithm,
+            IStorageMethod storageMethod,
+            string name = "restorePoint_")
         {
-            _id = id;
-            _backupId = backupJob.Id;
-            string restorePointName = "restorePoint" + _id;
-            _path = System.IO.Path.Combine(backupJob.Path, restorePointName);
-            System.IO.Directory.CreateDirectory(_path);
-            _storages = storageAlgorithm.Compression(_path, backupJob.FilePaths);
-            _time = DateTime.Now;
+            Id = id;
+            name += name.EndsWith("_") ? Id : string.Empty;
+            Path = storageMethod.ConstructPath(backupJob.Path, name);
+
+            storageMethod.MakeDirectory(Path);
+            _storages = storageAlgorithm.Compression(
+                Path,
+                backupJob.FilePaths,
+                storageMethod);
         }
+
+        public int Id { get; }
+
+        public string Path { get; }
     }
 }

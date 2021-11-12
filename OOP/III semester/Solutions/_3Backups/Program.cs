@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Backups.Classes;
 using Backups.Classes.StorageAlgorithms;
+using Backups.Classes.StorageMethods;
 using Backups.Services;
 
 namespace Backups
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {
@@ -16,22 +16,35 @@ namespace Backups
                 .Parent?
                 .FullName;
 
-            var backupJobService = new BackupJobService("test", position);
-            BackupJob backupJob = backupJobService.CreateBackup(new HashSet<string>
-            {
-                "/Users/artyomfadeyev/Documents/a.txt",
-                "/Users/artyomfadeyev/Documents/b.txt",
-                "/Users/artyomfadeyev/Documents/c.txt",
-            });
+            var backupJobService = new BackupJobService(
+                position,
+                new FileSystemStorage());
 
-            var restorePointService = new RestorePointService();
-            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
+            BackupJob backupJob = backupJobService.CreateBackup(
+                new HashSet<string>
+                {
+                    "/Users/artyomfadeyev/Documents/a.txt",
+                    "/Users/artyomfadeyev/Documents/b.txt",
+                    "/Users/artyomfadeyev/Documents/c.txt",
+                },
+                new SplitStorages());
+
+            backupJob.CreateRestorePoint();
             backupJob.RemoveFile("/Users/artyomfadeyev/Documents/b.txt");
-            backupJob.AddFile("/Users/artyomfadeyev/Documents/b.txt");
-            backupJob.AddFile("/Users/artyomfadeyev/Documents/b.txt");
-            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
-            restorePointService.CreateRestorePoint(backupJob, new SplitStorages());
-            restorePointService.CreateRestorePoint(backupJob, new SingleStorage());
+            backupJob.CreateRestorePoint();
+            backupJob.CreateRestorePoint();
+
+            BackupJob backupJob2 = backupJobService.CreateBackup(
+                new HashSet<string>
+                {
+                    "/Users/artyomfadeyev/Documents/a.txt",
+                    "/Users/artyomfadeyev/Documents/b.txt",
+                    "/Users/artyomfadeyev/Documents/c.txt",
+                },
+                new SingleStorage());
+
+            backupJob2.CreateRestorePoint();
+            backupJob2.CreateRestorePoint();
         }
     }
 }
