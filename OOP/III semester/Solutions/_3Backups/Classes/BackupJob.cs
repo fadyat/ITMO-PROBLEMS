@@ -25,7 +25,6 @@ namespace Backups.Classes
             _storageAlgorithm = storageAlgorithm;
             _storageMethod = storageMethod;
             Path = _storageMethod.ConstructPath(path, name);
-
             _storageMethod.MakeDirectory(Path);
         }
 

@@ -32,6 +32,7 @@ namespace Backups
             backupJob.CreateRestorePoint();
             backupJob.RemoveFile("/Users/artyomfadeyev/Documents/b.txt");
             backupJob.CreateRestorePoint();
+            backupJob.AddFile("/Users/artyomfadeyev/Documents/b.txt");
             backupJob.CreateRestorePoint();
 
             BackupJob backupJob2 = backupJobService.CreateBackup(
@@ -43,7 +44,6 @@ namespace Backups
                 },
                 new SingleStorage());
 
-            backupJob2.CreateRestorePoint();
             backupJob2.CreateRestorePoint();
         }
     }

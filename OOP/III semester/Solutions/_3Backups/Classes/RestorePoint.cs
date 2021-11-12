@@ -18,7 +18,6 @@ namespace Backups.Classes
             Id = id;
             name += name.EndsWith("_") ? Id : string.Empty;
             Path = storageMethod.ConstructPath(backupJob.Path, name);
-
             storageMethod.MakeDirectory(Path);
             _storages = storageAlgorithm.Compression(
                 Path,
