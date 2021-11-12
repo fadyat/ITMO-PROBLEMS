@@ -16,7 +16,7 @@ namespace Backups.Classes
             string name)
         {
             Id = id;
-            name += name.EndsWith("_") ? Id : string.Empty;
+            name += name.EndsWith("_") ? Id.ToString() : string.Empty;
             Path = storageMethod.ConstructPath(backupJob.Path, name);
             storageMethod.MakeDirectory(Path);
 

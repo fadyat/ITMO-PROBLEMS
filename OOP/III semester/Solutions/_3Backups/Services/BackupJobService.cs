@@ -31,7 +31,7 @@ namespace Backups.Services
             IStorageAlgorithm storageAlgorithm,
             string name = "backupJob_")
         {
-            name += name.EndsWith("_") ? _backups.Count + 1 : string.Empty;
+            name += name.EndsWith("_") ? (_backups.Count + 1).ToString() : string.Empty;
 
             var backupJob = new BackupJob(
                 _issuedBackupId++,
