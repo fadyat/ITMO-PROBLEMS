@@ -13,20 +13,21 @@ namespace Backups.Classes
             BackupJob backupJob,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod,
-            string name = "restorePoint_")
+            string name)
         {
             Id = id;
             name += name.EndsWith("_") ? Id : string.Empty;
             Path = storageMethod.ConstructPath(backupJob.Path, name);
             storageMethod.MakeDirectory(Path);
-            _storages = storageAlgorithm.Compression(
-                Path,
-                backupJob.FilePaths,
-                storageMethod);
+
+            _storages = storageAlgorithm
+                .Compression(Path, backupJob.FilePaths, storageMethod);
         }
 
         public int Id { get; }
 
         public string Path { get; }
+
+        public IEnumerable<Storage> Storages => _storages;
     }
 }

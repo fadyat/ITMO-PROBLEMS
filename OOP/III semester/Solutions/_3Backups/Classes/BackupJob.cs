@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
+using Backups.Exceptions;
 
 namespace Backups.Classes
 {
@@ -44,13 +45,17 @@ namespace Backups.Classes
             _filePaths.Remove(filePath);
         }
 
-        public RestorePoint CreateRestorePoint()
+        public RestorePoint CreateRestorePoint(string name = "restorePoint_")
         {
+            if (Equals(_filePaths.Count, 0))
+                throw new BackupException("No files for restore point!");
+
             var restorePoint = new RestorePoint(
                 _restorePoints.Count + 1,
                 this,
                 _storageAlgorithm,
-                _storageMethod);
+                _storageMethod,
+                name);
 
             _restorePoints.Add(restorePoint);
             return restorePoint;
