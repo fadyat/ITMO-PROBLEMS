@@ -26,5 +26,15 @@ namespace Backups.Classes.StorageMethods
                 zipArchive.CreateEntryFromFile(filePath, fileName);
             }
         }
+
+        public bool ExistsDirectory(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public bool ExistsFile(string path)
+        {
+            return File.Exists(path);
+        }
     }
 }

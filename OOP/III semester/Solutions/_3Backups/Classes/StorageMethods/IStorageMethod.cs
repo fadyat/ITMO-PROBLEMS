@@ -9,5 +9,9 @@ namespace Backups.Classes.StorageMethods
         void MakeDirectory(string path);
 
         void Archive(IEnumerable<string> from, string where);
+
+        bool ExistsDirectory(string path);
+
+        bool ExistsFile(string path);
     }
 }
