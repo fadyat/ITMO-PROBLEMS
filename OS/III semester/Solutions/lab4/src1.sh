@@ -1,3 +1,5 @@
+# ! start script from ~
+
 #!/bin/bash
 id="$(cat id)"
 [ $# -ne 1] && exit
