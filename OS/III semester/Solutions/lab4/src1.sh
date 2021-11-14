@@ -9,6 +9,6 @@ prev=$PWD/$1
 new=~/trash/$id
 ln $prev $new
 rm $prev
-echo "$prev $id" >> ~/trash.log
+echo "$prev $id" >> ~/.trash.log
 ((id++))
 echo "$id" > id
