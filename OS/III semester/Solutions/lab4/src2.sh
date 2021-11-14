@@ -27,7 +27,7 @@ while read line; do
  ln ~/trash/$id $path
  rm ~/trash/$id
  cat ~/trash.logU | head -n -1 > ~/trash.logU
-done < ~/trash.log
+done < ~/.trash.log
 
-cat ~/trash.logU > ~/trash.log
+cat ~/trash.logU > ~/.trash.log
 rm ~/trash.logU
