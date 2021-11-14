@@ -27,5 +27,5 @@
 <h2></h2>
 
 <div align=middle>
-  <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/III%20semester/Solutions/lab2/test.sh"> TEST</a>
+  <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/III%20semester/Solutions/lab3/test.sh"> TEST</a>
 </div>
