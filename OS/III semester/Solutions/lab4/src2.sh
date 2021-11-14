@@ -12,13 +12,13 @@ while read line; do
  [ $status != "y" ] && continue
 
  [ ! -d `dirname $path` ] &&
-        echo "  Last dir doesn't exist! File will be saved in /root" &&
+        printf "\tLast dir doesn't exist! File will be saved in /root\n" &&
         path=~/$name
 
  while true; do
   [ ! -f $path ] && break
 
-  echo -n "  Rename, \"$name\" is already exist: "
+  printf "\tRename, \"$name\" is already exist: "
   read name </dev/tty
   path=`dirname $path`/$name
  done
