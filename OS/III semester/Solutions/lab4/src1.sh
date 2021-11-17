@@ -3,12 +3,11 @@
 #!/bin/bash
 id="$(cat id)"
 [ $# -ne 1 ] && exit
-prev=$PWD/$1
-[ ! -f $prev ] && exit
+[ ! -f $PWD/"$1" ] && exit
 [ ! -d ~/trash ] && mkdir ~/trash
 new=~/trash/$id
-ln $prev $new
-rm $prev
-echo "$prev $id" >> ~/.trash.log
+ln $PWD/"$1" $new
+rm $PWD/"$1"
+echo "$PWD@$1@$id" >> ~/.trash.log
 ((id++))
 echo "$id" > id
