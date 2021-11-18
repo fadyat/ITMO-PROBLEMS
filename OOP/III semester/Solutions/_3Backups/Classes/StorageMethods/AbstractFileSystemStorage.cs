@@ -25,7 +25,7 @@ namespace Backups.Classes.StorageMethods
             _pathDirectories.Add(path);
         }
 
-        public void Archive(IEnumerable<string> from, string where)
+        public void Archive(IEnumerable<JobObject> from, string where)
         {
             _pathFiles.Add(where); // archive
 

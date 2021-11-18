@@ -21,7 +21,7 @@ namespace Backups.Classes
             storageMethod.MakeDirectory(Path);
 
             _storages = storageAlgorithm
-                .Compression(Path, backupJob.FilePaths, storageMethod);
+                .Compression(Path, backupJob.Objects, storageMethod);
         }
 
         public int Id { get; }

@@ -8,11 +8,11 @@ namespace Backups.Classes
         public Storage(
             string storageName,
             string path,
-            IEnumerable<string> filesPath,
+            IEnumerable<JobObject> objects,
             IStorageMethod storageMethod)
         {
             Path = storageMethod.ConstructPath(path, storageName + ".zip");
-            storageMethod.Archive(filesPath, Path);
+            storageMethod.Archive(objects, Path);
         }
 
         public string Path { get; }

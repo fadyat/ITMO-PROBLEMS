@@ -7,14 +7,14 @@ namespace Backups.Classes.StorageAlgorithms
     {
         public List<Storage> Compression(
             string path,
-            IEnumerable<string> filePaths,
+            IEnumerable<JobObject> objects,
             IStorageMethod storageMethod)
         {
             var storages = new List<Storage>();
             var newStorage = new Storage(
                 "Single",
                 path,
-                filePaths,
+                objects,
                 storageMethod);
 
             storages.Add(newStorage);

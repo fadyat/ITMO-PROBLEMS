@@ -27,16 +27,21 @@ namespace Backups.Services
         }
 
         public BackupJob CreateBackup(
-            HashSet<string> filePaths,
+            HashSet<JobObject> objects,
             IStorageAlgorithm storageAlgorithm,
             string name = "backupJob_")
         {
+            if (Equals(name, null))
+            {
+                throw new BackupException("Backup name couldn't be null!");
+            }
+
             name += name.EndsWith("_") ? (_backups.Count + 1).ToString() : string.Empty;
 
             var backupJob = new BackupJob(
                 _issuedBackupId++,
                 _location,
-                filePaths,
+                objects,
                 name,
                 storageAlgorithm,
                 _storageMethod);
@@ -47,12 +52,14 @@ namespace Backups.Services
 
         public BackupJob GetBackup(int id)
         {
-            foreach (BackupJob backup in _backups.Where(backup => Equals(backup.Id, id)))
+            BackupJob backup = _backups.SingleOrDefault(backup => Equals(backup.Id, id));
+
+            if (Equals(backup, null))
             {
-                return backup;
+                throw new BackupException("No such backup!");
             }
 
-            throw new BackupException("No such backup!");
+            return backup;
         }
     }
 }

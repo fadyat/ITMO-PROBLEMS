@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Backups.Classes.StorageMethods;
 
 namespace Backups.Classes.StorageAlgorithms
@@ -9,17 +8,23 @@ namespace Backups.Classes.StorageAlgorithms
     {
         public List<Storage> Compression(
             string path,
-            IEnumerable<string> filePaths,
+            IEnumerable<JobObject> objects,
             IStorageMethod storageMethod)
         {
-            return (from filePath in filePaths
-                    let fileName = Path.GetFileNameWithoutExtension(filePath)
-                    select new Storage(
-                        fileName,
-                        path,
-                        new List<string> { filePath },
-                        storageMethod))
-                .ToList();
+            var list = new List<Storage>();
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (JobObject jobObject in objects)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
+                list.Add(new Storage(
+                    fileName,
+                    path,
+                    new List<JobObject> { jobObject },
+                    storageMethod));
+            }
+
+            return list;
         }
     }
 }

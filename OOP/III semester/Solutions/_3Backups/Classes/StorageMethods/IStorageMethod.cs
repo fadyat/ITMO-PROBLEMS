@@ -8,7 +8,7 @@ namespace Backups.Classes.StorageMethods
 
         void MakeDirectory(string path);
 
-        void Archive(IEnumerable<string> from, string where);
+        void Archive(IEnumerable<JobObject> from, string where);
 
         bool ExistsDirectory(string path);
 

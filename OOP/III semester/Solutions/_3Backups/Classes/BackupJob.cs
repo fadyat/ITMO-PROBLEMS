@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 using Backups.Exceptions;
@@ -7,7 +8,7 @@ namespace Backups.Classes
 {
     public class BackupJob
     {
-        private readonly HashSet<string> _filePaths;
+        private readonly HashSet<JobObject> _objects;
         private readonly List<RestorePoint> _restorePoints;
         private readonly IStorageAlgorithm _storageAlgorithm;
         private readonly IStorageMethod _storageMethod;
@@ -15,13 +16,13 @@ namespace Backups.Classes
         public BackupJob(
             int id,
             string path,
-            HashSet<string> filePaths,
+            HashSet<JobObject> objects,
             string name,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod)
         {
             Id = id;
-            _filePaths = filePaths;
+            _objects = objects;
             _restorePoints = new List<RestorePoint>();
             _storageAlgorithm = storageAlgorithm;
             _storageMethod = storageMethod;
@@ -33,21 +34,21 @@ namespace Backups.Classes
 
         public string Path { get; }
 
-        public IEnumerable<string> FilePaths => _filePaths;
+        public IEnumerable<JobObject> Objects => _objects;
 
-        public void AddFile(string filePath)
+        public void AddJobObject(JobObject jobObject)
         {
-            _filePaths.Add(filePath);
+            _objects.Add(jobObject);
         }
 
-        public void RemoveFile(string filePath)
+        public void RemoveJobObject(JobObject jobObject)
         {
-            _filePaths.Remove(filePath);
+            _objects.Remove(jobObject);
         }
 
         public RestorePoint CreateRestorePoint(string name = "restorePoint_")
         {
-            if (Equals(_filePaths.Count, 0))
+            if (Equals(_objects.Count, 0))
                 throw new BackupException("No files for restore point!");
 
             var restorePoint = new RestorePoint(
@@ -59,6 +60,18 @@ namespace Backups.Classes
 
             _restorePoints.Add(restorePoint);
             return restorePoint;
+        }
+
+        public JobObject GetJobObject(string path)
+        {
+            JobObject jobObject = _objects.SingleOrDefault(jobObject => Equals(jobObject.Path, path));
+
+            if (Equals(jobObject, null))
+            {
+                throw new BackupException("Job object doesn't exist!");
+            }
+
+            return jobObject;
         }
     }
 }

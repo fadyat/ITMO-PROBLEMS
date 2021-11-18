@@ -17,13 +17,13 @@ namespace Backups.Classes.StorageMethods
             Directory.CreateDirectory(path);
         }
 
-        public void Archive(IEnumerable<string> from, string where)
+        public void Archive(IEnumerable<JobObject> from, string where)
         {
             ZipArchive zipArchive = ZipFile.Open(where, ZipArchiveMode.Create);
-            foreach (string filePath in from)
+            foreach (JobObject jobObject in from)
             {
-                string fileName = Path.GetFileName(filePath);
-                zipArchive.CreateEntryFromFile(filePath, fileName);
+                string fileName = Path.GetFileName(jobObject.Path);
+                zipArchive.CreateEntryFromFile(jobObject.Path, fileName);
             }
         }
 

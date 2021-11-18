@@ -7,7 +7,7 @@ namespace Backups.Classes.StorageAlgorithms
     {
         List<Storage> Compression(
             string path,
-            IEnumerable<string> filePaths,
+            IEnumerable<JobObject> objects,
             IStorageMethod storageMethod);
     }
 }
