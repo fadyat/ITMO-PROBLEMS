@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
@@ -16,6 +17,11 @@ namespace Backups.Classes
             string name)
         {
             Id = id;
+            if (Equals(name, null))
+            {
+                throw new Exception("Restore point name couldn't ba null!");
+            }
+
             name += name.EndsWith("_") ? Id.ToString() : string.Empty;
             Path = storageMethod.ConstructPath(backupJob.Path, name);
             storageMethod.MakeDirectory(Path);
