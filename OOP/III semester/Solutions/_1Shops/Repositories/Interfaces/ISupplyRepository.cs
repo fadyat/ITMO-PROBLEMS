@@ -5,7 +5,7 @@ namespace Shops.Repositories.Interfaces
 {
     public interface ISupplyRepository
     {
-        void Save(Supply shop);
+        void Save(Supply supply);
 
         IEnumerable<Supply> GetAll();
 

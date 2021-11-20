@@ -9,7 +9,7 @@ namespace Shops.Repositories.Interfaces
 
         IEnumerable<Shop> GetAll();
 
-        Shop GetShop(int id);
+        Shop GetShop(int shopId);
 
         void Print();
     }

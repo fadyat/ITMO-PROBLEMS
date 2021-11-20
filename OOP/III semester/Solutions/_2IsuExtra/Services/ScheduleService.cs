@@ -56,12 +56,9 @@ namespace IsuExtra.Services
 
         private bool CheckCrossingSchedule(Schedule newSchedule)
         {
-            return (from schedule in _schedules
-                from l1 in schedule.ScheduleLessons
-                from l2 in newSchedule.ScheduleLessons
-                where l1.CrossingTime(l2) &&
-                      (l1.CrossingAuditory(l2) || l1.CrossingTeacher(l2))
-                select l1).Any();
+            return _schedules.Any(schedule => schedule.ScheduleLessons
+                    .Any(l1 => newSchedule.ScheduleLessons
+                        .Any(l2 => l1.CrossingTime(l2) && (l1.CrossingAuditory(l2) || l1.CrossingTeacher(l2)))));
         }
     }
 }

@@ -47,11 +47,6 @@ namespace IsuExtra.Services
 
         public Student AddStudentToStream(Student student, StudentStream stream)
         {
-            if (student.PickedStreams.Count == 2)
-            {
-                throw new StudentStreamException("Already reached pick of streams");
-            }
-
             student.JoinStream(stream.Id);
             UpdateStudent(student);
 
@@ -78,11 +73,6 @@ namespace IsuExtra.Services
 
         public Student AddStudentToElectiveCourse(Student student, ElectiveCourse electiveCourse)
         {
-            if (student.PickedCourses.Count == 2)
-            {
-                throw new ElectiveCourseException("Already reached pick of courses!");
-            }
-
             if (Equals(electiveCourse.FacultyTag, student.GroupName.FacultyTag))
             {
                 throw new IsuExtraException("Student can't join his faculty course!");
@@ -115,12 +105,14 @@ namespace IsuExtra.Services
 
         public List<Student> FindStudents(ElectiveCourse electiveCourse, StudentStream stream)
         {
-            return (from streamId in electiveCourse.StreamsIds
-                where Equals(streamId, stream.Id)
-                from student in _students
-                where student.PickedCourses.Contains(electiveCourse.Id) &&
-                      student.PickedStreams.Contains(streamId)
-                select student).ToList();
+            var list = new List<Student>();
+            foreach (int streamId in electiveCourse.StreamsIds.Where(streamId => Equals(streamId, stream.Id)))
+            {
+                list.AddRange(_students.Where(student => student.PickedCourses
+                    .Contains(electiveCourse.Id) && student.PickedStreams.Contains(streamId)));
+            }
+
+            return list;
         }
 
         public List<Student> FindStudentsNotPickedElectiveCourse(Isu.Classes.GroupName groupName)

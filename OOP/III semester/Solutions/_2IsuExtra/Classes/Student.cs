@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using IsuExtra.Exceptions;
 
 namespace IsuExtra.Classes
 {
@@ -20,6 +21,11 @@ namespace IsuExtra.Classes
 
         public void JoinStream(int id)
         {
+            if (PickedStreams.Count == 2)
+            {
+                throw new StudentStreamException("Already reached pick of streams");
+            }
+
             _pickedStreams.Add(id);
         }
 
@@ -30,6 +36,11 @@ namespace IsuExtra.Classes
 
         public void JoinCourse(int id)
         {
+            if (PickedCourses.Count == 2)
+            {
+                throw new ElectiveCourseException("Already reached pick of courses!");
+            }
+
             _pickedCourses.Add(id);
         }
 

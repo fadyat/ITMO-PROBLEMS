@@ -5,7 +5,7 @@ namespace Shops.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        void Save(Order shop);
+        void Save(Order order);
 
         IEnumerable<Order> GetAll();
 

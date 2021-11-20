@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using IsuExtra.Classes;
 using IsuExtra.Exceptions;
 using IsuExtra.Interfaces;
@@ -44,13 +45,14 @@ namespace IsuExtra.Services
 
         public StudentStream GetStream(int id)
         {
-            foreach (StudentStream stream in _streams
-                .Where(stream => Equals(stream.Id, id)))
+            StudentStream stream = _streams.SingleOrDefault(stream => Equals(stream.Id, id));
+
+            if (Equals(stream, null))
             {
-                return stream;
+                throw new StudentStreamException("No such stream");
             }
 
-            throw new StudentStreamException("No such stream");
+            return stream;
         }
 
         public void UpdateStream(StudentStream newStream)
