@@ -13,7 +13,7 @@ namespace Banks.Banks
 
         void AddClient(IClient client);
 
-        void RegisterAccount(IClient client, IAccount account);
+        void RegisterAccount(IClient client, Account account);
 
         IClient GetClient(Guid id);
 

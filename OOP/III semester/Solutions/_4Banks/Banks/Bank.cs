@@ -10,14 +10,14 @@ namespace Banks.Banks
     public class Bank : IBank
     {
         private readonly HashSet<IClient> _clients;
-        private readonly Dictionary<Guid, List<IAccount>> _accounts;
+        private readonly Dictionary<Guid, List<Account>> _accounts;
 
         public Bank(Guid id, ILimit limit)
         {
             Id = id;
             Limit = limit;
             _clients = new HashSet<IClient>();
-            _accounts = new Dictionary<Guid, List<IAccount>>();
+            _accounts = new Dictionary<Guid, List<Account>>();
         }
 
         public Guid Id { get; }
@@ -29,12 +29,12 @@ namespace Banks.Banks
             _clients.Add(client);
         }
 
-        public void RegisterAccount(IClient client, IAccount account)
+        public void RegisterAccount(IClient client, Account account)
         {
             client = GetClient(client.Id);
             if (!_accounts.ContainsKey(client.Id))
             {
-                _accounts[client.Id] = new List<IAccount>();
+                _accounts[client.Id] = new List<Account>();
             }
 
             _accounts[client.Id].Add(account);
@@ -51,10 +51,10 @@ namespace Banks.Banks
             foreach (IClient c in _clients)
                 c.Print();
 
-            foreach ((Guid key, List<IAccount> value) in _accounts)
+            foreach ((Guid key, List<Account> value) in _accounts)
             {
                 Console.Write("C: " + key + " ");
-                foreach (IAccount aa in value)
+                foreach (Account aa in value)
                     aa.Print();
 
                 Console.Write("\n");

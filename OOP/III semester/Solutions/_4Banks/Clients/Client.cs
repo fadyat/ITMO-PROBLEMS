@@ -17,7 +17,7 @@ namespace Banks.Clients
 
         // private string _secondName;
         // private Guid _id;
-        // private List<IAccount> _accounts;
+        // private List<Account> _accounts;
         // private string _address; // could be class but I don't want
         // private IPassport _passport;
         // public class ClientBuilder
@@ -25,7 +25,7 @@ namespace Banks.Clients
             // private string _name;
             // private string _secondName;
             // private Guid _id;
-            // private List<IAccount> _accounts;
+            // private List<Account> _accounts;
             // private string _address; // could be class but I don't want
             // private IPassport _passport;
         // }

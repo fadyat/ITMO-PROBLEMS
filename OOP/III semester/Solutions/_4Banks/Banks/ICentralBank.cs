@@ -12,7 +12,7 @@ namespace Banks.Banks
 
         IBank GetBank(Guid id);
 
-        void RegisterAccount(IBank bank, IClient client, IAccount account);
+        void RegisterAccount(IBank bank, IClient client, Account account);
 
         void Print(); // remove
     }

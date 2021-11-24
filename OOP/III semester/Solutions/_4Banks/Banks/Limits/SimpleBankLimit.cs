@@ -7,21 +7,15 @@ namespace Banks.Banks.Limits
         public SimpleBankLimit(
             double debitPercent,
             SortedDictionary<int, double> depositPercent,
-            int creditLimit,
-            double creditCommission)
+            (int, int) creditLimit,
+            int creditCommission,
+            int daysForRepayment)
         {
             DebitPercent = debitPercent;
             CreditLimit = creditLimit;
             CreditCommission = creditCommission;
             DepositPercent = depositPercent;
+            DaysForRepayment = daysForRepayment;
         }
-
-        public double DebitPercent { get; }
-
-        public SortedDictionary<int, double> DepositPercent { get; }
-
-        public int CreditLimit { get; }
-
-        public double CreditCommission { get; }
     }
 }

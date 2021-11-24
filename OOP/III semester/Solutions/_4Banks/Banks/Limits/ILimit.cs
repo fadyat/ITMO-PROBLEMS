@@ -2,14 +2,16 @@ using System.Collections.Generic;
 
 namespace Banks.Banks.Limits
 {
-    public interface ILimit
+    public abstract class ILimit
     {
-        public double DebitPercent { get; }
+        public double DebitPercent { get; protected init; }
 
-        public SortedDictionary<int, double> DepositPercent { get; }
+        public SortedDictionary<int, double> DepositPercent { get; protected init; }
 
-        public int CreditLimit { get; }
+        public (int, int) CreditLimit { get; protected init; }
 
-        public double CreditCommission { get; }
+        public int CreditCommission { get; protected init; }
+
+        public int DaysForRepayment { get; protected init; }
     }
 }

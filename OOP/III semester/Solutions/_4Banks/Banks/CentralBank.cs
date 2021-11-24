@@ -31,7 +31,7 @@ namespace Banks.Banks
             return _banks.Single(b => Equals(b.Id, id));
         }
 
-        public void RegisterAccount(IBank bank, IClient client, IAccount account)
+        public void RegisterAccount(IBank bank, IClient client, Account account)
         {
             bank = GetBank(bank.Id);
             bank.RegisterAccount(client, account);
