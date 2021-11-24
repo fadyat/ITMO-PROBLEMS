@@ -16,20 +16,30 @@ namespace Banks.Accounts
 
         public override Account Calculate(ILimit limit, DateTime dateTime)
         {
-            DateTime first = NegativeBalanceDays.Peek().negDay;
-            int diff = dateTime.Subtract(first).Days;
-            if (Balance >= 0 || diff <= limit.DaysForRepayment) return this;
+            void AddToPayment(int days) => Balance -= limit.CreditCommission * days;
 
-            int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
-            Balance -= limit.CreditCommission * daysToPay;
-            PrevCalcDate = dateTime;
-
-            return this;
+            return CalculateWithMethod(limit, dateTime, AddToPayment);
         }
 
         public override void Print()
         {
             Console.Write("\t A: credit");
+        }
+
+        protected override Account CalculateWithMethod(
+            ILimit limit,
+            DateTime dateTime,
+            Action<int> addToPayment)
+        {
+            DateTime first = NegativeBalanceDays.Peek().negDay;
+            int diff = dateTime.Subtract(first).Days;
+            if (Balance >= 0 || diff <= limit.DaysForRepayment) return this;
+
+            int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
+            addToPayment(daysToPay);
+            PrevCalcDate = dateTime;
+
+            return this;
         }
     }
 }

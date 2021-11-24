@@ -30,5 +30,7 @@ namespace Banks.Accounts
         */
 
         public abstract void Print(); // remove
+
+        protected abstract Account CalculateWithMethod(ILimit limit, DateTime dateTime, Action<int> addToPayment);
     }
 }

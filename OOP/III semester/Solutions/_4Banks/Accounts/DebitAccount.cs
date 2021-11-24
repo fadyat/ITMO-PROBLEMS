@@ -11,15 +11,26 @@ namespace Banks.Accounts
             Payment = 0;
         }
 
-        public double Payment { get; private set; }
+        protected double Payment { get; set; }
 
         public override Account Calculate(ILimit limit, DateTime dateTime)
         {
-            void AddToPayment(int days)
-            {
+            void AddToPayment(int days) =>
                 Payment += Balance * (limit.DebitPercent / 100 / 365) * days;
-            }
 
+            return CalculateWithMethod(limit, dateTime, AddToPayment);
+        }
+
+        public override void Print()
+        {
+            Console.Write("\t A: debit");
+        }
+
+        protected override Account CalculateWithMethod(
+            ILimit limit,
+            DateTime dateTime,
+            Action<int> addToPayment)
+        {
             DateTime closesDayPayment = PrevCalcDate;
             if (PrevCalcDate.Day > Date.Day)
                 closesDayPayment = closesDayPayment.AddMonths(1);
@@ -31,13 +42,13 @@ namespace Banks.Accounts
 
             if (diff < payAfter)
             {
-                AddToPayment(diff);
+                addToPayment(diff);
                 PrevCalcDate = dateTime;
                 return this;
             }
 
             diff -= payAfter;
-            AddToPayment(payAfter);
+            addToPayment(payAfter);
             Balance += Payment;
             PrevCalcDate = closesDayPayment;
             Payment = 0;
@@ -47,7 +58,7 @@ namespace Banks.Accounts
                 int daysInMonth = DateTime.DaysInMonth(PrevCalcDate.Year, PrevCalcDate.Month);
                 int daysToPay = Math.Min(daysInMonth, diff);
 
-                AddToPayment(daysToPay);
+                addToPayment(daysToPay);
                 if (daysToPay != diff)
                 {
                     Balance += Payment;
@@ -63,11 +74,6 @@ namespace Banks.Accounts
             }
 
             return this;
-        }
-
-        public override void Print()
-        {
-            Console.Write("\t A: debit");
         }
     }
 }

@@ -5,14 +5,12 @@ using Banks.Banks.Limits;
 
 namespace Banks.Accounts
 {
-    public class DepositAccount : Account
+    public class DepositAccount : DebitAccount
     {
         public DepositAccount(int money, DateTime date)
             : base(money, date)
         {
         }
-
-        public double Payment { get; private set; }
 
         public override Account Calculate(ILimit limit, DateTime dateTime)
         {
@@ -29,52 +27,10 @@ namespace Banks.Accounts
                 return limit.DepositPercent[maxBalance];
             }
 
-            void AddToPayment(int days)
-            {
+            void AddToPayment(int days) =>
                 Payment += Balance * (FindPercent() / 100 / 365) * days;
-            }
 
-            DateTime closesDayPayment = PrevCalcDate;
-            if (PrevCalcDate.Day > Date.Day)
-                closesDayPayment = closesDayPayment.AddMonths(1);
-
-            closesDayPayment = closesDayPayment.AddDays(Date.Day - PrevCalcDate.Day);
-            int payAfter = closesDayPayment.Day;
-
-            int diff = dateTime.Subtract(PrevCalcDate).Days;
-
-            if (diff < payAfter)
-            {
-                AddToPayment(diff);
-                PrevCalcDate = dateTime;
-                return this;
-            }
-
-            diff -= payAfter;
-            AddToPayment(payAfter);
-            Balance += Payment;
-            PrevCalcDate = closesDayPayment;
-            Payment = 0;
-
-            while (diff > 0)
-            {
-                int daysInMonth = DateTime.DaysInMonth(PrevCalcDate.Year, PrevCalcDate.Month);
-                int daysToPay = Math.Min(daysInMonth, diff);
-
-                AddToPayment(daysToPay);
-                if (daysToPay != diff)
-                {
-                    Balance += Payment;
-                    Payment = 0;
-                    PrevCalcDate = PrevCalcDate.AddMonths(1);
-                }
-                else
-                {
-                    PrevCalcDate = PrevCalcDate.AddDays(diff);
-                }
-
-                diff -= daysToPay;
-            }
+            CalculateWithMethod(limit, dateTime, AddToPayment);
 
             return this;
         }
