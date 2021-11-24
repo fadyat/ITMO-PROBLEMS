@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Banks.Accounts;
 using Banks.Banks;
 using Banks.Banks.Factory;
-using Banks.Clients.Passport;
+using Banks.Banks.Limits;
+using Banks.Clients;
 
 namespace Banks
 {
@@ -11,8 +12,25 @@ namespace Banks
         {
             var centralBank = new CentralBank();
             var bankFactory = new SimpleBankFactory();
-            IBank bank = bankFactory.CreateBank("123");
+            var pr = new SimpleBankLimit(1, null, 1, 1);
+
+            IBank bank = bankFactory.CreateBank(pr);
+            IBank bank1 = bankFactory.CreateBank(pr);
             centralBank.AddBank(bank);
+            centralBank.AddBank(bank1);
+            centralBank.Print();
+
+            var lol = new Client("lol");
+            var lol1 = new Client("lol1");
+            centralBank.AddClient(bank, lol);
+            centralBank.AddClient(bank, lol1);
+            centralBank.AddClient(bank1, lol);
+            centralBank.Print();
+
+            centralBank.RegisterAccount(bank, lol, new CreditAccount());
+            centralBank.RegisterAccount(bank, lol1, new DepositAccount());
+            centralBank.RegisterAccount(bank, lol, new DebitAccount());
+            centralBank.Print();
         }
     }
 }

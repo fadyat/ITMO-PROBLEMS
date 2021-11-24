@@ -1,7 +1,9 @@
+using Banks.Banks.Limits;
+
 namespace Banks.Banks.Factory
 {
     public interface IBankFactory
     {
-        IBank CreateBank(string name);
+        IBank CreateBank(ILimit limit);
     }
 }

@@ -1,10 +1,14 @@
+using System;
+using Banks.Banks.Limits;
+
 namespace Banks.Banks.Factory
 {
     public class SimpleBankFactory : IBankFactory
     {
-        public IBank CreateBank(string name)
+        public IBank CreateBank(ILimit limit)
         {
-            return new Bank();
+            var id = Guid.NewGuid();
+            return new Bank(id, limit);
         }
     }
 }
