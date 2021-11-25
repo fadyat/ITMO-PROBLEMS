@@ -23,19 +23,19 @@ namespace Banks.Accounts
         // NEED COMMANDS!!!!!!!!!
         public abstract bool Check(ILimit limit);
 
-        public abstract bool ApproveTopUp(ILimit limit); // fake
+        // public abstract bool ApproveTopUp(ILimit limit); // fake
 
-        public abstract bool ApproveWithDraw(ILimit limit); // fake
+        // public abstract bool ApproveWithDraw(ILimit limit); // fake
 
-        public abstract bool ApproveTransfer(ILimit limit); // fake
+        // public abstract bool ApproveTransfer(ILimit limit); // fake
 
         /* Operations */
-        public abstract Account TopUp(ILimit limit); // fake
 
-        public abstract Account WithDraw(ILimit limit); // fake
+        // public abstract Account TopUp(ILimit limit); // fake
 
-        public abstract Account Transfer(ILimit limit); // fake
+        // public abstract Account WithDraw(ILimit limit); // fake
 
+        // public abstract Account Transfer(ILimit limit); // fake
 
         /* For checks */
         public abstract void Print();
