@@ -8,32 +8,32 @@ namespace Banks.Clients
     public class Client : IClient
     {
         private readonly string _name;
+        private string _secondName;
 
-        public Client(string name)
+        public Client(
+            string secondName,
+            string name,
+            string address = null,
+            IPassport passport = null)
         {
+            _secondName = secondName;
             _name = name;
+            Address = address;
+            Passport = passport;
             Id = Guid.NewGuid();
         }
 
-        // private string _secondName;
-        // private Guid _id;
-        // private List<Account> _accounts;
-        // private string _address; // could be class but I don't want
-        // private IPassport _passport;
-        // public class ClientBuilder
-        // {
-            // private string _name;
-            // private string _secondName;
-            // private Guid _id;
-            // private List<Account> _accounts;
-            // private string _address; // could be class but I don't want
-            // private IPassport _passport;
-        // }
         public Guid Id { get; }
+
+        public string Address { get; }
+
+        public IPassport Passport { get; }
 
         public void Print()
         {
             Console.WriteLine($"\t C: {_name}");
         }
+
+        // ... builder
     }
 }

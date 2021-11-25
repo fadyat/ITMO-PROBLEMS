@@ -16,7 +16,7 @@ namespace Banks.Accounts
 
         public DateTime Date { get; }
 
-        public DateTime PrevCalcDate { get; protected set; }
+        protected DateTime PrevCalcDate { get; set; }
 
         // void ?
         public abstract Account Calculate(ILimit limit, DateTime dateTime);

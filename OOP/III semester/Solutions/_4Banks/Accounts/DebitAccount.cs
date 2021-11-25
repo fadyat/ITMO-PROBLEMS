@@ -31,15 +31,12 @@ namespace Banks.Accounts
             DateTime dateTime,
             Action<int> addToPayment)
         {
-            DateTime closesDayPayment = PrevCalcDate;
-            if (PrevCalcDate.Day > Date.Day)
-                closesDayPayment = closesDayPayment.AddMonths(1);
+            DateTime closesDayPayment = PrevCalcDate
+                .AddMonths(1)
+                .AddDays(Date.Day - PrevCalcDate.Day);
 
-            closesDayPayment = closesDayPayment.AddDays(Date.Day - PrevCalcDate.Day);
-            int payAfter = closesDayPayment.Day;
-
+            int payAfter = closesDayPayment.Subtract(PrevCalcDate).Days;
             int diff = dateTime.Subtract(PrevCalcDate).Days;
-
             if (diff < payAfter)
             {
                 addToPayment(diff);
@@ -56,21 +53,20 @@ namespace Banks.Accounts
             while (diff > 0)
             {
                 int daysInMonth = DateTime.DaysInMonth(PrevCalcDate.Year, PrevCalcDate.Month);
-                int daysToPay = Math.Min(daysInMonth, diff);
-
-                addToPayment(daysToPay);
-                if (daysToPay != diff)
+                if (diff >= daysInMonth)
                 {
+                    addToPayment(daysInMonth);
+                    diff -= daysInMonth;
                     Balance += Payment;
                     Payment = 0;
                     PrevCalcDate = PrevCalcDate.AddMonths(1);
                 }
                 else
                 {
+                    addToPayment(diff);
+                    diff = 0;
                     PrevCalcDate = PrevCalcDate.AddDays(diff);
                 }
-
-                diff -= daysToPay;
             }
 
             return this;
