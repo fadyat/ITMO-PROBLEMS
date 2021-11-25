@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Banks.Accounts;
 using Banks.Clients.Passport;
 
 namespace Banks.Clients

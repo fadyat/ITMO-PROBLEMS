@@ -1,5 +1,4 @@
 using System;
-using Banks.Accounts;
 using Banks.Clients.Passport;
 
 namespace Banks.Clients

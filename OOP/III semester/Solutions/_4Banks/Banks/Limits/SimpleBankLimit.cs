@@ -8,14 +8,12 @@ namespace Banks.Banks.Limits
             double debitPercent,
             SortedDictionary<int, double> depositPercent,
             (int, int) creditLimit,
-            int creditCommission,
-            int daysForRepayment)
+            int creditCommission)
         {
             DebitPercent = debitPercent;
             CreditLimit = creditLimit;
             CreditCommission = creditCommission;
             DepositPercent = depositPercent;
-            DaysForRepayment = daysForRepayment;
         }
     }
 }

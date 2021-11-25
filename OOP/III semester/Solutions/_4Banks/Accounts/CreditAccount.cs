@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Banks.Banks.Limits;
 
 namespace Banks.Accounts
@@ -7,7 +6,24 @@ namespace Banks.Accounts
     public class CreditAccount : Account
     {
         public CreditAccount(int money, DateTime date)
-            : base(money, date) { }
+            : base(money, date)
+        {
+        }
+
+        public override bool ApprovedTopUp(Limit limit)
+        {
+            return Balance <= limit.CreditLimit.up;
+        }
+
+        public override bool ApprovedWithDraw(Limit limit)
+        {
+            return Balance >= limit.CreditLimit.down;
+        }
+
+        public override void Print()
+        {
+            Console.Write("\t A: credit");
+        }
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
@@ -24,27 +40,6 @@ namespace Banks.Accounts
             PrevCalcDate = dateTime;
 
             return this;
-        }
-
-        public override bool ApprovedTopUp(Limit limit)
-        {
-            return Balance <= limit.CreditLimit.up;
-        }
-
-        public override bool ApprovedWithDraw(Limit limit)
-        {
-            return Balance >= limit.CreditLimit.down;
-        }
-
-        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
-        {
-            // ???
-            throw new NotImplementedException();
-        }
-
-        public override void Print()
-        {
-            Console.Write("\t A: credit");
         }
     }
 }

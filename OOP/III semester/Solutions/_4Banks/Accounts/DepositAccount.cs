@@ -15,6 +15,21 @@ namespace Banks.Accounts
 
         private DateTime Duration { get; }
 
+        public override bool ApprovedWithDraw(Limit limit)
+        {
+            return false;
+        }
+
+        public override bool ApprovedTransfer(Account toAccount, Limit limit)
+        {
+            return false;
+        }
+
+        public override void Print()
+        {
+            Console.Write("\t A: deposit");
+        }
+
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
             double FindPercent()
@@ -36,21 +51,6 @@ namespace Banks.Accounts
                 Payment += Balance * (FindPercent() / 100 / 365) * days;
 
             return CalculateWithMethod(dateTime, AddToPayment);
-        }
-
-        public override bool ApprovedWithDraw(Limit limit)
-        {
-            return false;
-        }
-
-        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
-        {
-            return false;
-        }
-
-        public override void Print()
-        {
-            Console.Write("\t A: deposit");
         }
     }
 }

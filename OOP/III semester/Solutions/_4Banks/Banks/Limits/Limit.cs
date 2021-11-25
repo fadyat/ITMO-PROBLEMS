@@ -14,7 +14,5 @@ namespace Banks.Banks.Limits
         public (int down, int up) CreditLimit { get; protected init; }
 
         public int CreditCommission { get; protected init; }
-
-        public int DaysForRepayment { get; protected init; }
     }
 }

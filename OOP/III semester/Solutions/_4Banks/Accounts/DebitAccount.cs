@@ -23,12 +23,6 @@ namespace Banks.Accounts
             return Balance >= 0;
         }
 
-        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
-        {
-            // ???
-            throw new NotImplementedException();
-        }
-
         public override void Print()
         {
             Console.Write("\t A: debit");

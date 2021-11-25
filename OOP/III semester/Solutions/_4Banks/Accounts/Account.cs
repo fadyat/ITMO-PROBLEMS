@@ -23,7 +23,10 @@ namespace Banks.Accounts
 
         public abstract bool ApprovedWithDraw(Limit limit);
 
-        public abstract bool ApprovedTransfer(Account toAccount, double amount, Limit limit);
+        public virtual bool ApprovedTransfer(Account toAccount, Limit limit)
+        {
+            return ApprovedWithDraw(limit) && toAccount.ApprovedTopUp(limit);
+        }
 
         /* Operations */
         public void TopUp(double amount)
