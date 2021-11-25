@@ -9,49 +9,44 @@ namespace Banks.Banks
 {
     public class Bank : IBank
     {
-        private readonly HashSet<IClient> _clients;
-        private readonly Dictionary<Guid, List<Account>> _accounts;
-
-        public Bank(Guid id, ILimit limit)
+        public Bank(Guid id, Limit limit)
         {
             Id = id;
             Limit = limit;
-            _clients = new HashSet<IClient>();
-            _accounts = new Dictionary<Guid, List<Account>>();
+            Clients = new HashSet<IClient>();
+            Accounts = new Dictionary<Guid, List<Account>>();
         }
 
         public Guid Id { get; }
 
-        public ILimit Limit { get; }
+        public Limit Limit { get; }
+
+        public Dictionary<Guid, List<Account>> Accounts { get; }
+
+        public HashSet<IClient> Clients { get; }
 
         public void AddClient(IClient client)
         {
-            _clients.Add(client);
+            CentralBank.AddClient(this, client);
         }
 
         public void RegisterAccount(IClient client, Account account)
         {
-            client = GetClient(client.Id);
-            if (!_accounts.ContainsKey(client.Id))
-            {
-                _accounts[client.Id] = new List<Account>();
-            }
-
-            _accounts[client.Id].Add(account);
+            CentralBank.RegisterAccount(this, client, account);
         }
 
         public IClient GetClient(Guid id)
         {
-            return _clients.Single(c => Equals(c.Id, id));
+            return Clients.Single(c => Equals(c.Id, id));
         }
 
         public void Print()
         {
             Console.WriteLine($"# B: {Id}");
-            foreach (IClient c in _clients)
+            foreach (IClient c in Clients)
                 c.Print();
 
-            foreach ((Guid key, List<Account> value) in _accounts)
+            foreach ((Guid key, List<Account> value) in Accounts)
             {
                 Console.Write("C: " + key + " ");
                 foreach (Account aa in value)

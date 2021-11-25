@@ -16,7 +16,6 @@ namespace Banks.Banks.Chain
 
         public override bool HandlerRequest()
         {
-            Console.WriteLine(_client.Address);
             if (_client.Address == null || _client.Passport == null)
             {
                 return false;

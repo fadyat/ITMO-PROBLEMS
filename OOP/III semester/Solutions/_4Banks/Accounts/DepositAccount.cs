@@ -7,12 +7,15 @@ namespace Banks.Accounts
 {
     public class DepositAccount : DebitAccount
     {
-        public DepositAccount(int money, DateTime date)
+        public DepositAccount(int money, DateTime date, DateTime duration)
             : base(money, date)
         {
+            Duration = duration;
         }
 
-        public override Account Calculate(ILimit limit, DateTime dateTime)
+        private DateTime Duration { get; }
+
+        public override Account Calculate(Limit limit, DateTime dateTime)
         {
             double FindPercent()
             {
@@ -27,10 +30,22 @@ namespace Banks.Accounts
                 return limit.DepositPercent[maxBalance];
             }
 
+            dateTime = (Duration.CompareTo(dateTime) > 0) ? dateTime : Duration;
+
             void AddToPayment(int days) =>
                 Payment += Balance * (FindPercent() / 100 / 365) * days;
 
-            return CalculateWithMethod(limit, dateTime, AddToPayment);
+            return CalculateWithMethod(dateTime, AddToPayment);
+        }
+
+        public override bool ApprovedWithDraw(Limit limit)
+        {
+            return false;
+        }
+
+        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
+        {
+            return false;
         }
 
         public override void Print()

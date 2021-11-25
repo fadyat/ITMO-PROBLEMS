@@ -14,6 +14,12 @@ namespace Banks.Banks
 
         void RegisterAccount(IBank bank, IClient client, Account account);
 
+        void Transfer();
+
+        void TopUp();
+
+        void WithDraw();
+
         void Print(); // remove
     }
 }

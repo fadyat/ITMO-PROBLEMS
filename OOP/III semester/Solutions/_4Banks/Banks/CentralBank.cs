@@ -6,40 +6,46 @@ using Banks.Clients;
 
 namespace Banks.Banks
 {
-    public class CentralBank : ICentralBank
+    public static class CentralBank
     {
-        private readonly List<IBank> _banks;
+        private static readonly List<IBank> Banks;
 
-        public CentralBank()
+        static CentralBank()
         {
-            _banks = new List<IBank>();
+            Banks = new List<IBank>();
         }
 
-        public void AddBank(IBank bank)
+        public static void AddBank(IBank bank)
         {
-            _banks.Add(bank);
+            Banks.Add(bank);
         }
 
-        public void AddClient(IBank bank, IClient client)
+        public static void AddClient(IBank bank, IClient client)
         {
             bank = GetBank(bank.Id);
-            bank.AddClient(client);
+            bank.Clients.Add(client);
         }
 
-        public IBank GetBank(Guid id)
+        public static IBank GetBank(Guid id)
         {
-            return _banks.Single(b => Equals(b.Id, id));
+            return Banks.Single(b => Equals(b.Id, id));
         }
 
-        public void RegisterAccount(IBank bank, IClient client, Account account)
+        public static void RegisterAccount(IBank bank, IClient client, Account account)
         {
             bank = GetBank(bank.Id);
-            bank.RegisterAccount(client, account);
+            client = bank.GetClient(client.Id);
+            if (!bank.Accounts.ContainsKey(client.Id))
+            {
+                bank.Accounts[client.Id] = new List<Account>();
+            }
+
+            bank.Accounts[client.Id].Add(account);
         }
 
-        public void Print()
+        public static void Print()
         {
-            foreach (IBank b in _banks)
+            foreach (IBank b in Banks)
                 b.Print();
         }
     }

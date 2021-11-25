@@ -7,47 +7,44 @@ namespace Banks.Accounts
     public class CreditAccount : Account
     {
         public CreditAccount(int money, DateTime date)
-            : base(money, date)
+            : base(money, date) { }
+
+        public override Account Calculate(Limit limit, DateTime dateTime)
         {
-            NegativeBalanceDays = new Queue<(DateTime, int)>();
+            void AddToPayment(int days) =>
+                Balance -= limit.CreditCommission * days;
+
+            if (Balance >= 0)
+            {
+                return this;
+            }
+
+            int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
+            AddToPayment(daysToPay);
+            PrevCalcDate = dateTime;
+
+            return this;
         }
 
-        public Queue<(DateTime negDay, int sum)> NegativeBalanceDays { get; }
-
-        public override Account Calculate(ILimit limit, DateTime dateTime)
+        public override bool ApprovedTopUp(Limit limit)
         {
-            void AddToPayment(int days) => Balance -= limit.CreditCommission * days;
-
-            return CalculateWithMethod(limit, dateTime, AddToPayment);
+            return Balance <= limit.CreditLimit.up;
         }
 
-        public override bool Check(ILimit limit)
+        public override bool ApprovedWithDraw(Limit limit)
         {
+            return Balance >= limit.CreditLimit.down;
+        }
+
+        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
+        {
+            // ???
             throw new NotImplementedException();
         }
 
         public override void Print()
         {
             Console.Write("\t A: credit");
-        }
-
-        protected override Account CalculateWithMethod(
-            ILimit limit,
-            DateTime dateTime,
-            Action<int> addToPayment)
-        {
-            DateTime first = NegativeBalanceDays.Peek().negDay;
-            int diff = dateTime.Subtract(first).Days;
-            if (Balance >= 0 || diff <= limit.DaysForRepayment)
-            {
-                return this;
-            }
-
-            int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
-            addToPayment(daysToPay);
-            PrevCalcDate = dateTime;
-
-            return this;
         }
     }
 }

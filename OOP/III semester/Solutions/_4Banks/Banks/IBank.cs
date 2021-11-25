@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 using Banks.Clients;
@@ -7,9 +8,13 @@ namespace Banks.Banks
 {
     public interface IBank
     {
-        ILimit Limit { get; }
+        Limit Limit { get; }
 
         Guid Id { get; }
+
+        public Dictionary<Guid, List<Account>> Accounts { get; }
+
+        public HashSet<IClient> Clients { get; }
 
         void AddClient(IClient client);
 

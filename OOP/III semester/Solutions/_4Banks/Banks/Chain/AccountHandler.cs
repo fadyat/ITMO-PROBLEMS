@@ -1,29 +1,20 @@
+using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 
 namespace Banks.Banks.Chain
 {
-    public class AccountHandler : Handler
+    public abstract class AccountHandler : Handler
     {
-        private readonly Account _account;
-        private readonly ILimit _limit;
-
-        public AccountHandler(Account account, ILimit limit, Handler successor = null)
+        public AccountHandler(Account account, Limit limit, Handler successor = null)
             : base(successor)
         {
-            _account = account;
-            _limit = limit;
+            Account = account;
+            Limit = limit;
         }
 
-        public override bool HandlerRequest()
-        {
-            _account.Check(_limit);
+        protected Account Account { get; }
 
-            // need check for all kinds of operations
-            // for +
-            // for -
-            // for ->
-            return base.HandlerRequest();
-        }
+        protected Limit Limit { get; }
     }
 }

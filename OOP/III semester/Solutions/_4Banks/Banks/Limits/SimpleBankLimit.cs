@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Banks.Banks.Limits
 {
-    public class SimpleBankLimit : ILimit
+    public class SimpleBankLimit : Limit
     {
         public SimpleBankLimit(
             double debitPercent,

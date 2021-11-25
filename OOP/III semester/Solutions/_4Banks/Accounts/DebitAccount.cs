@@ -13,16 +13,19 @@ namespace Banks.Accounts
 
         protected double Payment { get; set; }
 
-        public override Account Calculate(ILimit limit, DateTime dateTime)
+        public override bool ApprovedTopUp(Limit limit)
         {
-            void AddToPayment(int days) =>
-                Payment += Balance * (limit.DebitPercent / 100 / 365) * days;
-
-            return CalculateWithMethod(limit, dateTime, AddToPayment);
+            return true;
         }
 
-        public override bool Check(ILimit limit)
+        public override bool ApprovedWithDraw(Limit limit)
         {
+            return Balance >= 0;
+        }
+
+        public override bool ApprovedTransfer(Account toAccount, double amount, Limit limit)
+        {
+            // ???
             throw new NotImplementedException();
         }
 
@@ -31,10 +34,15 @@ namespace Banks.Accounts
             Console.Write("\t A: debit");
         }
 
-        protected override Account CalculateWithMethod(
-            ILimit limit,
-            DateTime dateTime,
-            Action<int> addToPayment)
+        public override Account Calculate(Limit limit, DateTime dateTime)
+        {
+            void AddToPayment(int days) =>
+                Payment += Balance * (limit.DebitPercent / 100 / 365) * days;
+
+            return CalculateWithMethod(dateTime, AddToPayment);
+        }
+
+        protected Account CalculateWithMethod(DateTime dateTime, Action<int> addToPayment)
         {
             DateTime closesDayPayment = PrevCalcDate
                 .AddMonths(1)

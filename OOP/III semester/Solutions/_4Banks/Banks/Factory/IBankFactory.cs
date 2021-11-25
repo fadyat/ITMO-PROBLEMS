@@ -4,6 +4,6 @@ namespace Banks.Banks.Factory
 {
     public interface IBankFactory
     {
-        IBank CreateBank(ILimit limit);
+        IBank CreateBank(Limit limit);
     }
 }
