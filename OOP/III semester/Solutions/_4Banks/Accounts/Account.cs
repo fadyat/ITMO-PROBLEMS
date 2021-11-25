@@ -18,18 +18,30 @@ namespace Banks.Accounts
 
         protected DateTime PrevCalcDate { get; set; }
 
-        // void ?
+        /* For approve operations */
+
+        // NEED COMMANDS!!!!!!!!!
+        public abstract bool Check(ILimit limit);
+
+        public abstract bool ApproveTopUp(ILimit limit); // fake
+
+        public abstract bool ApproveWithDraw(ILimit limit); // fake
+
+        public abstract bool ApproveTransfer(ILimit limit); // fake
+
+        /* Operations */
+        public abstract Account TopUp(ILimit limit); // fake
+
+        public abstract Account WithDraw(ILimit limit); // fake
+
+        public abstract Account Transfer(ILimit limit); // fake
+
+
+        /* For checks */
+        public abstract void Print();
+
+        /* For TimeMachine */
         public abstract Account Calculate(ILimit limit, DateTime dateTime);
-
-        /*
-            public abstract Account TopUp(ILimit limit);
-
-            public abstract Account WithDraw(ILimit limit);
-
-            public abstract Account Transfer(ILimit limit);
-        */
-
-        public abstract void Print(); // remove
 
         protected abstract Account CalculateWithMethod(ILimit limit, DateTime dateTime, Action<int> addToPayment);
     }

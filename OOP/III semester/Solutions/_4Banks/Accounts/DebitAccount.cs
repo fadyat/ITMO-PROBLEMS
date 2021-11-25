@@ -21,6 +21,11 @@ namespace Banks.Accounts
             return CalculateWithMethod(limit, dateTime, AddToPayment);
         }
 
+        public override bool Check(ILimit limit)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Print()
         {
             Console.Write("\t A: debit");

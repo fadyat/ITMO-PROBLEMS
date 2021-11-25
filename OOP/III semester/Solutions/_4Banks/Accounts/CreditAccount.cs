@@ -21,6 +21,11 @@ namespace Banks.Accounts
             return CalculateWithMethod(limit, dateTime, AddToPayment);
         }
 
+        public override bool Check(ILimit limit)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Print()
         {
             Console.Write("\t A: credit");
@@ -33,7 +38,10 @@ namespace Banks.Accounts
         {
             DateTime first = NegativeBalanceDays.Peek().negDay;
             int diff = dateTime.Subtract(first).Days;
-            if (Balance >= 0 || diff <= limit.DaysForRepayment) return this;
+            if (Balance >= 0 || diff <= limit.DaysForRepayment)
+            {
+                return this;
+            }
 
             int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
             addToPayment(daysToPay);

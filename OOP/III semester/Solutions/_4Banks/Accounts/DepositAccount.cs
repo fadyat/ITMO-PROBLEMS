@@ -30,9 +30,7 @@ namespace Banks.Accounts
             void AddToPayment(int days) =>
                 Payment += Balance * (FindPercent() / 100 / 365) * days;
 
-            CalculateWithMethod(limit, dateTime, AddToPayment);
-
-            return this;
+            return CalculateWithMethod(limit, dateTime, AddToPayment);
         }
 
         public override void Print()
