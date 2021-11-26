@@ -5,7 +5,7 @@ namespace Banks.Accounts
 {
     public class DebitAccount : Account
     {
-        public DebitAccount(int balance, DateTime date)
+        public DebitAccount(double balance, DateTime date)
             : base(balance, date)
         {
             Payment = 0;

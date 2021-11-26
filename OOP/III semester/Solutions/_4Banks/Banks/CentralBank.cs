@@ -19,6 +19,8 @@ namespace Banks.Banks
             Operations = new Stack<AccountCommand>();
         }
 
+        public static Stack<AccountCommand> Op => Operations;
+
         public static void AddBank(IBank bank)
         {
             Banks.Add(bank);
