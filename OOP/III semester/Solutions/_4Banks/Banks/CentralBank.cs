@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Banks.Accounts;
+using Banks.Accounts.Command;
+using Banks.Banks.Chain;
 using Banks.Clients;
 
 namespace Banks.Banks
@@ -9,10 +11,12 @@ namespace Banks.Banks
     public static class CentralBank
     {
         private static readonly List<IBank> Banks;
+        private static readonly Stack<AccountCommand> Operations;
 
         static CentralBank()
         {
             Banks = new List<IBank>();
+            Operations = new Stack<AccountCommand>();
         }
 
         public static void AddBank(IBank bank)
@@ -41,6 +45,19 @@ namespace Banks.Banks
             }
 
             bank.Accounts[client.Id].Add(account);
+        }
+
+        public static void Operation(AccountCommand accountCommand, Handler check)
+        {
+            accountCommand.Execute();
+            Operations.Push(accountCommand);
+            if (check.HandlerRequest())
+            {
+                return;
+            }
+
+            Operations.Pop()
+                .Undo();
         }
 
         public static void Print()

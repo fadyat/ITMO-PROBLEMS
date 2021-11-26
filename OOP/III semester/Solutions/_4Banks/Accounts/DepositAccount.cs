@@ -7,8 +7,8 @@ namespace Banks.Accounts
 {
     public class DepositAccount : DebitAccount
     {
-        public DepositAccount(int money, DateTime date, DateTime duration)
-            : base(money, date)
+        public DepositAccount(int balance, DateTime date, DateTime duration)
+            : base(balance, date)
         {
             Duration = duration;
         }

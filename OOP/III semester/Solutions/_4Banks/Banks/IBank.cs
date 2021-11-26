@@ -22,6 +22,12 @@ namespace Banks.Banks
 
         IClient GetClient(Guid id);
 
+        void TopUp(IClient client, Account account, double amount);
+
+        void WithDraw(IClient client, Account account, double amount);
+
+        void Transfer(IClient client, Account from, Account too, double amount);
+
         void Print(); // remove
     }
 }

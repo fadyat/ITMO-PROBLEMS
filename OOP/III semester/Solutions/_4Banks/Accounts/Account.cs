@@ -5,16 +5,19 @@ namespace Banks.Accounts
 {
     public abstract class Account
     {
-        public Account(double money, DateTime date)
+        public Account(double balance, DateTime date)
         {
-            Balance = money;
+            Balance = balance;
             Date = date;
             PrevCalcDate = date;
+            Id = Guid.NewGuid();
         }
 
         public double Balance { get; protected set; }
 
         public DateTime Date { get; }
+
+        public Guid Id { get; }
 
         protected DateTime PrevCalcDate { get; set; }
 
