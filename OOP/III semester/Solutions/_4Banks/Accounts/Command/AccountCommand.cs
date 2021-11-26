@@ -2,7 +2,7 @@ namespace Banks.Accounts.Command
 {
     public abstract class AccountCommand
     {
-        public AccountCommand(Account account, double amount)
+        protected AccountCommand(Account account, double amount)
         {
             Account = account;
             Amount = amount;

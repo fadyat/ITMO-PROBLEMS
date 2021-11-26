@@ -1,4 +1,3 @@
-using System;
 using Banks.Exceptions;
 
 namespace Banks.Clients.Passport

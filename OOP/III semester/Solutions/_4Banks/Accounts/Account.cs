@@ -1,12 +1,11 @@
 using System;
-using System.Runtime.CompilerServices;
 using Banks.Banks.Limits;
 
 namespace Banks.Accounts
 {
     public abstract class Account
     {
-        public Account(double balance, DateTime date)
+        protected Account(double balance, DateTime date)
         {
             Balance = balance;
             Date = date;
