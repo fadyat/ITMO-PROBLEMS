@@ -16,6 +16,8 @@ namespace Banks.Banks.Limits
         public double CreditCommission { get; protected init; }
 
         /* All */
-        public double TopUpAndTransferLimit { get; protected set; }
+        public double WithDrawLimit { get; protected set; }
+
+        public double TransferLimit { get; protected set; }
     }
 }

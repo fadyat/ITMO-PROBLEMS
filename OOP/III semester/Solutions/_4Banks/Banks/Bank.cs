@@ -52,8 +52,7 @@ namespace Banks.Banks
             account = GetAccount(client.Id, account.Id);
 
             var accountCheck = new AccountTopUpHandler(account, Limit);
-            var clientCheck = new ClientHandler(client, accountCheck);
-            var check = new Handler(clientCheck);
+            var check = new Handler(accountCheck);
 
             CentralBank.Operation(new TopUpCommand(account, amount), check);
         }
@@ -63,7 +62,7 @@ namespace Banks.Banks
             account = GetAccount(client.Id, account.Id);
 
             var accountCheck = new AccountWithDrawHandler(account, Limit);
-            var clientCheck = new ClientHandler(client, accountCheck);
+            var clientCheck = new ClientWithDrawHandler(client, Limit, amount, accountCheck);
             var check = new Handler(clientCheck);
 
             CentralBank.Operation(new WithDrawCommand(account, amount), check);
@@ -74,7 +73,7 @@ namespace Banks.Banks
             from = GetAccount(client.Id, from.Id);
 
             var accountCheck = new AccountTransferHandler(from, too, Limit);
-            var clientCheck = new ClientHandler(client, accountCheck);
+            var clientCheck = new ClientTransferHandler(client, Limit, amount, accountCheck);
             var check = new Handler(clientCheck);
 
             CentralBank.Operation(new TransferCommand(from, too, amount), check);

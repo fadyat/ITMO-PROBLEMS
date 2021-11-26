@@ -11,7 +11,8 @@ namespace Banks.Banks.Chain
 
         public virtual bool HandlerRequest()
         {
-            return Successor == null || Successor.HandlerRequest();
+            return Successor == null ||
+                   Successor.HandlerRequest();
         }
 
         public void SetHandler(Handler successor)

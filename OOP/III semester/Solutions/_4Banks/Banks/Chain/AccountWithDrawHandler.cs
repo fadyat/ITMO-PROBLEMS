@@ -1,16 +1,30 @@
+using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 
 namespace Banks.Banks.Chain
 {
-    public class AccountWithDrawHandler : AccountHandler
+    public class AccountWithDrawHandler : Handler
     {
+        private readonly Account _account;
+        private readonly Limit _limit;
+
         public AccountWithDrawHandler(Account account, Limit limit, Handler successor = null)
-            : base(account, limit, successor) { }
+            : base(successor)
+        {
+            _account = account;
+            _limit = limit;
+        }
 
         public override bool HandlerRequest()
         {
-            return Account.ApprovedWithDraw(Limit) && base.HandlerRequest();
+            if (!_account.ApprovedWithDraw(_limit))
+            {
+                Console.WriteLine("WithDraw don't approved!");
+                return false;
+            }
+
+            return base.HandlerRequest();
         }
     }
 }

@@ -1,16 +1,30 @@
+using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 
 namespace Banks.Banks.Chain
 {
-    public class AccountTopUpHandler : AccountHandler
+    public class AccountTopUpHandler : Handler
     {
+        private readonly Account _account;
+        private readonly Limit _limit;
+
         public AccountTopUpHandler(Account account, Limit limit, Handler successor = null)
-            : base(account, limit, successor) { }
+            : base(successor)
+        {
+            _account = account;
+            _limit = limit;
+        }
 
         public override bool HandlerRequest()
         {
-            return Account.ApprovedTopUp(Limit) && base.HandlerRequest();
+            if (!_account.ApprovedTopUp(_limit))
+            {
+                Console.WriteLine("TopUp don't approved!");
+                return false;
+            }
+
+            return base.HandlerRequest();
         }
     }
 }

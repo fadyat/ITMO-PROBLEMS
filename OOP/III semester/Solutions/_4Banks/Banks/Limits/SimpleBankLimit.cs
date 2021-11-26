@@ -9,13 +9,15 @@ namespace Banks.Banks.Limits
             SortedDictionary<int, double> depositPercent,
             (double, double) creditLimit,
             double creditCommission,
-            double topUpAndTransferLimit)
+            double withDrawLimit,
+            double transferLimit)
         {
             DebitPercent = debitPercent;
             CreditLimit = creditLimit;
             CreditCommission = creditCommission;
             DepositPercent = depositPercent;
-            TopUpAndTransferLimit = topUpAndTransferLimit;
+            WithDrawLimit = withDrawLimit;
+            TransferLimit = transferLimit;
         }
     }
 }

@@ -1,20 +1,32 @@
+using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 
 namespace Banks.Banks.Chain
 {
-    public class AccountTransferHandler : AccountHandler
+    public class AccountTransferHandler : Handler
     {
-        public AccountTransferHandler(Account account, Account to, Limit limit, Handler successor = null)
-            : base(account, limit, successor)
+        private readonly Account _account;
+        private readonly Account _toAccount;
+        private readonly Limit _limit;
+
+        public AccountTransferHandler(Account account, Account toAccount, Limit limit, Handler successor = null)
+            : base(successor)
         {
-            ToAccount = to;
+            _account = account;
+            _toAccount = toAccount;
+            _limit = limit;
         }
 
-        private Account ToAccount { get; }
         public override bool HandlerRequest()
         {
-            return Account.ApprovedTransfer(ToAccount, Limit) && base.HandlerRequest();
+            if (!_account.ApprovedTransfer(_toAccount, _limit))
+            {
+                Console.WriteLine("Transfer don't approved!");
+                return false;
+            }
+
+            return base.HandlerRequest();
         }
     }
 }

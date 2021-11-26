@@ -28,6 +28,7 @@ namespace Banks.Tests
                 new SortedDictionary<int, double> {{0, 3}, {10000, 4}},
                 (-10000, 1e5),
                 10,
+                1000,
                 1000);
 
             _firstBank = _bankFactory.CreateBank(_stdLimit);
@@ -67,7 +68,7 @@ namespace Banks.Tests
         {
             _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
-            
+
             Assert.True(_firstBank.Accounts[_firstClient.Id].Contains(account));
         }
     }
