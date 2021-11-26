@@ -1,5 +1,3 @@
-using System;
-
 namespace Banks.Accounts.Command
 {
     public class TopUpCommand : AccountCommand

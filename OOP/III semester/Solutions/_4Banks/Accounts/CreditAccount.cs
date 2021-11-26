@@ -27,19 +27,21 @@ namespace Banks.Accounts
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
-            void AddToPayment(int days) =>
-                Balance -= limit.CreditCommission * days;
+            var nextAccountStatus = (CreditAccount)MemberwiseClone();
 
-            if (Balance >= 0)
+            void AddToPayment(int days) =>
+                nextAccountStatus.Balance -= limit.CreditCommission * days;
+
+            if (nextAccountStatus.Balance >= 0)
             {
-                return this;
+                return nextAccountStatus;
             }
 
-            int daysToPay = dateTime.Subtract(PrevCalcDate).Days;
+            int daysToPay = dateTime.Subtract(nextAccountStatus.PrevCalcDate).Days;
             AddToPayment(daysToPay);
-            PrevCalcDate = dateTime;
+            nextAccountStatus.PrevCalcDate = dateTime;
 
-            return this;
+            return nextAccountStatus;
         }
     }
 }

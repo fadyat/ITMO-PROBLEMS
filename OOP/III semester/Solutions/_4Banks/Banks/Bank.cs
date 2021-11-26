@@ -34,6 +34,7 @@ namespace Banks.Banks
 
         public void RegisterAccount(IClient client, Account account)
         {
+            client = GetClient(client.Id);
             CentralBank.RegisterAccount(this, client, account);
         }
 
@@ -77,6 +78,13 @@ namespace Banks.Banks
             var check = new Handler(clientCheck);
 
             CentralBank.Operation(new TransferCommand(from, too, amount), check);
+        }
+
+        public Account Calculate(IClient client, Account account, DateTime inDate)
+        {
+            client = GetClient(client.Id);
+            account = GetAccount(client.Id, account.Id);
+            return CentralBank.Calculate(account, Limit, inDate);
         }
 
         public void Print()

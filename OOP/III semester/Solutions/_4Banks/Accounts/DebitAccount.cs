@@ -30,53 +30,61 @@ namespace Banks.Accounts
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
-            void AddToPayment(int days) =>
-                Payment += Balance * (limit.DebitPercent / 100 / 365) * days;
+            var nextAccountStatus = (DebitAccount)MemberwiseClone();
 
-            return CalculateWithMethod(dateTime, AddToPayment);
+            void AddToPayment(int days) =>
+                nextAccountStatus.Payment += nextAccountStatus.Balance * (limit.DebitPercent / 100 / 365) * days;
+
+            return CalculateWithMethod(nextAccountStatus, dateTime, AddToPayment);
         }
 
-        protected Account CalculateWithMethod(DateTime dateTime, Action<int> addToPayment)
+        protected static Account CalculateWithMethod(
+            DebitAccount nextAccountStatus,
+            DateTime dateTime,
+            Action<int> addToPayment)
         {
-            DateTime closesDayPayment = PrevCalcDate
+            DateTime closesDayPayment = nextAccountStatus.PrevCalcDate
                 .AddMonths(1)
-                .AddDays(Date.Day - PrevCalcDate.Day);
+                .AddDays(nextAccountStatus.Date.Day - nextAccountStatus.PrevCalcDate.Day);
 
-            int payAfter = closesDayPayment.Subtract(PrevCalcDate).Days;
-            int diff = dateTime.Subtract(PrevCalcDate).Days;
+            int payAfter = closesDayPayment.Subtract(nextAccountStatus.PrevCalcDate).Days;
+            int diff = dateTime.Subtract(nextAccountStatus.PrevCalcDate).Days;
             if (diff < payAfter)
             {
                 addToPayment(diff);
-                PrevCalcDate = dateTime;
-                return this;
+                nextAccountStatus.PrevCalcDate = dateTime;
+                return nextAccountStatus;
             }
 
             diff -= payAfter;
             addToPayment(payAfter);
-            Balance += Payment;
-            PrevCalcDate = closesDayPayment;
-            Payment = 0;
+            nextAccountStatus.Balance += nextAccountStatus.Payment;
+            nextAccountStatus.PrevCalcDate = closesDayPayment;
+            nextAccountStatus.Payment = 0;
 
             while (diff > 0)
             {
-                int daysInMonth = DateTime.DaysInMonth(PrevCalcDate.Year, PrevCalcDate.Month);
+                int daysInMonth = DateTime.DaysInMonth(
+                    nextAccountStatus.PrevCalcDate.Year,
+                    nextAccountStatus.PrevCalcDate.Month);
+
                 if (diff >= daysInMonth)
                 {
                     addToPayment(daysInMonth);
                     diff -= daysInMonth;
-                    Balance += Payment;
-                    Payment = 0;
-                    PrevCalcDate = PrevCalcDate.AddMonths(1);
+                    nextAccountStatus.Balance += nextAccountStatus.Payment;
+                    nextAccountStatus.Payment = 0;
+                    nextAccountStatus.PrevCalcDate = nextAccountStatus.PrevCalcDate.AddMonths(1);
                 }
                 else
                 {
                     addToPayment(diff);
                     diff = 0;
-                    PrevCalcDate = PrevCalcDate.AddDays(diff);
+                    nextAccountStatus.PrevCalcDate = nextAccountStatus.PrevCalcDate.AddDays(diff);
                 }
             }
 
-            return this;
+            return nextAccountStatus;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Banks.Accounts;
 using Banks.Accounts.Command;
 using Banks.Banks.Chain;
+using Banks.Banks.Limits;
 using Banks.Clients;
 
 namespace Banks.Banks
@@ -18,8 +19,6 @@ namespace Banks.Banks
             Banks = new List<IBank>();
             Operations = new Stack<AccountCommand>();
         }
-
-        public static Stack<AccountCommand> Op => Operations;
 
         public static void AddBank(IBank bank)
         {
@@ -60,6 +59,11 @@ namespace Banks.Banks
 
             Operations.Pop()
                 .Undo();
+        }
+
+        public static Account Calculate(Account account, Limit limit, DateTime inDate)
+        {
+            return account.Calculate(limit, inDate);
         }
 
         public static void Print()

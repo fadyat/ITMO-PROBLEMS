@@ -17,12 +17,12 @@ namespace Banks.Accounts
 
         public override bool ApprovedWithDraw(Limit limit)
         {
-            return false;
+            return PrevCalcDate >= Duration && base.ApprovedWithDraw(limit);
         }
 
         public override bool ApprovedTransfer(Account toAccount, Limit limit)
         {
-            return false;
+            return PrevCalcDate >= Duration && base.ApprovedTransfer(toAccount, limit);
         }
 
         public override void Print()
@@ -32,12 +32,14 @@ namespace Banks.Accounts
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
+            var nextAccountStatus = (DepositAccount)MemberwiseClone();
+
             double FindPercent()
             {
                 int maxBalance = 0;
                 SortedDictionary<int, double> depositPercent = limit.DepositPercent;
                 foreach (int balance in depositPercent.Keys
-                    .Where(balance => balance <= Balance))
+                    .Where(balance => balance <= nextAccountStatus.Balance))
                 {
                     maxBalance = balance;
                 }
@@ -45,12 +47,12 @@ namespace Banks.Accounts
                 return limit.DepositPercent[maxBalance];
             }
 
-            dateTime = (Duration.CompareTo(dateTime) > 0) ? dateTime : Duration;
+            dateTime = (nextAccountStatus.Duration.CompareTo(dateTime) > 0) ? dateTime : nextAccountStatus.Duration;
 
             void AddToPayment(int days) =>
-                Payment += Balance * (FindPercent() / 100 / 365) * days;
+                nextAccountStatus.Payment += nextAccountStatus.Balance * (FindPercent() / 100 / 365) * days;
 
-            return CalculateWithMethod(dateTime, AddToPayment);
+            return CalculateWithMethod(nextAccountStatus, dateTime, AddToPayment);
         }
     }
 }
