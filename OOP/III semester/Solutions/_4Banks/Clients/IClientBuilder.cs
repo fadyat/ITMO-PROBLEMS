@@ -1,5 +1,4 @@
 using System;
-using Banks.Clients.Passport;
 
 namespace Banks.Clients
 {
@@ -13,7 +12,7 @@ namespace Banks.Clients
 
         IClientBuilder WithAddress(string address);
 
-        IClientBuilder WithPassport(IPassport passport);
+        IClientBuilder WithPassport(string passport);
 
         IClient Build();
     }

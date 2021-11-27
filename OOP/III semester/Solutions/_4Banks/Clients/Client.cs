@@ -1,5 +1,4 @@
 using System;
-using Banks.Clients.Passport;
 
 namespace Banks.Clients
 {
@@ -10,7 +9,7 @@ namespace Banks.Clients
             string name,
             Guid id,
             string address = null,
-            IPassport passport = null)
+            string passport = null)
         {
             Surname = surname;
             Name = name;
@@ -27,7 +26,7 @@ namespace Banks.Clients
 
         public string Address { get; }
 
-        public IPassport Passport { get; }
+        public string Passport { get; }
 
         public IClientBuilder ToBuilder()
         {
@@ -52,7 +51,7 @@ namespace Banks.Clients
             private string _name;
             private string _surname;
             private string _address;
-            private IPassport _passport;
+            private string _passport;
 
             public IClientBuilder WithId(Guid id)
             {
@@ -78,7 +77,7 @@ namespace Banks.Clients
                 return this;
             }
 
-            public IClientBuilder WithPassport(IPassport passport)
+            public IClientBuilder WithPassport(string passport)
             {
                 _passport = passport;
                 return this;

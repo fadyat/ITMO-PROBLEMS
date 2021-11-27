@@ -49,6 +49,7 @@ namespace Banks.Accounts
         }
 
         /* For checks */
+
         public abstract void Print();
 
         /* For TimeMachine */

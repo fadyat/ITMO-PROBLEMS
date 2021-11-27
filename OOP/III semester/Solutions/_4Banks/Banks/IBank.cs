@@ -8,6 +8,8 @@ namespace Banks.Banks
 {
     public interface IBank
     {
+        string Name { get; }
+
         Limit Limit { get; }
 
         Guid Id { get; }
@@ -22,6 +24,10 @@ namespace Banks.Banks
 
         IClient GetClient(Guid id);
 
+        Account GetAccount(Guid clientId, Guid accountId);
+
+        bool ContainsClient(Guid id);
+
         void TopUp(IClient client, Account account, double amount);
 
         void WithDraw(IClient client, Account account, double amount);
@@ -30,6 +36,6 @@ namespace Banks.Banks
 
         Account Calculate(IClient client, Account account, DateTime inDate);
 
-        void Print(); // remove
+        void Print();
     }
 }

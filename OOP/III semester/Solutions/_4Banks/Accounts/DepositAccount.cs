@@ -25,11 +25,10 @@ namespace Banks.Accounts
             return PrevCalcDate >= Duration && base.ApprovedTransfer(toAccount, limit);
         }
 
-        public override void Print()
-        {
-            Console.Write("\t A: deposit");
-        }
-
+        // public override void Print()
+        // {
+            // Console.Write("\t A: deposit");
+        // }
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
             var nextAccountStatus = (DepositAccount)MemberwiseClone();

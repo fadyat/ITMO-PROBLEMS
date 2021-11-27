@@ -11,12 +11,14 @@ namespace Banks.Banks
 {
     public class Bank : IBank
     {
-        public Bank(Guid id, Limit limit)
+        public Bank(string name, Guid id, Limit limit)
         {
+            Name = name;
             Id = id;
             Limit = limit;
             Clients = new HashSet<IClient>();
             Accounts = new Dictionary<Guid, List<Account>>();
+            CentralBank.AddBank(this);
         }
 
         public Guid Id { get; }
@@ -25,6 +27,7 @@ namespace Banks.Banks
 
         public HashSet<IClient> Clients { get; }
 
+        public string Name { get; }
         public Limit Limit { get; }
 
         public void AddClient(IClient client)
@@ -46,6 +49,11 @@ namespace Banks.Banks
         public Account GetAccount(Guid clientId, Guid accountId)
         {
             return Accounts[clientId].Single(a => Equals(a.Id, accountId));
+        }
+
+        public bool ContainsClient(Guid id)
+        {
+            return Clients.Any(c => c.Id == id);
         }
 
         public void TopUp(IClient client, Account account, double amount)

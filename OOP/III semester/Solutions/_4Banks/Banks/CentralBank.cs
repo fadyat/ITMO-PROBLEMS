@@ -6,6 +6,7 @@ using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
+using Banks.Exceptions;
 
 namespace Banks.Banks
 {
@@ -28,6 +29,11 @@ namespace Banks.Banks
         public static void AddClient(IBank bank, IClient client)
         {
             bank = GetBank(bank.Id);
+            if (bank.ContainsClient(client.Id))
+            {
+                throw new ClientException("This client is already in this bank!");
+            }
+
             bank.Clients.Add(client);
         }
 
