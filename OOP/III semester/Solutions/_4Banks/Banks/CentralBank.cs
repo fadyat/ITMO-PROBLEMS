@@ -21,6 +21,8 @@ namespace Banks.Banks
             Operations = new Stack<AccountCommand>();
         }
 
+        public static IEnumerable<IBank> AllBanks => Banks;
+
         public static void AddBank(IBank bank)
         {
             Banks.Add(bank);
@@ -35,6 +37,7 @@ namespace Banks.Banks
             }
 
             bank.Clients.Add(client);
+            bank.Accounts[client.Id] = new List<Account>();
         }
 
         public static IBank GetBank(Guid id)
@@ -42,14 +45,15 @@ namespace Banks.Banks
             return Banks.Single(b => Equals(b.Id, id));
         }
 
+        public static IBank FindBank(Guid id)
+        {
+            return Banks.FirstOrDefault(b => Equals(b.Id, id));
+        }
+
         public static void RegisterAccount(IBank bank, IClient client, Account account)
         {
             bank = GetBank(bank.Id);
             client = bank.GetClient(client.Id);
-            if (!bank.Accounts.ContainsKey(client.Id))
-            {
-                bank.Accounts[client.Id] = new List<Account>();
-            }
 
             bank.Accounts[client.Id].Add(account);
         }

@@ -16,43 +16,29 @@ namespace Banks
         {
             var findInheritedClasses = new Func<Type, List<string>>((mainType) =>
             {
-                switch (mainType.IsInterface)
+                if (mainType.IsInterface)
                 {
-                    case true:
-                        return Assembly.GetAssembly(mainType)?
-                            .GetTypes()
-                            .Where(type => mainType.IsAssignableFrom(type) && mainType != type)
-                            .Select(type => type.Name)
-                            .ToList();
+                    return Assembly.GetAssembly(mainType)?
+                        .GetTypes()
+                        .Where(type => mainType.IsAssignableFrom(type) && mainType != type)
+                        .Select(type => type.Name)
+                        .ToList();
                 }
 
-                switch (mainType.IsAbstract)
+                if (mainType.IsAbstract)
                 {
-                    case true:
-                        return Assembly.GetAssembly(mainType)?
-                            .GetTypes()
-                            .Where(type => type.IsSubclassOf(mainType))
-                            .Select(type => type.Name)
-                            .ToList();
-                    default:
-                        return null;
+                    return Assembly.GetAssembly(mainType)?
+                        .GetTypes()
+                        .Where(type => type.IsSubclassOf(mainType))
+                        .Select(type => type.Name)
+                        .ToList();
                 }
-            });
 
-            var findPublicMethodsInClass = new Func<Type, List<string>>((mainType) =>
-            {
-                return mainType.GetTypeInfo()
-                    .GetMethods()
-                    .Where(method => method.IsPublic &&
-                                     !method.Name.Contains("get_") &&
-                                     !method.Name.Contains("set_"))
-                    .Select(type => type.Name)
-                    .ToList();
+                return null;
             });
 
             Type bankInterface = typeof(IBank);
             List<string> bankTypes = findInheritedClasses(bankInterface);
-            List<string> bankMethods = findPublicMethodsInClass(bankInterface);
 
             Type accountAbstract = typeof(Account);
             List<string> accountTypes = findInheritedClasses(accountAbstract);
@@ -68,18 +54,6 @@ namespace Banks
             {
                 return;
             }
-
-            /*
-            // CreateBank -- Type of bank
-            // |
-            // |____ CreateLimit -- Type of limit
-            //
-            // CreateClient -- Type of client -> to
-            // CentralBank (get bank)
-            // ...
-            // CurrentBankOperations (if picked)
-            // Exit
-            */
 
             string[] StringToPairParser(string message)
             {
@@ -102,17 +76,15 @@ namespace Banks
             IBank BankCreation()
             {
                 string bankType = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                    .Title("What type of bank you want to create?")
+                    .Title("What's type of bank you want to create?")
                     .AddChoices(bankTypes));
 
                 switch (bankType)
                 {
                     case nameof(Bank):
-                    {
                         string name = AnsiConsole.Ask<string>("What's your bank name?");
                         Limit limit = LimitCreation();
                         return new Bank(name, Guid.NewGuid(), limit);
-                    }
 
                     default:
                         return null;
@@ -122,13 +94,12 @@ namespace Banks
             Limit LimitCreation()
             {
                 string limitType = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                    .Title("What type of limit you want to create?")
+                    .Title("What's type of limit you want to create?")
                     .AddChoices(limitTypes));
 
                 switch (limitType)
                 {
                     case nameof(SimpleBankLimit):
-                    {
                         double debitPercent = AnsiConsole.Ask<double>("Debit percent (%): ");
                         var depositPercent = new SortedDictionary<int, double>();
                         while (depositPercent.Count < 3)
@@ -150,11 +121,9 @@ namespace Banks
 
                         string[] creditLimitPair = StringToPairParser("Credit limit (down, up): ");
                         var creditLimit = (Convert.ToInt32(creditLimitPair[0]), Convert.ToInt32(creditLimitPair[1]));
-
                         double creditCommission = AnsiConsole.Ask<double>("Credit commission: ");
                         double withDrawLimit = AnsiConsole.Ask<double>("With draw limit for incomplete clients: ");
                         double transferLimit = AnsiConsole.Ask<double>("Transfer limit for incomplete clients: ");
-
                         return new SimpleBankLimit(
                             debitPercent,
                             depositPercent,
@@ -162,7 +131,6 @@ namespace Banks
                             creditCommission,
                             withDrawLimit,
                             transferLimit);
-                    }
 
                     default:
                         return null;
@@ -172,35 +140,119 @@ namespace Banks
             IClient ClientCreation()
             {
                 string clientType = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                    .Title("What type of client you want to create?")
+                    .Title("What's type of client you want to create?")
                     .AddChoices(clientTypes));
 
                 switch (clientType)
                 {
                     case nameof(Client):
-                    {
                         string name = AnsiConsole.Ask<string>("What's your client name?");
                         string surname = AnsiConsole.Ask<string>("What's your client surname?");
                         string passport = AnsiConsole.Prompt(new TextPrompt<string>("What's your client passport?")
                             .AllowEmpty());
                         string address = AnsiConsole.Prompt(new TextPrompt<string>("What's your client address?")
                             .AllowEmpty());
-
                         return new Client.ClientBuilder().WithName(name)
                             .WithSurname(surname)
                             .WithId(Guid.NewGuid())
                             .WithPassport(passport)
                             .WithAddress(address)
                             .Build();
-                    }
 
                     default:
                         return null;
                 }
             }
 
+            Account AccountCreation()
+            {
+                string accountType = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                    .Title("What's type of account you want to create?")
+                    .AddChoices(accountTypes));
+
+                switch (accountType)
+                {
+                    case nameof(DebitAccount):
+                        double balance = AnsiConsole.Ask<double>("How much do you invest in a bank account?");
+                        DateTime date = DateTime.Now;
+                        return new DebitAccount(balance, date);
+
+                    case nameof(DepositAccount):
+                        balance = AnsiConsole.Ask<double>("How much do you invest in a bank account?");
+                        date = DateTime.Now;
+                        int month = AnsiConsole.Ask<int>("For how many month do you open an account?");
+                        return new DepositAccount(balance, date, date.AddYears(month));
+
+                    case nameof(CreditAccount):
+                        balance = AnsiConsole.Ask<double>("How much do you invest in a bank account?");
+                        date = DateTime.Now;
+                        return new CreditAccount(balance, date);
+
+                    default:
+                        return null;
+                }
+            }
+
+            IBank BankSelection()
+            {
+                SelectionPrompt<(string name, Guid id)> selection = new SelectionPrompt<(string, Guid)>()
+                    .Title("What bank you want to pick?");
+
+                if (!CentralBank.AllBanks.Any())
+                {
+                    return null;
+                }
+
+                foreach (IBank b in CentralBank.AllBanks)
+                {
+                    selection.AddChoice((b.Name, b.Id));
+                }
+
+                (string name, Guid id) bank = AnsiConsole.Prompt(selection);
+
+                return CentralBank.GetBank(bank.id);
+            }
+
+            IClient ClientSelection(List<IClient> clients)
+            {
+                SelectionPrompt<(string name, Guid id)> selection = new SelectionPrompt<(string, Guid)>()
+                    .Title("What client you want to pick?");
+
+                if (!clients.Any())
+                {
+                    return null;
+                }
+
+                foreach (IClient c in clients)
+                {
+                    selection.AddChoice((c.Name, c.Id));
+                }
+
+                (string name, Guid id) client = AnsiConsole.Prompt(selection);
+                return clients.First(c => c.Id == client.id);
+            }
+
+            Account AccountSelection(List<Account> accounts)
+            {
+                SelectionPrompt<(string name, double balance, Guid id)> selection =
+                    new SelectionPrompt<(string, double, Guid)>()
+                        .Title("What account you want to pick?");
+
+                if (!accounts.Any())
+                {
+                    return null;
+                }
+
+                foreach (Account a in accounts)
+                {
+                    selection.AddChoice((nameof(a), a.Balance, a.Id));
+                }
+
+                (string name, double balance, Guid id) account = AnsiConsole.Prompt(selection);
+                return accounts.First(c => c.Id == account.id);
+            }
+
             var allClients = new List<IClient>();
-            var allBanks = new List<IBank>();
 
             while (true)
             {
@@ -228,9 +280,79 @@ namespace Banks
 
                     case "BankOptions":
                     {
+                        IBank pickedBank = BankSelection();
+                        if (pickedBank == null)
+                        {
+                            AnsiConsole.Prompt(new TextPrompt<string>("[red]There are no banks :( [/]")
+                                .AllowEmpty());
+                            break;
+                        }
+
                         string bankMethodName = AnsiConsole.Prompt(new SelectionPrompt<string>()
                             .Title("What operation you want to do?")
-                            .AddChoices(bankMethods));
+                            .AddChoices(new List<string>()
+                            {
+                                "AddClient", "RegisterAccount",
+                                "TopUp", "WithDraw", "Transfer",
+                                "Calculate",
+                            }));
+
+                        IClient pickedClient = bankMethodName switch
+                        {
+                            "AddClient" => ClientSelection(allClients),
+                            _ => ClientSelection(pickedBank.Clients.ToList())
+                        };
+
+                        if (pickedClient == null)
+                        {
+                            AnsiConsole.Prompt(new TextPrompt<string>("[red]There are no clients :( [/]")
+                                .AllowEmpty());
+                            break;
+                        }
+
+                        switch (bankMethodName)
+                        {
+                            case "AddClient":
+                                pickedBank.AddClient(pickedClient);
+                                break;
+
+                            case "RegisterAccount":
+                                pickedBank.RegisterAccount(pickedClient, AccountCreation());
+                                break;
+
+                            default:
+                            {
+                                Account pickedAccount = AccountSelection(pickedBank.Accounts[pickedClient.Id]);
+                                if (pickedAccount == null)
+                                {
+                                    AnsiConsole.Prompt(new TextPrompt<string>("[red]There are no accounts :( [/]")
+                                        .AllowEmpty());
+                                    break;
+                                }
+
+                                double amount = AnsiConsole.Ask<double>($"Balance to {bankMethodName}");
+                                switch (bankMethodName)
+                                {
+                                    case "TopUp":
+                                        pickedBank.TopUp(pickedClient, pickedAccount, amount);
+                                        break;
+
+                                    case "WithDraw":
+                                        pickedBank.WithDraw(pickedClient, pickedAccount, amount);
+                                        break;
+
+                                    case "Transfer":
+                                        Account pickedAccount2 = AccountSelection(pickedBank.Accounts[pickedClient.Id]);
+                                        pickedBank.Transfer(pickedClient, pickedAccount, pickedAccount2, amount);
+                                        break;
+
+                                    case "Calculate":
+                                        break;
+                                }
+
+                                break;
+                            }
+                        }
 
                         break;
                     }
@@ -238,6 +360,8 @@ namespace Banks
                     case "CentralBank":
                     {
                         CentralBank.Print();
+                        AnsiConsole.Prompt(new TextPrompt<string>(string.Empty)
+                            .AllowEmpty());
                         break;
                     }
                 }

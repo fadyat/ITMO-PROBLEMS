@@ -79,6 +79,12 @@ namespace Banks.Banks
 
         public void Transfer(IClient client, Account from, Account too, double amount)
         {
+            if (from.Id == too.Id)
+            {
+                Console.WriteLine("Accounts can't be equal!");
+                return;
+            }
+
             from = GetAccount(client.Id, from.Id);
 
             var accountCheck = new AccountTransferHandler(from, too, Limit);
