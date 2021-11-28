@@ -6,6 +6,7 @@ using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
+using Banks.UI;
 
 namespace Banks.Banks
 {
@@ -81,7 +82,7 @@ namespace Banks.Banks
         {
             if (from.Id == too.Id)
             {
-                Console.WriteLine("Accounts can't be equal!");
+                Messages.EmptyPrompt("[red]Accounts can't be equal![/]");
                 return;
             }
 
@@ -101,20 +102,9 @@ namespace Banks.Banks
             return CentralBank.Calculate(account, Limit, inDate);
         }
 
-        public void Print()
+        public override string ToString()
         {
-            Console.WriteLine($"# B: {Id}");
-            foreach (IClient c in Clients)
-                c.Print();
-
-            foreach ((Guid key, List<Account> value) in Accounts)
-            {
-                Console.Write("C: " + key + " ");
-                foreach (Account aa in value)
-                    aa.Print();
-
-                Console.Write("\n");
-            }
+            return "(" + Name + ", " + Id + ")";
         }
     }
 }

@@ -20,9 +20,9 @@ namespace Banks.Accounts
             return Balance >= limit.CreditLimit.down;
         }
 
-        public override void Print()
+        public override string ToString()
         {
-            Console.Write("\t A: credit");
+            return "(" + nameof(CreditAccount) + ", " + base.ToString();
         }
 
         public override Account Calculate(Limit limit, DateTime dateTime)

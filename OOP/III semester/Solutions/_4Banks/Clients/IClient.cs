@@ -15,7 +15,5 @@ namespace Banks.Clients
         string Passport { get; }
 
         IClientBuilder ToBuilder();
-
-        void Print();
     }
 }

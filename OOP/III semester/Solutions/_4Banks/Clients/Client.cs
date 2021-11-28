@@ -4,12 +4,7 @@ namespace Banks.Clients
 {
     public class Client : IClient
     {
-        private Client(
-            string surname,
-            string name,
-            Guid id,
-            string address = null,
-            string passport = null)
+        private Client(string surname, string name, Guid id, string address = null, string passport = null)
         {
             Surname = surname;
             Name = name;
@@ -40,9 +35,10 @@ namespace Banks.Clients
             return builder;
         }
 
-        public void Print()
+        public override string ToString()
         {
-            Console.WriteLine($"\t C: {Surname}");
+            return "(" + Surname + " " + Name + ", " + (Address == string.Empty ? "-" : Address) + ", " +
+                   (Passport == string.Empty ? "-" : Address) + ")";
         }
 
         public class ClientBuilder : IClientBuilder

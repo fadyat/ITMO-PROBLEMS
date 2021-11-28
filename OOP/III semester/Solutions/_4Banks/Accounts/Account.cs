@@ -48,9 +48,10 @@ namespace Banks.Accounts
             toAccount.TopUp(amount);
         }
 
-        /* For checks */
-
-        public abstract void Print();
+        public override string ToString()
+        {
+            return Balance.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")) + ", " + Id + ")";
+        }
 
         /* For TimeMachine */
         public abstract Account Calculate(Limit limit, DateTime dateTime);

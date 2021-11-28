@@ -1,6 +1,7 @@
 using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
+using Banks.UI;
 
 namespace Banks.Banks.Chain
 {
@@ -20,7 +21,7 @@ namespace Banks.Banks.Chain
         {
             if (!_account.ApprovedWithDraw(_limit))
             {
-                Console.WriteLine("WithDraw don't approved!");
+                Messages.EmptyPrompt("[red]WithDraw don't approved![/]");
                 return false;
             }
 

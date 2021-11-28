@@ -6,7 +6,7 @@ using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Banks.Exceptions;
+using Banks.UI;
 
 namespace Banks.Banks
 {
@@ -14,14 +14,17 @@ namespace Banks.Banks
     {
         private static readonly List<IBank> Banks;
         private static readonly Stack<AccountCommand> Operations;
+        private static readonly List<IClient> Clients;
 
         static CentralBank()
         {
             Banks = new List<IBank>();
             Operations = new Stack<AccountCommand>();
+            Clients = new List<IClient>();
         }
 
         public static IEnumerable<IBank> AllBanks => Banks;
+        public static IEnumerable<IClient> AllClients => Clients;
 
         public static void AddBank(IBank bank)
         {
@@ -33,21 +36,18 @@ namespace Banks.Banks
             bank = GetBank(bank.Id);
             if (bank.ContainsClient(client.Id))
             {
-                throw new ClientException("This client is already in this bank!");
+                Messages.EmptyPrompt("[red] This client is already in this bank![/]");
+                return;
             }
 
             bank.Clients.Add(client);
             bank.Accounts[client.Id] = new List<Account>();
+            Clients.Add(client);
         }
 
         public static IBank GetBank(Guid id)
         {
             return Banks.Single(b => Equals(b.Id, id));
-        }
-
-        public static IBank FindBank(Guid id)
-        {
-            return Banks.FirstOrDefault(b => Equals(b.Id, id));
         }
 
         public static void RegisterAccount(IBank bank, IClient client, Account account)
@@ -58,28 +58,31 @@ namespace Banks.Banks
             bank.Accounts[client.Id].Add(account);
         }
 
+        public static IEnumerable<Account> GetAllAccounts(IClient client)
+        {
+            var accounts = new List<Account>();
+            foreach (List<Account> accountInThisBank in Banks
+                .SelectMany(b => b.Clients.Where(c => client.Id == c.Id)
+                    .Select(c => b.Accounts[c.Id])))
+            {
+                accounts.AddRange(accountInThisBank);
+            }
+
+            return accounts;
+        }
+
         public static void Operation(AccountCommand accountCommand, Handler check)
         {
             accountCommand.Execute();
             Operations.Push(accountCommand);
-            if (check.HandlerRequest())
-            {
-                return;
-            }
+            if (check.HandlerRequest()) return;
 
-            Operations.Pop()
-                .Undo();
+            Operations.Pop().Undo();
         }
 
         public static Account Calculate(Account account, Limit limit, DateTime inDate)
         {
             return account.Calculate(limit, inDate);
-        }
-
-        public static void Print()
-        {
-            foreach (IBank b in Banks)
-                b.Print();
         }
     }
 }

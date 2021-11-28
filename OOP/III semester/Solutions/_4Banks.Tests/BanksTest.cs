@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Linq;
 using Banks.Accounts;
 using Banks.Banks;
-using Banks.Banks.Factory;
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Banks.Clients.Passport;
 using NUnit.Framework;
 
 namespace Banks.Tests
 {
     public class BanksTest
     {
-        private IBankFactory _bankFactory;
         private IBank _firstBank;
         private IBank _secondBank;
         private IClient _firstClient;
@@ -23,8 +18,6 @@ namespace Banks.Tests
         [SetUp]
         public void SetUp()
         {
-            _bankFactory = new SimpleBankFactory();
-
             var stdLimit = new SimpleBankLimit(
                 3,
                 new SortedDictionary<int, double> {{0, 3}, {10000, 4}},
@@ -33,10 +26,8 @@ namespace Banks.Tests
                 150,
                 150);
 
-            _firstBank = _bankFactory.CreateBank(stdLimit);
-            _secondBank = _bankFactory.CreateBank(stdLimit);
-            CentralBank.AddBank(_firstBank);
-            CentralBank.AddBank(_secondBank);
+            _firstBank = new Bank("1", Guid.NewGuid(), stdLimit);
+            _secondBank = new Bank("2", Guid.NewGuid(), stdLimit);
 
             _firstClient = new Client.ClientBuilder()
                 .WithSurname("first")
@@ -157,7 +148,7 @@ namespace Banks.Tests
         {
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             const double amount = 950;
@@ -201,7 +192,7 @@ namespace Banks.Tests
         {
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             const double amount = 1e6;
@@ -285,12 +276,12 @@ namespace Banks.Tests
         {
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             _secondClient = _secondClient.ToBuilder()
                 .WithAddress("second client address")
-                .WithPassport(new PassportRu("9876", "543210"))
+                .WithPassport("9876543210")
                 .Build();
 
             const double amount = 2e2;
@@ -341,12 +332,12 @@ namespace Banks.Tests
             const double amount = 2e5;
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             _secondClient = _secondClient.ToBuilder()
                 .WithAddress("second client address")
-                .WithPassport(new PassportRu("9876", "543210"))
+                .WithPassport("9876543210")
                 .Build();
 
             _firstBank.AddClient(_firstClient);
@@ -372,7 +363,7 @@ namespace Banks.Tests
         {
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             const int days = 15;
@@ -394,7 +385,7 @@ namespace Banks.Tests
             DateTime now = DateTime.Now;
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             var account1 = new DebitAccount(1000, now);
@@ -448,7 +439,7 @@ namespace Banks.Tests
             DateTime now = DateTime.Now;
             _firstClient = _firstClient.ToBuilder()
                 .WithAddress("first client address")
-                .WithPassport(new PassportRu("1234", "567890"))
+                .WithPassport("1234567890")
                 .Build();
 
             var account1 = new DepositAccount(9999, now, now.AddMonths(3));

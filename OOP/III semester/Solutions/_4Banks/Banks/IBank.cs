@@ -35,7 +35,5 @@ namespace Banks.Banks
         void Transfer(IClient client, Account from, Account too, double amount);
 
         Account Calculate(IClient client, Account account, DateTime inDate);
-
-        void Print();
     }
 }

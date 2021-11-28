@@ -1,6 +1,7 @@
 using System;
 using Banks.Banks.Limits;
 using Banks.Clients;
+using Banks.UI;
 
 namespace Banks.Banks.Chain
 {
@@ -23,14 +24,14 @@ namespace Banks.Banks.Chain
             if (Equals(_client.Address, null) &&
                 _amount > _limit.WithDrawLimit)
             {
-                Console.WriteLine("Client don't have address and cross WithDrawLimit!");
+                Messages.EmptyPrompt("[red]Client don't have address and cross WithDrawLimit![/]");
                 return false;
             }
 
             if (Equals(_client.Passport, null) &&
                 _amount > _limit.WithDrawLimit)
             {
-                Console.WriteLine("Client don't have passport and cross WithDrawLimit!");
+                Messages.EmptyPrompt("[red]Client don't have passport and cross WithDrawLimit![/]");
                 return false;
             }
 

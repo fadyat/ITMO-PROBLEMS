@@ -23,9 +23,9 @@ namespace Banks.Accounts
             return Balance >= 0;
         }
 
-        public override void Print()
+        public override string ToString()
         {
-            Console.Write("\t A: debit");
+            return "(" + nameof(DebitAccount) + ", " + base.ToString();
         }
 
         public override Account Calculate(Limit limit, DateTime dateTime)

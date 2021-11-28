@@ -1,6 +1,6 @@
-using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
+using Banks.UI;
 
 namespace Banks.Banks.Chain
 {
@@ -20,7 +20,7 @@ namespace Banks.Banks.Chain
         {
             if (!_account.ApprovedTopUp(_limit))
             {
-                Console.WriteLine("TopUp don't approved!");
+                Messages.EmptyPrompt("[red]TopUp don't approved![/]");
                 return false;
             }
 
