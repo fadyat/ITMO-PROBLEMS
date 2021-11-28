@@ -19,7 +19,7 @@ namespace Banks.UI
                     TreeNode clientNode = bankNode.AddNode(client.ToString() ?? string.Empty);
                     foreach (Account account in bank.Accounts[client.Id])
                     {
-                        clientNode.AddNode(account.ToString());
+                        clientNode.AddNode(account.ToString() ?? string.Empty);
                     }
                 }
             }
