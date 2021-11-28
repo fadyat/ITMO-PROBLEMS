@@ -18,7 +18,7 @@ namespace Banks.Banks
 
         public HashSet<IClient> Clients { get; }
 
-        void AddClient(IClient client);
+        IClient AddClient(string surname, string name, string passport, string address);
 
         void RegisterAccount(IClient client, Account account);
 
@@ -33,6 +33,8 @@ namespace Banks.Banks
         void WithDraw(IClient client, Account account, double amount);
 
         void Transfer(IClient client, Account from, Account too, double amount);
+
+        void UpdateLimit(Limit limit);
 
         Account Calculate(IClient client, Account account, DateTime inDate);
     }

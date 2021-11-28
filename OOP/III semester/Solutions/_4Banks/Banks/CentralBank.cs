@@ -6,7 +6,7 @@ using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Banks.UI;
+using Spectre.Console;
 
 namespace Banks.Banks
 {
@@ -14,17 +14,14 @@ namespace Banks.Banks
     {
         private static readonly List<IBank> Banks;
         private static readonly Stack<AccountCommand> Operations;
-        private static readonly List<IClient> Clients;
 
         static CentralBank()
         {
             Banks = new List<IBank>();
             Operations = new Stack<AccountCommand>();
-            Clients = new List<IClient>();
         }
 
         public static IEnumerable<IBank> AllBanks => Banks;
-        public static IEnumerable<IClient> AllClients => Clients;
 
         public static void AddBank(IBank bank)
         {
@@ -36,13 +33,12 @@ namespace Banks.Banks
             bank = GetBank(bank.Id);
             if (bank.ContainsClient(client.Id))
             {
-                Messages.EmptyPrompt("[red] This client is already in this bank![/]");
+                AnsiConsole.WriteLine("[red] This client is already in this bank![/]");
                 return;
             }
 
             bank.Clients.Add(client);
             bank.Accounts[client.Id] = new List<Account>();
-            Clients.Add(client);
         }
 
         public static IBank GetBank(Guid id)
@@ -56,6 +52,17 @@ namespace Banks.Banks
             client = bank.GetClient(client.Id);
 
             bank.Accounts[client.Id].Add(account);
+        }
+
+        public static IEnumerable<IClient> GetAllClients()
+        {
+            var clients = new List<IClient>();
+            foreach (IBank bank in Banks)
+            {
+                clients.AddRange(bank.Clients);
+            }
+
+            return clients;
         }
 
         public static IEnumerable<Account> GetAllAccounts(IClient client)

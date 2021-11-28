@@ -29,24 +29,8 @@ namespace Banks.Tests
             _firstBank = new Bank("1", Guid.NewGuid(), stdLimit);
             _secondBank = new Bank("2", Guid.NewGuid(), stdLimit);
 
-            _firstClient = new Client.ClientBuilder()
-                .WithSurname("first")
-                .WithName("client")
-                .WithId(Guid.NewGuid())
-                .Build();
-
-            _secondClient = new Client.ClientBuilder()
-                .WithSurname("second")
-                .WithName("client")
-                .WithId(Guid.NewGuid())
-                .Build();
-        }
-
-        [Test]
-        public void AddClient()
-        {
-            _firstBank.AddClient(_firstClient);
-            Assert.True(_firstBank.Clients.Contains(_firstClient));
+            _firstClient = _firstBank.AddClient("first", "client", null, null);
+            _secondClient = _secondBank.AddClient("second", "client", null, null);
         }
 
         private static readonly object[] DebitAccountData =
@@ -78,9 +62,7 @@ namespace Banks.Tests
         [TestCaseSource(nameof(CreditAccountData))]
         public void RegisterAccount(Account account)
         {
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
-
             Assert.True(_firstBank.Accounts[_firstClient.Id].Contains(account));
         }
 
@@ -95,7 +77,6 @@ namespace Banks.Tests
             const double amount = 1e3;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.TopUp(_firstClient, account, amount);
 
@@ -111,7 +92,6 @@ namespace Banks.Tests
             const double amount = 1e5;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.TopUp(_firstClient, account, amount);
 
@@ -130,7 +110,6 @@ namespace Banks.Tests
             const double amount = 50;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
@@ -146,15 +125,12 @@ namespace Banks.Tests
         [TestCaseSource(nameof(CreditAccountData))]
         public void WithDrawAccount_True_ClientEnoughData(Account account)
         {
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                    .WithPassport("1234567890");
 
             const double amount = 950;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
@@ -172,7 +148,6 @@ namespace Banks.Tests
             const double amount = 2e2;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
@@ -190,15 +165,12 @@ namespace Banks.Tests
         [TestCaseSource(nameof(CreditAccountData))]
         public void WithDrawAccount_False_ClientEnoughData(Account account)
         {
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                    .WithPassport("1234567890");
 
             const double amount = 1e6;
             double prevBalance = account.Balance;
 
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
@@ -253,8 +225,7 @@ namespace Banks.Tests
         public void TransferFromDebit_True_ClientNotEnoughData(Account from, Account to)
         {
             const double amount = 100;
-            _firstBank.AddClient(_firstClient);
-            _secondBank.AddClient(_secondClient);
+
             _firstBank.RegisterAccount(_firstClient, from);
             _secondBank.RegisterAccount(_secondClient, to);
 
@@ -274,19 +245,13 @@ namespace Banks.Tests
         [TestCaseSource(nameof(TransferData))]
         public void TransferFromDebit_True_ClientEnoughData(Account from, Account to)
         {
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                    .WithPassport("1234567890");
 
-            _secondClient = _secondClient.ToBuilder()
-                .WithAddress("second client address")
-                .WithPassport("9876543210")
-                .Build();
+            _secondClient = _secondClient.WithAddress("second client address")
+                    .WithPassport("9876543210");
 
             const double amount = 2e2;
-            _firstBank.AddClient(_firstClient);
-            _secondBank.AddClient(_secondClient);
 
             _firstBank.RegisterAccount(_firstClient, from);
             _secondBank.RegisterAccount(_secondClient, to);
@@ -308,8 +273,6 @@ namespace Banks.Tests
         public void TransferFromDebit_False_ClientNotEnoughData(Account from, Account to)
         {
             const double amount = 200;
-            _firstBank.AddClient(_firstClient);
-            _secondBank.AddClient(_secondClient);
             _firstBank.RegisterAccount(_firstClient, from);
             _secondBank.RegisterAccount(_secondClient, to);
 
@@ -330,18 +293,12 @@ namespace Banks.Tests
         public void TransferFromDebit_False_ClientEnoughData(Account from, Account to)
         {
             const double amount = 2e5;
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                .WithPassport("1234567890");
 
-            _secondClient = _secondClient.ToBuilder()
-                .WithAddress("second client address")
-                .WithPassport("9876543210")
-                .Build();
+            _secondClient = _secondClient.WithAddress("second client address")
+                .WithPassport("9876543210");
 
-            _firstBank.AddClient(_firstClient);
-            _secondBank.AddClient(_secondClient);
             _firstBank.RegisterAccount(_firstClient, from);
             _secondBank.RegisterAccount(_secondClient, to);
 
@@ -361,14 +318,11 @@ namespace Banks.Tests
         [Test]
         public void CreditCommission()
         {
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                .WithPassport("1234567890");
 
             const int days = 15;
             var account1 = new CreditAccount(1000, DateTime.Now);
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account1);
             Account account2 = _firstBank.Calculate(_firstClient, account1, DateTime.Now.AddDays(days));
             Assert.AreEqual(account2.Balance, account1.Balance);
@@ -383,13 +337,10 @@ namespace Banks.Tests
         {
             // if we change balance everything will be correct to ofc
             DateTime now = DateTime.Now;
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                .WithPassport("1234567890");
 
             var account1 = new DebitAccount(1000, now);
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account1);
 
             DateTime inTime = now.AddMonths(1);
@@ -437,13 +388,10 @@ namespace Banks.Tests
             // but he change percent when balance start be upper
             // ...
             DateTime now = DateTime.Now;
-            _firstClient = _firstClient.ToBuilder()
-                .WithAddress("first client address")
-                .WithPassport("1234567890")
-                .Build();
+            _firstClient = _firstClient.WithAddress("first client address")
+                .WithPassport("1234567890");
 
             var account1 = new DepositAccount(9999, now, now.AddMonths(3));
-            _firstBank.AddClient(_firstClient);
             _firstBank.RegisterAccount(_firstClient, account1);
 
             DateTime inTime = now.AddMonths(1);

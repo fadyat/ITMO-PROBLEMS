@@ -48,11 +48,6 @@ namespace Banks.Accounts
             toAccount.TopUp(amount);
         }
 
-        public override string ToString()
-        {
-            return Balance.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")) + ", " + Id + ")";
-        }
-
         /* For TimeMachine */
         public abstract Account Calculate(Limit limit, DateTime dateTime);
     }

@@ -7,6 +7,7 @@ using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
 using Banks.UI;
+using Spectre.Console;
 
 namespace Banks.Banks
 {
@@ -29,11 +30,14 @@ namespace Banks.Banks
         public HashSet<IClient> Clients { get; }
 
         public string Name { get; }
-        public Limit Limit { get; }
 
-        public void AddClient(IClient client)
+        public Limit Limit { get; private set; }
+
+        public IClient AddClient(string surname, string name, string passport, string address)
         {
-            CentralBank.AddClient(this, client);
+            var registeredClient = new Client(surname, name, Guid.NewGuid(), address, passport);
+            CentralBank.AddClient(this, registeredClient);
+            return registeredClient;
         }
 
         public void RegisterAccount(IClient client, Account account)
@@ -82,7 +86,7 @@ namespace Banks.Banks
         {
             if (from.Id == too.Id)
             {
-                Messages.EmptyPrompt("[red]Accounts can't be equal![/]");
+                AnsiConsole.WriteLine("[red]Accounts can't be equal![/]");
                 return;
             }
 
@@ -93,6 +97,12 @@ namespace Banks.Banks
             var check = new Handler(clientCheck);
 
             CentralBank.Operation(new TransferCommand(from, too, amount), check);
+        }
+
+        public void UpdateLimit(Limit limit)
+        {
+            Limit = limit;
+            AnsiConsole.WriteLine("[red]Attention! Bank limit has changed![/]");
         }
 
         public Account Calculate(IClient client, Account account, DateTime inDate)

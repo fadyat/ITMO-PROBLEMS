@@ -14,6 +14,8 @@ namespace Banks.Clients
 
         string Passport { get; }
 
-        IClientBuilder ToBuilder();
+        Client WithAddress(string address);
+
+        Client WithPassport(string passport);
     }
 }

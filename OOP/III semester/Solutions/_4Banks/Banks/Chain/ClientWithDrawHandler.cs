@@ -2,6 +2,7 @@ using System;
 using Banks.Banks.Limits;
 using Banks.Clients;
 using Banks.UI;
+using Spectre.Console;
 
 namespace Banks.Banks.Chain
 {
@@ -24,14 +25,14 @@ namespace Banks.Banks.Chain
             if (Equals(_client.Address, null) &&
                 _amount > _limit.WithDrawLimit)
             {
-                Messages.EmptyPrompt("[red]Client don't have address and cross WithDrawLimit![/]");
+                AnsiConsole.WriteLine("[red]Client don't have address and cross WithDrawLimit![/]");
                 return false;
             }
 
             if (Equals(_client.Passport, null) &&
                 _amount > _limit.WithDrawLimit)
             {
-                Messages.EmptyPrompt("[red]Client don't have passport and cross WithDrawLimit![/]");
+                AnsiConsole.WriteLine("[red]Client don't have passport and cross WithDrawLimit![/]");
                 return false;
             }
 

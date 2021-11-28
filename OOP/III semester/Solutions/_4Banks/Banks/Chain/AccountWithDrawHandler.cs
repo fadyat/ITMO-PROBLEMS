@@ -1,7 +1,6 @@
-using System;
 using Banks.Accounts;
 using Banks.Banks.Limits;
-using Banks.UI;
+using Spectre.Console;
 
 namespace Banks.Banks.Chain
 {
@@ -21,7 +20,7 @@ namespace Banks.Banks.Chain
         {
             if (!_account.ApprovedWithDraw(_limit))
             {
-                Messages.EmptyPrompt("[red]WithDraw don't approved![/]");
+                AnsiConsole.WriteLine("[red]WithDraw don't approved![/]");
                 return false;
             }
 

@@ -1,6 +1,7 @@
 using Banks.Accounts;
 using Banks.Banks.Limits;
 using Banks.UI;
+using Spectre.Console;
 
 namespace Banks.Banks.Chain
 {
@@ -20,7 +21,7 @@ namespace Banks.Banks.Chain
         {
             if (!_account.ApprovedTopUp(_limit))
             {
-                Messages.EmptyPrompt("[red]TopUp don't approved![/]");
+                AnsiConsole.WriteLine("[red]TopUp don't approved![/]");
                 return false;
             }
 

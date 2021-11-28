@@ -4,7 +4,7 @@ namespace Banks.Clients
 {
     public class Client : IClient
     {
-        private Client(string surname, string name, Guid id, string address = null, string passport = null)
+        public Client(string surname, string name, Guid id, string address, string passport)
         {
             Surname = surname;
             Name = name;
@@ -19,71 +19,31 @@ namespace Banks.Clients
 
         public Guid Id { get; }
 
-        public string Address { get; }
+        public string Address { get; private set; }
 
-        public string Passport { get; }
+        public string Passport { get; private set; }
 
-        public IClientBuilder ToBuilder()
+        public Client WithAddress(string address)
         {
-            IClientBuilder builder = new ClientBuilder()
-                .WithSurname(Surname)
-                .WithName(Name)
-                .WithId(Id)
-                .WithPassport(Passport)
-                .WithAddress(Address);
+            Address = address;
+            return this;
+        }
 
-            return builder;
+        public Client WithPassport(string passport)
+        {
+            Passport = passport;
+            return this;
         }
 
         public override string ToString()
         {
-            return "(" + Surname + " " + Name + ", " + (Address == string.Empty ? "-" : Address) + ", " +
-                   (Passport == string.Empty ? "-" : Address) + ")";
-        }
+            string address = Address;
+            if (Address == null) address = "-";
 
-        public class ClientBuilder : IClientBuilder
-        {
-            private Guid _id;
-            private string _name;
-            private string _surname;
-            private string _address;
-            private string _passport;
+            string passport = Passport;
+            if (Passport == null) passport = "-";
 
-            public IClientBuilder WithId(Guid id)
-            {
-                _id = id;
-                return this;
-            }
-
-            public IClientBuilder WithName(string name)
-            {
-                _name = name;
-                return this;
-            }
-
-            public IClientBuilder WithSurname(string surname)
-            {
-                _surname = surname;
-                return this;
-            }
-
-            public IClientBuilder WithAddress(string address)
-            {
-                _address = address;
-                return this;
-            }
-
-            public IClientBuilder WithPassport(string passport)
-            {
-                _passport = passport;
-                return this;
-            }
-
-            public IClient Build()
-            {
-                var finallyClient = new Client(_surname, _name, _id, _address, _passport);
-                return finallyClient;
-            }
+            return "(" + Surname + " " + Name + ", " + address + ", " + passport + ")";
         }
     }
 }

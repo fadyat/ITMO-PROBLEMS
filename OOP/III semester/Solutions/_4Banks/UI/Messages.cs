@@ -1,5 +1,6 @@
 using Banks.Accounts;
 using Banks.Banks;
+using Banks.Banks.Limits;
 using Banks.Clients;
 using Spectre.Console;
 
@@ -7,12 +8,7 @@ namespace Banks.UI
 {
     public static class Messages
     {
-        public static void EmptyPrompt(string message)
-        {
-            AnsiConsole.Prompt(new TextPrompt<string>(message).AllowEmpty());
-        }
-
-        public static void BuildTree()
+        public static void BankTree()
         {
             var root = new Tree(nameof(CentralBank));
             foreach (IBank bank in CentralBank.AllBanks)
@@ -26,6 +22,32 @@ namespace Banks.UI
                         clientNode.AddNode(account.ToString());
                     }
                 }
+            }
+
+            AnsiConsole.Write(root);
+        }
+
+        public static void LimitTree()
+        {
+            var root = new Tree(nameof(CentralBank));
+            foreach (IBank bank in CentralBank.AllBanks)
+            {
+                TreeNode bankNode = root.AddNode(bank.ToString() ?? string.Empty);
+                Limit limit = bank.Limit;
+                bankNode.AddNode($"DebitPercent: {limit.DebitPercent}");
+                TreeNode depositPercent = bankNode.AddNode("Deposit percent: ");
+                foreach ((int key, double value) in limit.DepositPercent)
+                {
+                    depositPercent.AddNode(
+                        $"{key}, {value.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+                }
+
+                bankNode.AddNode(
+                    $"CreditLimit: {limit.CreditLimit.down.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                    $"{limit.CreditLimit.up.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+                bankNode.AddNode($"CreditCommission: {limit.CreditCommission}");
+                bankNode.AddNode($"WithDrawLimit: {limit.WithDrawLimit}");
+                bankNode.AddNode($"TransferLimit: {limit.TransferLimit}");
             }
 
             AnsiConsole.Write(root);

@@ -25,7 +25,8 @@ namespace Banks.Accounts
 
         public override string ToString()
         {
-            return "(" + nameof(DebitAccount) + ", " + base.ToString();
+            return "(" + nameof(DebitAccount) + ", " +
+                   Balance.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", " + Id + ")";
         }
 
         public override Account Calculate(Limit limit, DateTime dateTime)
