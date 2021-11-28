@@ -28,9 +28,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_3Backups.Tests", "_3Backup
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_5BackupsExtra.Tests", "_5BackupsExtra.Tests\_5BackupsExtra.Tests.csproj", "{292B4B3A-0991-4B13-882C-7C297B3882B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banks", "Banks\Banks.csproj", "{F631B30C-A6DE-46B0-99B7-A75FBB6911F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_4Banks", "_4Banks\_4Banks.csproj", "{F631B30C-A6DE-46B0-99B7-A75FBB6911F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banks.Tests", "Banks.Tests\Banks.Tests.csproj", "{3845CD18-DD04-4B8F-B0DC-74EF9354F6DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_4Banks.Tests", "_4Banks.Tests\_4Banks.Tests.csproj", "{3845CD18-DD04-4B8F-B0DC-74EF9354F6DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
