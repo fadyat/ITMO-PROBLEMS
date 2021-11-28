@@ -4,7 +4,7 @@ namespace Banks.Clients
 {
     public class Client : IClient
     {
-        public Client(string surname, string name, Guid id, string address, string passport)
+        public Client(string surname, string name, Guid id, string address = null, string passport = null)
         {
             Surname = surname;
             Name = name;

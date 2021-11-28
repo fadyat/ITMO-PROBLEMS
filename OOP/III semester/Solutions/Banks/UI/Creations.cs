@@ -112,7 +112,7 @@ namespace Banks.UI
                     if (passport == string.Empty) passport = null;
                     string address = AnsiConsole.Prompt(new TextPrompt<string>("Address: ").AllowEmpty());
                     if (address == string.Empty) address = null;
-                    return bank.AddClient(surname, name, passport, address);
+                    return new Client(surname, name, Guid.NewGuid(), address, passport);
                 }
 
                 default:

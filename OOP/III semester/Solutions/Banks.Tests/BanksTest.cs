@@ -29,8 +29,28 @@ namespace Banks.Tests
             _firstBank = new Bank("1", Guid.NewGuid(), stdLimit);
             _secondBank = new Bank("2", Guid.NewGuid(), stdLimit);
 
-            _firstClient = _firstBank.AddClient("first", "client", null, null);
-            _secondClient = _secondBank.AddClient("second", "client", null, null);
+            _firstClient = new Client("first", "client", Guid.NewGuid());
+            _secondClient = new Client("second", "client", Guid.NewGuid());
+
+            _firstBank.AddClient(_firstClient);
+            _secondBank.AddClient(_secondClient);
+        }
+
+        [Test]
+        public void AddClient()
+        {
+            var client1 = new Client("second", "client", Guid.NewGuid());
+            var client2 = new Client("second", "client", Guid.NewGuid(), "???");
+            var client3 = new Client("second", "client", Guid.NewGuid(), passport: "???");
+            var client4 = new Client("second", "client", Guid.NewGuid(), "???", "???");
+            _firstBank.AddClient(client1);
+            _firstBank.AddClient(client2);
+            _firstBank.AddClient(client3);
+            _firstBank.AddClient(client4);
+            Assert.True(_firstBank.Clients.Contains(client1));
+            Assert.True(_firstBank.Clients.Contains(client2));
+            Assert.True(_firstBank.Clients.Contains(client3));
+            Assert.True(_firstBank.Clients.Contains(client4));
         }
 
         private static readonly object[] DebitAccountData =
@@ -126,7 +146,7 @@ namespace Banks.Tests
         public void WithDrawAccount_True_ClientEnoughData(Account account)
         {
             _firstClient = _firstClient.WithAddress("first client address")
-                    .WithPassport("1234567890");
+                .WithPassport("1234567890");
 
             const double amount = 950;
             double prevBalance = account.Balance;
@@ -166,7 +186,7 @@ namespace Banks.Tests
         public void WithDrawAccount_False_ClientEnoughData(Account account)
         {
             _firstClient = _firstClient.WithAddress("first client address")
-                    .WithPassport("1234567890");
+                .WithPassport("1234567890");
 
             const double amount = 1e6;
             double prevBalance = account.Balance;
@@ -246,10 +266,10 @@ namespace Banks.Tests
         public void TransferFromDebit_True_ClientEnoughData(Account from, Account to)
         {
             _firstClient = _firstClient.WithAddress("first client address")
-                    .WithPassport("1234567890");
+                .WithPassport("1234567890");
 
             _secondClient = _secondClient.WithAddress("second client address")
-                    .WithPassport("9876543210");
+                .WithPassport("9876543210");
 
             const double amount = 2e2;
 

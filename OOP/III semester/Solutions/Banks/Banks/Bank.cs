@@ -32,11 +32,9 @@ namespace Banks.Banks
 
         public Limit Limit { get; private set; }
 
-        public IClient AddClient(string surname, string name, string passport, string address)
+        public void AddClient(IClient client)
         {
-            var registeredClient = new Client(surname, name, Guid.NewGuid(), address, passport);
-            CentralBank.AddClient(this, registeredClient);
-            return registeredClient;
+            CentralBank.AddClient(this, client);
         }
 
         public void RegisterAccount(IClient client, Account account)

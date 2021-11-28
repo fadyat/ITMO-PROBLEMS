@@ -98,7 +98,7 @@ namespace Banks
 
                         if (bankMethodName == "AddClient")
                         {
-                            Creations.ClientCreation(pickedBank, clientTypes);
+                            pickedBank.AddClient(Creations.ClientCreation(pickedBank, clientTypes));
                             break;
                         }
 
