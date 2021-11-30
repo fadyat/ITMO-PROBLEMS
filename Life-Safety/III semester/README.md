@@ -43,4 +43,8 @@
    <a href = "./healthyEating/solution.pdf"> Healthy eating </a>
 </div>
 
+<div>
+   <a href = "./fearOvercoming"> 9. </a> #
+   <a href = "./fearOvercoming/solution.pdf"> Fear overcoming </a>
+</div>
 
