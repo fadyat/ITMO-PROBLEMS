@@ -10,7 +10,6 @@ namespace Backups.Classes
     {
         private readonly HashSet<JobObject> _objects;
         private readonly List<RestorePoint> _restorePoints;
-        private readonly IStorageAlgorithm _storageAlgorithm;
         private readonly IStorageMethod _storageMethod;
 
         public BackupJob(
@@ -24,7 +23,7 @@ namespace Backups.Classes
             Id = id;
             _objects = objects;
             _restorePoints = new List<RestorePoint>();
-            _storageAlgorithm = storageAlgorithm;
+            StorageAlgorithm = storageAlgorithm;
             _storageMethod = storageMethod;
             Path = _storageMethod.ConstructPath(path, name);
             _storageMethod.MakeDirectory(Path);
@@ -35,6 +34,10 @@ namespace Backups.Classes
         public string Path { get; }
 
         public IEnumerable<JobObject> Objects => _objects;
+
+        public IEnumerable<RestorePoint> RestorePoints => _restorePoints;
+
+        public IStorageAlgorithm StorageAlgorithm { get; }
 
         public void AddJobObject(JobObject jobObject)
         {
@@ -54,7 +57,7 @@ namespace Backups.Classes
             var restorePoint = new RestorePoint(
                 _restorePoints.Count + 1,
                 this,
-                _storageAlgorithm,
+                StorageAlgorithm,
                 _storageMethod,
                 name);
 

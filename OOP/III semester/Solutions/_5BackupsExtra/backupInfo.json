@@ -1,0 +1,41 @@
+{
+  "Backups": [
+    {
+      "Id": 100000,
+      "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol",
+      "Objects": [
+        {
+          "Path": "/Users/artyomfadeyev/Documents/a.txt"
+        },
+        {
+          "Path": "/Users/artyomfadeyev/Documents/b.txt"
+        },
+        {
+          "Path": "/Users/artyomfadeyev/Documents/c.txt"
+        }
+      ],
+      "RestorePoints": [
+        {
+          "Id": 1,
+          "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1",
+          "Storages": [
+            {
+              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/a.zip"
+            },
+            {
+              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/b.zip"
+            },
+            {
+              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/c.zip"
+            }
+          ]
+        }
+      ],
+      "StorageAlgorithm": {}
+    }
+  ],
+  "StorageMethod": {},
+  "Location": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek",
+  "FolderName": "Kek",
+  "IssuedBackupId": 100001
+}

@@ -20,7 +20,7 @@ namespace Backups.Tests
         [SetUp]
         public void SetUp()
         {
-            _position = Directory.GetParent(Directory.GetCurrentDirectory())
+            _position = Directory.GetParent(Directory.GetCurrentDirectory())?
                 .Parent?
                 .Parent?
                 .FullName;

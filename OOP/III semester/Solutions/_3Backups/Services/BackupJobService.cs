@@ -7,24 +7,32 @@ using Backups.Exceptions;
 
 namespace Backups.Services
 {
-    public class BackupJobService
+    public class BackupJobService : IBackupJobService
     {
         private readonly List<BackupJob> _backups;
-        private readonly IStorageMethod _storageMethod;
-        private readonly string _location;
-        private int _issuedBackupId;
 
         public BackupJobService(
             string location,
             IStorageMethod storageMethod,
             string folderName = "Repository")
         {
-            _storageMethod = storageMethod;
+            StorageMethod = storageMethod;
             _backups = new List<BackupJob>();
-            _issuedBackupId = 100000;
-            _location = _storageMethod.ConstructPath(location, folderName);
-            storageMethod.MakeDirectory(_location);
+            IssuedBackupId = 100000;
+            FolderName = folderName;
+            Location = StorageMethod.ConstructPath(location, folderName);
+            storageMethod.MakeDirectory(Location);
         }
+
+        public IEnumerable<BackupJob> Backups => _backups;
+
+        public IStorageMethod StorageMethod { get; }
+
+        public string Location { get; }
+
+        public string FolderName { get; }
+
+        public int IssuedBackupId { get; private set; }
 
         public BackupJob CreateBackup(
             HashSet<JobObject> objects,
@@ -39,12 +47,12 @@ namespace Backups.Services
             name += name.EndsWith("_") ? (_backups.Count + 1).ToString() : string.Empty;
 
             var backupJob = new BackupJob(
-                _issuedBackupId++,
-                _location,
+                IssuedBackupId++,
+                Location,
                 objects,
                 name,
                 storageAlgorithm,
-                _storageMethod);
+                StorageMethod);
 
             _backups.Add(backupJob);
             return backupJob;
