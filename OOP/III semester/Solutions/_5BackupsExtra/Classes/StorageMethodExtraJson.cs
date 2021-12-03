@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Text.Json;
+using Backups.Services;
 using BackupsExtra.Services;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes
 {
@@ -22,28 +22,29 @@ namespace BackupsExtra.Classes
 
         public void Save(BackupExtraJobService backupJobService)
         {
-            var options = new JsonSerializerOptions
+            var settings = new JsonSerializerSettings
             {
-                WriteIndented = true,
-                ReadCommentHandling = JsonCommentHandling.Skip,
+                TypeNameHandling = TypeNameHandling.All,
             };
 
-            string json = JsonSerializer.Serialize(backupJobService, options);
+            string json = JsonConvert.SerializeObject(backupJobService, Formatting.Indented, settings);
 
             using var sw = new StreamWriter(JsonPath, false, System.Text.Encoding.Default);
             sw.WriteLine(json);
         }
 
-        public BackupExtraJobService Loading()
+        public BackupExtraJobService Load()
         {
             var fileInfo = new FileInfo(JsonPath);
-            if (fileInfo.Length == 0)
+            if (fileInfo.Length == 0) return null;
+
+            var settings = new JsonSerializerSettings
             {
-                return null;
-            }
+                TypeNameHandling = TypeNameHandling.All,
+            };
 
             string json = File.ReadAllText(JsonPath);
-            return JsonSerializer.Deserialize<BackupExtraJobService>(json);
+            return JsonConvert.DeserializeObject(json, settings) as BackupExtraJobService;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Backups.Tests
                 .Parent?
                 .FullName;
 
-            _fileSystemStorage = new AbstractFileSystemStorage(); // IStorageMethod 
+            _fileSystemStorage = new AbstractFileSystemStorage();
             _backupJobService = new BackupJobService(
                 _position,
                 _fileSystemStorage,
@@ -33,9 +33,9 @@ namespace Backups.Tests
 
             _standardFiles = new List<JobObject>
             {
-                new JobObject("/Users/artyomfadeyev/Documents/a.txt"),
-                new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
-                new JobObject("/Users/artyomfadeyev/Documents/c.txt")
+                new ("/Users/artyomfadeyev/Documents/a.txt"),
+                new ("/Users/artyomfadeyev/Documents/b.txt"),
+                new ("/Users/artyomfadeyev/Documents/c.txt")
             };
         }
 

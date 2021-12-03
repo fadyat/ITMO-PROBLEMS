@@ -1,5 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 
@@ -11,29 +12,37 @@ namespace Backups.Classes
 
         public RestorePoint(
             int id,
-            BackupJob backupJob,
+            string path,
+            IEnumerable<JobObject> backupJobObjects,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod,
             string name)
         {
+            StorageMethod = storageMethod;
             Id = id;
-            if (Equals(name, null))
-            {
-                throw new Exception("Restore point name couldn't ba null!");
-            }
-
-            name += name.EndsWith("_") ? Id.ToString() : string.Empty;
-            Path = storageMethod.ConstructPath(backupJob.Path, name);
-            storageMethod.MakeDirectory(Path);
-
-            _storages = storageAlgorithm
-                .Compression(Path, backupJob.Objects, storageMethod);
+            Name = name + (name.EndsWith("_") ? Id.ToString() : string.Empty);
+            Path = path;
+            FullPath = StorageMethod.ConstructPath(Path, Name);
+            StorageMethod.MakeDirectory(Path);
+            BackupJobObjects = backupJobObjects;
+            StorageAlgorithm = storageAlgorithm;
+            _storages = StorageAlgorithm.CreateStorages(Path, BackupJobObjects, StorageMethod);
         }
 
         public int Id { get; }
 
+        public string Name { get; }
+
         public string Path { get; }
 
         public IEnumerable<Storage> Storages => _storages;
+
+        public string FullPath { get; }
+
+        public IStorageMethod StorageMethod { get; }
+
+        public IEnumerable<JobObject> BackupJobObjects { get; }
+
+        public IStorageAlgorithm StorageAlgorithm { get; }
     }
 }

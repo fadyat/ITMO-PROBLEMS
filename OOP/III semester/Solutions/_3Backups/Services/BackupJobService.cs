@@ -11,17 +11,15 @@ namespace Backups.Services
     {
         private readonly List<BackupJob> _backups;
 
-        public BackupJobService(
-            string location,
-            IStorageMethod storageMethod,
-            string folderName = "Repository")
+        public BackupJobService(string location, IStorageMethod storageMethod, string name = "Repository")
         {
             StorageMethod = storageMethod;
             _backups = new List<BackupJob>();
             IssuedBackupId = 100000;
-            FolderName = folderName;
-            Location = StorageMethod.ConstructPath(location, folderName);
-            storageMethod.MakeDirectory(Location);
+            Location = location;
+            Name = name;
+            FullPath = StorageMethod.ConstructPath(Location, Name);
+            StorageMethod.MakeDirectory(Location);
         }
 
         public IEnumerable<BackupJob> Backups => _backups;
@@ -30,7 +28,9 @@ namespace Backups.Services
 
         public string Location { get; }
 
-        public string FolderName { get; }
+        public string Name { get; }
+
+        public string FullPath { get; }
 
         public int IssuedBackupId { get; private set; }
 
@@ -39,11 +39,6 @@ namespace Backups.Services
             IStorageAlgorithm storageAlgorithm,
             string name = "backupJob_")
         {
-            if (Equals(name, null))
-            {
-                throw new BackupException("Backup name couldn't be null!");
-            }
-
             name += name.EndsWith("_") ? (_backups.Count + 1).ToString() : string.Empty;
 
             var backupJob = new BackupJob(
@@ -60,14 +55,7 @@ namespace Backups.Services
 
         public BackupJob GetBackup(int id)
         {
-            BackupJob backup = _backups.SingleOrDefault(backup => Equals(backup.Id, id));
-
-            if (Equals(backup, null))
-            {
-                throw new BackupException("No such backup!");
-            }
-
-            return backup;
+            return _backups.Single(backup => Equals(backup.Id, id));
         }
     }
 }

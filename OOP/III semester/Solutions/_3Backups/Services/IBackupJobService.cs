@@ -13,8 +13,6 @@ namespace Backups.Services
 
         string Location { get; }
 
-        string FolderName { get; }
-
         int IssuedBackupId { get; }
 
         BackupJob CreateBackup(

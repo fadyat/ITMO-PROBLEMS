@@ -13,9 +13,9 @@ namespace BackupsExtra.Services
         public BackupExtraJobService(
             string location,
             IStorageMethod storageMethod,
-            string folderName = "Repository")
+            string name = "Repository")
         {
-            _backupJobService = new BackupJobService(location, storageMethod, folderName);
+            _backupJobService = new BackupJobService(location, storageMethod, name);
         }
 
         public IEnumerable<BackupJob> Backups => _backupJobService.Backups;
@@ -24,7 +24,7 @@ namespace BackupsExtra.Services
 
         public string Location => _backupJobService.Location;
 
-        public string FolderName => _backupJobService.FolderName;
+        public string Name => _backupJobService.Name;
 
         public int IssuedBackupId => _backupJobService.IssuedBackupId;
 

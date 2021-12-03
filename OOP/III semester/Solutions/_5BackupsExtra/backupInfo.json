@@ -1,41 +1,108 @@
 {
-  "Backups": [
-    {
-      "Id": 100000,
-      "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol",
-      "Objects": [
-        {
-          "Path": "/Users/artyomfadeyev/Documents/a.txt"
-        },
-        {
-          "Path": "/Users/artyomfadeyev/Documents/b.txt"
-        },
-        {
-          "Path": "/Users/artyomfadeyev/Documents/c.txt"
-        }
-      ],
-      "RestorePoints": [
-        {
-          "Id": 1,
-          "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1",
-          "Storages": [
+  "$type": "BackupsExtra.Services.BackupExtraJobService, _5BackupsExtra",
+  "Backups": {
+    "$type": "System.Collections.Generic.List`1[[Backups.Classes.BackupJob, _3Backups]], System.Private.CoreLib",
+    "$values": [
+      {
+        "$type": "Backups.Classes.BackupJob, _3Backups",
+        "Id": 100000,
+        "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra",
+        "Name": "lol",
+        "FullPath": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol",
+        "Objects": {
+          "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.JobObject, _3Backups]], System.Private.CoreLib",
+          "$values": [
             {
-              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/a.zip"
+              "$type": "Backups.Classes.JobObject, _3Backups",
+              "Path": "/Users/artyomfadeyev/Documents/a.txt"
             },
             {
-              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/b.zip"
+              "$type": "Backups.Classes.JobObject, _3Backups",
+              "Path": "/Users/artyomfadeyev/Documents/b.txt"
             },
             {
-              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek/lol/restorePoint_1/c.zip"
+              "$type": "Backups.Classes.JobObject, _3Backups",
+              "Path": "/Users/artyomfadeyev/Documents/c.txt"
             }
           ]
+        },
+        "RestorePoints": {
+          "$type": "System.Collections.Generic.List`1[[Backups.Classes.RestorePoint, _3Backups]], System.Private.CoreLib",
+          "$values": [
+            {
+              "$type": "Backups.Classes.RestorePoint, _3Backups",
+              "Id": 1,
+              "Name": "restorePoint_1",
+              "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol",
+              "Storages": {
+                "$type": "System.Collections.Generic.List`1[[Backups.Classes.Storage, _3Backups]], System.Private.CoreLib",
+                "$values": [
+                  {
+                    "$type": "Backups.Classes.Storage, _3Backups",
+                    "Name": "a.zip",
+                    "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol/a.zip",
+                    "StorageMethod": {
+                      "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
+                    }
+                  },
+                  {
+                    "$type": "Backups.Classes.Storage, _3Backups",
+                    "Name": "b.zip",
+                    "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol/b.zip",
+                    "StorageMethod": {
+                      "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
+                    }
+                  },
+                  {
+                    "$type": "Backups.Classes.Storage, _3Backups",
+                    "Name": "c.zip",
+                    "Path": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol/c.zip",
+                    "StorageMethod": {
+                      "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
+                    }
+                  }
+                ]
+              },
+              "FullPath": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/lol/restorePoint_1",
+              "StorageMethod": {
+                "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
+              },
+              "BackupJobObjects": {
+                "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.JobObject, _3Backups]], System.Private.CoreLib",
+                "$values": [
+                  {
+                    "$type": "Backups.Classes.JobObject, _3Backups",
+                    "Path": "/Users/artyomfadeyev/Documents/a.txt"
+                  },
+                  {
+                    "$type": "Backups.Classes.JobObject, _3Backups",
+                    "Path": "/Users/artyomfadeyev/Documents/b.txt"
+                  },
+                  {
+                    "$type": "Backups.Classes.JobObject, _3Backups",
+                    "Path": "/Users/artyomfadeyev/Documents/c.txt"
+                  }
+                ]
+              },
+              "StorageAlgorithm": {
+                "$type": "Backups.Classes.StorageAlgorithms.SplitStorages, _3Backups"
+              }
+            }
+          ]
+        },
+        "StorageAlgorithm": {
+          "$type": "Backups.Classes.StorageAlgorithms.SplitStorages, _3Backups"
+        },
+        "StorageMethod": {
+          "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
         }
-      ],
-      "StorageAlgorithm": {}
-    }
-  ],
-  "StorageMethod": {},
-  "Location": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/Kek",
-  "FolderName": "Kek",
+      }
+    ]
+  },
+  "StorageMethod": {
+    "$type": "Backups.Classes.StorageMethods.AbstractFileSystemStorage, _3Backups"
+  },
+  "Location": "/Users/artyomfadeyev/Desktop/GitHub/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra",
+  "Name": "Kek",
   "IssuedBackupId": 100001
 }

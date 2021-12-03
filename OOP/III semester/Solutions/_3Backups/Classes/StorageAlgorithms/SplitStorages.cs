@@ -6,22 +6,17 @@ namespace Backups.Classes.StorageAlgorithms
 {
     public class SplitStorages : IStorageAlgorithm
     {
-        public List<Storage> Compression(
-            string path,
-            IEnumerable<JobObject> objects,
-            IStorageMethod storageMethod)
+        public List<Storage> CreateStorages(
+            string path, IEnumerable<JobObject> objects, IStorageMethod storageMethod)
         {
             var list = new List<Storage>();
 
-            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (JobObject jobObject in objects)
             {
                 string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
-                list.Add(new Storage(
-                    fileName,
-                    path,
-                    new List<JobObject> { jobObject },
-                    storageMethod));
+                var storage = new Storage(fileName, path, storageMethod);
+                storageMethod.Archive(new List<JobObject> { jobObject }, storage.Path);
+                list.Add(storage);
             }
 
             return list;
