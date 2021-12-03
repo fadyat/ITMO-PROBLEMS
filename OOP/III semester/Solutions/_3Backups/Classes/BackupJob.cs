@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 using Backups.Exceptions;
+using Newtonsoft.Json;
 
 namespace Backups.Classes
 {
@@ -25,10 +25,10 @@ namespace Backups.Classes
             _restorePoints = new List<RestorePoint>();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
-            Path = path;
             Name = name;
+            Path = path;
             FullPath = StorageMethod.ConstructPath(Path, Name);
-            StorageMethod.MakeDirectory(Path);
+            StorageMethod.MakeDirectory(FullPath);
         }
 
         public int Id { get; }
@@ -37,15 +37,18 @@ namespace Backups.Classes
 
         public string Name { get; }
 
+        [JsonIgnore]
         public string FullPath { get; }
 
         public IEnumerable<JobObject> Objects => _objects;
 
         public IEnumerable<RestorePoint> RestorePoints => _restorePoints;
 
-        public IStorageAlgorithm StorageAlgorithm { get; }
+        [JsonProperty]
+        private IStorageAlgorithm StorageAlgorithm { get; }
 
-        public IStorageMethod StorageMethod { get; }
+        [JsonProperty]
+        private IStorageMethod StorageMethod { get; }
 
         public void AddJobObject(JobObject jobObject)
         {
@@ -67,11 +70,6 @@ namespace Backups.Classes
 
             _restorePoints.Add(restorePoint);
             return restorePoint;
-        }
-
-        public JobObject GetJobObject(string path)
-        {
-            return _objects.Single(jobObject => Equals(jobObject.Path, path));
         }
     }
 }

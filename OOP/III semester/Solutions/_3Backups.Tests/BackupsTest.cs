@@ -47,7 +47,7 @@ namespace Backups.Tests
                 new SplitStorages(),
                 "BackupCreationSplitStorages");
             
-            Assert.True(_fileSystemStorage.ExistsDirectory(backupJob1.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(backupJob1.FullPath));
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
         }
 
@@ -59,7 +59,7 @@ namespace Backups.Tests
                 new SingleStorage(),
                 "BackupCreationSingleStorage");
 
-            Assert.True(_fileSystemStorage.ExistsDirectory(backupJob2.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(backupJob2.FullPath));
             Assert.AreEqual(_standardFiles.Count, backupJob2.Objects.ToList().Count);
         }
 
@@ -72,13 +72,13 @@ namespace Backups.Tests
                 "RestorePointCreationSplitStorages");
 
             RestorePoint b1P1 = backupJob1.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.FullPath));
             Assert.AreEqual(
                 backupJob1.Objects.ToList().Count,
                 b1P1.Storages.ToList().Count);
             foreach (Storage storage in b1P1.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
         }
 
@@ -91,11 +91,11 @@ namespace Backups.Tests
                 "RestorePointCreationSingleStorage");
 
             RestorePoint b2P1 = backupJob2.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.FullPath));
             Assert.AreEqual(1, b2P1.Storages.ToList().Count);
             foreach (Storage storage in b2P1.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
         }
 
@@ -115,13 +115,13 @@ namespace Backups.Tests
                 backupJob1.Objects.ToList().Count);
 
             RestorePoint b1P2 = backupJob1.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b1P2.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b1P2.FullPath));
             Assert.AreEqual(
                 backupJob1.Objects.ToList().Count,
                 b1P2.Storages.ToList().Count);
             foreach (Storage storage in b1P2.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
 
             backupJob1.AddJobObject(toRemove);
@@ -130,13 +130,13 @@ namespace Backups.Tests
                 backupJob1.Objects.ToList().Count);
 
             RestorePoint b1P3 = backupJob1.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b1P3.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b1P3.FullPath));
             Assert.AreEqual(
                 backupJob1.Objects.ToList().Count,
                 b1P3.Storages.ToList().Count);
             foreach (Storage storage in b1P3.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
         }
 
@@ -156,11 +156,11 @@ namespace Backups.Tests
                 backupJob2.Objects.ToList().Count);
 
             RestorePoint b2P2 = backupJob2.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b2P2.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b2P2.FullPath));
             Assert.AreEqual(1, b2P2.Storages.ToList().Count);
             foreach (Storage storage in b2P2.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
 
             backupJob2.AddJobObject(toRemove);
@@ -169,11 +169,11 @@ namespace Backups.Tests
                 backupJob2.Objects.ToList().Count);
 
             RestorePoint b2P3 = backupJob2.CreateRestorePoint();
-            Assert.True(_fileSystemStorage.ExistsDirectory(b2P3.Path));
+            Assert.True(_fileSystemStorage.ExistsDirectory(b2P3.FullPath));
             Assert.AreEqual(1, b2P3.Storages.ToList().Count);
             foreach (Storage storage in b2P3.Storages)
             {
-                Assert.True(_fileSystemStorage.ExistsFile(storage.Path));
+                Assert.True(_fileSystemStorage.ExistsFile(storage.FullPath));
             }
         }
     }

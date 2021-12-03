@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Backups.Classes;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
+using Newtonsoft.Json;
 
 namespace Backups.Services
 {
@@ -11,7 +12,12 @@ namespace Backups.Services
 
         IStorageMethod StorageMethod { get; }
 
-        string Location { get; }
+        string Path { get; }
+
+        string Name { get; }
+
+        [JsonIgnore]
+        string FullPath { get; }
 
         int IssuedBackupId { get; }
 

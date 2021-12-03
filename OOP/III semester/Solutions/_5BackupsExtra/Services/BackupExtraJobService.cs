@@ -10,28 +10,25 @@ namespace BackupsExtra.Services
     {
         private readonly BackupJobService _backupJobService;
 
-        public BackupExtraJobService(
-            string location,
-            IStorageMethod storageMethod,
-            string name = "Repository")
+        public BackupExtraJobService(string path, IStorageMethod storageMethod, string name = "Repository")
         {
-            _backupJobService = new BackupJobService(location, storageMethod, name);
+            _backupJobService = new BackupJobService(path, storageMethod, name);
         }
 
         public IEnumerable<BackupJob> Backups => _backupJobService.Backups;
 
         public IStorageMethod StorageMethod => _backupJobService.StorageMethod;
 
-        public string Location => _backupJobService.Location;
+        public string Path => _backupJobService.Path;
 
-        public string Name => _backupJobService.Name;
+        public string FullPath => _backupJobService.FullPath;
 
         public int IssuedBackupId => _backupJobService.IssuedBackupId;
 
+        public string Name => _backupJobService.Name;
+
         public BackupJob CreateBackup(
-            HashSet<JobObject> objects,
-            IStorageAlgorithm storageAlgorithm,
-            string name = "backupJob_")
+            HashSet<JobObject> objects, IStorageAlgorithm storageAlgorithm, string name = "backupJob_")
         {
             return _backupJobService.CreateBackup(objects, storageAlgorithm, name);
         }

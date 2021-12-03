@@ -8,12 +8,15 @@ namespace Backups.Classes
         {
             Name = storageName + ".zip";
             StorageMethod = storageMethod;
-            Path = StorageMethod.ConstructPath(path, Name);
+            Path = path;
+            FullPath = StorageMethod.ConstructPath(path, Name);
         }
 
         public string Name { get; }
 
         public string Path { get; }
+
+        public string FullPath { get; }
 
         public IStorageMethod StorageMethod { get; }
     }
