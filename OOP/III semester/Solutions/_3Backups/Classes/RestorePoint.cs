@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
@@ -15,7 +16,8 @@ namespace Backups.Classes
             IEnumerable<JobObject> backupJobObjects,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod,
-            string name)
+            string name,
+            DateTime dateTime)
         {
             StorageMethod = storageMethod;
             Id = id;
@@ -26,11 +28,15 @@ namespace Backups.Classes
             BackupJobObjects = backupJobObjects;
             StorageAlgorithm = storageAlgorithm;
             _storages = StorageAlgorithm.CreateStorages(FullPath, BackupJobObjects, StorageMethod);
+
+            CreationDate = dateTime;
         }
 
         public string Name { get; }
 
         public string Path { get; }
+
+        public DateTime CreationDate { get; }
 
         [JsonIgnore]
         public string FullPath { get; }

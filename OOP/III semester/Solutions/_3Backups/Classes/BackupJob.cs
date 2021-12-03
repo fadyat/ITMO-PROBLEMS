@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
@@ -9,7 +10,7 @@ namespace Backups.Classes
     public class BackupJob
     {
         private readonly HashSet<JobObject> _objects;
-        private readonly List<RestorePoint> _restorePoints;
+        private readonly LinkedList<RestorePoint> _restorePoints;
 
         public BackupJob(
             int id,
@@ -21,7 +22,7 @@ namespace Backups.Classes
         {
             Id = id;
             _objects = objects;
-            _restorePoints = new List<RestorePoint>();
+            _restorePoints = new LinkedList<RestorePoint>();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
             Name = name;
@@ -59,16 +60,19 @@ namespace Backups.Classes
             _objects.Remove(jobObject);
         }
 
-        public RestorePoint CreateRestorePoint(string name = "restorePoint_")
+        public RestorePoint CreateRestorePoint(DateTime creationDate = default, string name = "restorePoint_")
         {
+            if (creationDate == default)
+                creationDate = DateTime.Now;
+
             if (Equals(_objects.Count, 0))
                 throw new BackupException("No files for restore point!");
 
             int restoreNumber = _restorePoints.Count + 1;
             var restorePoint =
-                new RestorePoint(restoreNumber, FullPath, _objects, StorageAlgorithm, StorageMethod, name);
+                new RestorePoint(restoreNumber, FullPath, _objects, StorageAlgorithm, StorageMethod, name, creationDate);
 
-            _restorePoints.Add(restorePoint);
+            _restorePoints.AddLast(restorePoint);
             return restorePoint;
         }
     }
