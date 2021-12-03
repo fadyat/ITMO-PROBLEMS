@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
@@ -66,7 +65,8 @@ namespace Backups.Classes
                 throw new BackupException("No files for restore point!");
 
             int restoreNumber = _restorePoints.Count + 1;
-            var restorePoint = new RestorePoint(restoreNumber, FullPath, _objects, StorageAlgorithm, StorageMethod, name);
+            var restorePoint =
+                new RestorePoint(restoreNumber, FullPath, _objects, StorageAlgorithm, StorageMethod, name);
 
             _restorePoints.Add(restorePoint);
             return restorePoint;
