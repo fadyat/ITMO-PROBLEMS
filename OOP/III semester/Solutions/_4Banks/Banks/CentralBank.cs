@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Banks.Accounts;
 using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Spectre.Console;
 
 namespace Banks.Banks
 {
@@ -31,14 +31,7 @@ namespace Banks.Banks
         public static void AddClient(IBank bank, IClient client)
         {
             bank = GetBank(bank.Id);
-            if (bank.ContainsClient(client.Id))
-            {
-                AnsiConsole.WriteLine("[red] This client is already in this bank![/]");
-                return;
-            }
-
-            bank.Clients.Add(client);
-            bank.Accounts[client.Id] = new List<Account>();
+            bank.AddClient(client);
         }
 
         public static IBank GetBank(Guid id)
@@ -49,26 +42,18 @@ namespace Banks.Banks
         public static void RegisterAccount(IBank bank, IClient client, Account account)
         {
             bank = GetBank(bank.Id);
-            client = bank.GetClient(client.Id);
-
-            bank.Accounts[client.Id].Add(account);
+            bank.RegisterAccount(client, account);
         }
 
         public static IEnumerable<IClient> GetAllClients()
         {
-            var clients = new List<IClient>();
-            foreach (IBank bank in Banks)
-            {
-                clients.AddRange(bank.Clients);
-            }
-
-            return clients;
+            return Banks.SelectMany(bank => bank.Clients).Distinct();
         }
 
         public static IEnumerable<Account> GetAllAccounts(IClient client)
         {
             var accounts = new List<Account>();
-            foreach (List<Account> accountInThisBank in Banks
+            foreach (ReadOnlyCollection<Account> accountInThisBank in Banks
                 .SelectMany(b => b.Clients.Where(c => client.Id == c.Id)
                     .Select(c => b.Accounts[c.Id])))
             {

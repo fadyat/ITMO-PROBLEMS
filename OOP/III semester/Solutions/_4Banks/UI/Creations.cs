@@ -78,7 +78,7 @@ namespace Banks.UI
                     }
 
                     string[] creditLimitPair = StringToPairParser("Credit limit (down, up): ");
-                    var creditLimit = (Convert.ToInt32(creditLimitPair[0]), Convert.ToInt32(creditLimitPair[1]));
+                    double[] creditLimit = { Convert.ToDouble(creditLimitPair[0]), Convert.ToDouble(creditLimitPair[1]) };
                     double creditCommission = AnsiConsole.Ask<double>("Credit commission: ");
                     double withDrawLimit = AnsiConsole.Ask<double>("WithDraw limit: ");
                     double transferLimit = AnsiConsole.Ask<double>("Transfer limit: ");

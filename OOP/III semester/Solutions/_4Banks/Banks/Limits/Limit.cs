@@ -11,7 +11,7 @@ namespace Banks.Banks.Limits
         public SortedDictionary<int, double> DepositPercent { get; protected init; }
 
         /* Credit */
-        public (double down, double up) CreditLimit { get; protected init; }
+        public double[] CreditLimit { get; protected init; }
 
         public double CreditCommission { get; protected init; }
 

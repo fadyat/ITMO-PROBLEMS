@@ -1,6 +1,5 @@
 using Banks.Accounts;
 using Banks.Banks.Limits;
-using Spectre.Console;
 
 namespace Banks.Banks.Chain
 {
@@ -22,7 +21,6 @@ namespace Banks.Banks.Chain
         {
             if (!_account.ApprovedTransfer(_toAccount, _limit))
             {
-                AnsiConsole.WriteLine("[red]Transfer don't approved![/]");
                 return false;
             }
 

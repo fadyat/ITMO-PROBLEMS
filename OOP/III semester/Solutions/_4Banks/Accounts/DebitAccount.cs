@@ -1,5 +1,6 @@
 using System;
 using Banks.Banks.Limits;
+using Banks.Exceptions;
 
 namespace Banks.Accounts
 {
@@ -31,6 +32,11 @@ namespace Banks.Accounts
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
+            if (dateTime < Date)
+            {
+                throw new BankException("Can't travel to the past!");
+            }
+
             var nextAccountStatus = (DebitAccount)MemberwiseClone();
 
             void AddToPayment(int days) =>

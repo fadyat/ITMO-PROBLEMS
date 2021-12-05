@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Banks.Exceptions;
 
 namespace Banks.Banks.Limits
 {
@@ -7,11 +8,16 @@ namespace Banks.Banks.Limits
         public SimpleBankLimit(
             double debitPercent,
             SortedDictionary<int, double> depositPercent,
-            (double, double) creditLimit,
+            double[] creditLimit,
             double creditCommission,
             double withDrawLimit,
             double transferLimit)
         {
+            if (creditLimit.Length != 2)
+            {
+                throw new BankException("Invalid data!");
+            }
+
             DebitPercent = debitPercent;
             CreditLimit = creditLimit;
             CreditCommission = creditCommission;

@@ -1,46 +1,58 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Banks.Accounts;
 using Banks.Accounts.Command;
 using Banks.Banks.Chain;
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Spectre.Console;
+using Banks.Exceptions;
 
 namespace Banks.Banks
 {
     public class Bank : IBank
     {
+        private readonly Dictionary<Guid, List<Account>> _accounts;
+        private readonly HashSet<IClient> _clients;
+
         public Bank(string name, Guid id, Limit limit)
         {
             Name = name;
             Id = id;
             Limit = limit;
-            Clients = new HashSet<IClient>();
-            Accounts = new Dictionary<Guid, List<Account>>();
+            _clients = new HashSet<IClient>();
+            _accounts = new Dictionary<Guid, List<Account>>();
             CentralBank.AddBank(this);
         }
 
         public Guid Id { get; }
 
-        public Dictionary<Guid, List<Account>> Accounts { get; }
-
-        public HashSet<IClient> Clients { get; }
+        public IEnumerable<IClient> Clients => _clients;
 
         public string Name { get; }
 
         public Limit Limit { get; private set; }
 
+        public ImmutableDictionary<Guid, ReadOnlyCollection<Account>> Accounts =>
+            _accounts.ToImmutableDictionary(x => x.Key, x => x.Value.AsReadOnly());
+
         public void AddClient(IClient client)
         {
-            CentralBank.AddClient(this, client);
+            if (ContainsClient(client.Id))
+            {
+                throw new BankException("This client is already in this bank!");
+            }
+
+            _clients.Add(client);
+            _accounts[client.Id] = new List<Account>();
         }
 
         public void RegisterAccount(IClient client, Account account)
         {
             client = GetClient(client.Id);
-            CentralBank.RegisterAccount(this, client, account);
+            _accounts[client.Id].Add(account);
         }
 
         public IClient GetClient(Guid id)
@@ -83,8 +95,7 @@ namespace Banks.Banks
         {
             if (from.Id == too.Id)
             {
-                AnsiConsole.WriteLine("[red]Accounts can't be equal![/]");
-                return;
+                throw new BankException("[red]Accounts can't be equal![/]");
             }
 
             from = GetAccount(client.Id, from.Id);
@@ -99,7 +110,6 @@ namespace Banks.Banks
         public void UpdateLimit(Limit limit)
         {
             Limit = limit;
-            AnsiConsole.WriteLine("[red]Attention! Bank limit has changed![/]");
         }
 
         public Account Calculate(IClient client, Account account, DateTime inDate)

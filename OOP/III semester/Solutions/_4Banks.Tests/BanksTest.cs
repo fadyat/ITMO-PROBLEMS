@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Banks.Accounts;
 using Banks.Banks;
 using Banks.Banks.Limits;
@@ -21,7 +22,7 @@ namespace Banks.Tests
             var stdLimit = new SimpleBankLimit(
                 3,
                 new SortedDictionary<int, double> {{0, 3}, {10000, 4}},
-                (-1e5, 1e5),
+                 new [] { -1e5, 1e5},
                 10,
                 150,
                 150);
@@ -32,8 +33,8 @@ namespace Banks.Tests
             _firstClient = new Client("first", "client", Guid.NewGuid());
             _secondClient = new Client("second", "client", Guid.NewGuid());
 
-            _firstBank.AddClient(_firstClient);
-            _secondBank.AddClient(_secondClient);
+            CentralBank.AddClient(_firstBank, _firstClient);
+            CentralBank.AddClient(_secondBank, _secondClient);
         }
 
         [Test]
@@ -43,10 +44,10 @@ namespace Banks.Tests
             var client2 = new Client("second", "client", Guid.NewGuid(), "???");
             var client3 = new Client("second", "client", Guid.NewGuid(), passport: "???");
             var client4 = new Client("second", "client", Guid.NewGuid(), "???", "???");
-            _firstBank.AddClient(client1);
-            _firstBank.AddClient(client2);
-            _firstBank.AddClient(client3);
-            _firstBank.AddClient(client4);
+            CentralBank.AddClient(_firstBank, client1);
+            CentralBank.AddClient(_firstBank, client2);
+            CentralBank.AddClient(_firstBank, client3);
+            CentralBank.AddClient(_firstBank, client4);
             Assert.True(_firstBank.Clients.Contains(client1));
             Assert.True(_firstBank.Clients.Contains(client2));
             Assert.True(_firstBank.Clients.Contains(client3));
@@ -82,7 +83,7 @@ namespace Banks.Tests
         [TestCaseSource(nameof(CreditAccountData))]
         public void RegisterAccount(Account account)
         {
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             Assert.True(_firstBank.Accounts[_firstClient.Id].Contains(account));
         }
 
@@ -97,7 +98,7 @@ namespace Banks.Tests
             const double amount = 1e3;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.TopUp(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance + amount, account.Balance);
@@ -112,7 +113,7 @@ namespace Banks.Tests
             const double amount = 1e5;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.TopUp(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance, account.Balance);
@@ -130,7 +131,7 @@ namespace Banks.Tests
             const double amount = 50;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance - amount, account.Balance);
@@ -151,7 +152,7 @@ namespace Banks.Tests
             const double amount = 950;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance - amount, account.Balance);
@@ -168,7 +169,7 @@ namespace Banks.Tests
             const double amount = 2e2;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance, account.Balance);
@@ -191,7 +192,7 @@ namespace Banks.Tests
             const double amount = 1e6;
             double prevBalance = account.Balance;
 
-            _firstBank.RegisterAccount(_firstClient, account);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account);
             _firstBank.WithDraw(_firstClient, account, amount);
 
             Assert.AreEqual(prevBalance, account.Balance);
@@ -246,8 +247,8 @@ namespace Banks.Tests
         {
             const double amount = 100;
 
-            _firstBank.RegisterAccount(_firstClient, from);
-            _secondBank.RegisterAccount(_secondClient, to);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, from);
+            CentralBank.RegisterAccount(_secondBank, _secondClient, to);
 
             double prevFromBalance = from.Balance;
             double prevToBalance = to.Balance;
@@ -273,8 +274,8 @@ namespace Banks.Tests
 
             const double amount = 2e2;
 
-            _firstBank.RegisterAccount(_firstClient, from);
-            _secondBank.RegisterAccount(_secondClient, to);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, from);
+            CentralBank.RegisterAccount(_secondBank, _secondClient, to);
 
             double prevFromBalance = from.Balance;
             double prevToBalance = to.Balance;
@@ -293,8 +294,8 @@ namespace Banks.Tests
         public void TransferFromDebit_False_ClientNotEnoughData(Account from, Account to)
         {
             const double amount = 200;
-            _firstBank.RegisterAccount(_firstClient, from);
-            _secondBank.RegisterAccount(_secondClient, to);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, from);
+            CentralBank.RegisterAccount(_secondBank, _secondClient, to);
 
             double prevFromBalance = from.Balance;
             double prevToBalance = to.Balance;
@@ -319,8 +320,8 @@ namespace Banks.Tests
             _secondClient = _secondClient.WithAddress("second client address")
                 .WithPassport("9876543210");
 
-            _firstBank.RegisterAccount(_firstClient, from);
-            _secondBank.RegisterAccount(_secondClient, to);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, from);
+            CentralBank.RegisterAccount(_secondBank, _secondClient, to);
 
             double prevFromBalance = from.Balance;
             double prevToBalance = to.Balance;
@@ -343,7 +344,7 @@ namespace Banks.Tests
 
             const int days = 15;
             var account1 = new CreditAccount(1000, DateTime.Now);
-            _firstBank.RegisterAccount(_firstClient, account1);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account1);
             Account account2 = _firstBank.Calculate(_firstClient, account1, DateTime.Now.AddDays(days));
             Assert.AreEqual(account2.Balance, account1.Balance);
 
@@ -361,7 +362,7 @@ namespace Banks.Tests
                 .WithPassport("1234567890");
 
             var account1 = new DebitAccount(1000, now);
-            _firstBank.RegisterAccount(_firstClient, account1);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account1);
 
             DateTime inTime = now.AddMonths(1);
             int days = (inTime - now).Days;
@@ -412,7 +413,7 @@ namespace Banks.Tests
                 .WithPassport("1234567890");
 
             var account1 = new DepositAccount(9999, now, now.AddMonths(3));
-            _firstBank.RegisterAccount(_firstClient, account1);
+            CentralBank.RegisterAccount(_firstBank, _firstClient, account1);
 
             DateTime inTime = now.AddMonths(1);
             int days1 = (inTime - now).Days;

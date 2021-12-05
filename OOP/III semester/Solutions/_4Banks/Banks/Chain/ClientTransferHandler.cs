@@ -1,6 +1,5 @@
 using Banks.Banks.Limits;
 using Banks.Clients;
-using Spectre.Console;
 
 namespace Banks.Banks.Chain
 {
@@ -23,14 +22,12 @@ namespace Banks.Banks.Chain
             if (Equals(_client.Address, null) &&
                 _amount > _limit.TransferLimit)
             {
-                AnsiConsole.WriteLine("[red]Client don't have address and cross TransferLimit![/]");
                 return false;
             }
 
             if (Equals(_client.Passport, null) &&
                 _amount > _limit.TransferLimit)
             {
-                AnsiConsole.WriteLine("[red]Client don't have passport and cross TransferLimit![/]");
                 return false;
             }
 

@@ -43,8 +43,8 @@ namespace Banks.UI
                 }
 
                 bankNode.AddNode(
-                    $"CreditLimit: {limit.CreditLimit.down.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
-                    $"{limit.CreditLimit.up.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+                    $"CreditLimit: {limit.CreditLimit[0].ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+                    $"{limit.CreditLimit[1].ToString(System.Globalization.CultureInfo.InvariantCulture)}");
                 bankNode.AddNode($"CreditCommission: {limit.CreditCommission}");
                 bankNode.AddNode($"WithDrawLimit: {limit.WithDrawLimit}");
                 bankNode.AddNode($"TransferLimit: {limit.TransferLimit}");

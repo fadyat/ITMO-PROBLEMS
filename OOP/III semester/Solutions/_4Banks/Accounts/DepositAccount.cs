@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Banks.Banks.Limits;
+using Banks.Exceptions;
 
 namespace Banks.Accounts
 {
@@ -34,6 +35,11 @@ namespace Banks.Accounts
 
         public override Account Calculate(Limit limit, DateTime dateTime)
         {
+            if (dateTime < Date)
+            {
+                throw new BankException("Can't travel to the past!");
+            }
+
             var nextAccountStatus = (DepositAccount)MemberwiseClone();
 
             double FindPercent()

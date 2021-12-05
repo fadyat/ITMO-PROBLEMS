@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using Banks.Accounts;
 using Banks.Banks.Limits;
 using Banks.Clients;
@@ -14,9 +16,9 @@ namespace Banks.Banks
 
         Guid Id { get; }
 
-        public Dictionary<Guid, List<Account>> Accounts { get; }
+        ImmutableDictionary<Guid, ReadOnlyCollection<Account>> Accounts { get; }
 
-        public HashSet<IClient> Clients { get; }
+        IEnumerable<IClient> Clients { get; }
 
         void AddClient(IClient client);
 
