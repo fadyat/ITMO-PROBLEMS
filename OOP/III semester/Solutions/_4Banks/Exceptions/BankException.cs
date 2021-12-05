@@ -2,9 +2,9 @@ using System;
 
 namespace Banks.Exceptions
 {
-    public class PassportException : Exception
+    public class BankException : Exception
     {
-        public PassportException(string message)
+        public BankException(string message)
             : base(message)
         {
         }

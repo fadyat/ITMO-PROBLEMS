@@ -1,17 +1,49 @@
 using System;
-using System.Collections.Generic;
-using Banks.Accounts;
-using Banks.Clients.Passport;
 
 namespace Banks.Clients
 {
-    public class Client
+    public class Client : IClient
     {
-        // private string _name;
-        // private string _secondName;
-        // private Guid _id;
-        // private List<IAccount> _accounts;
-        // private string _address; // could be class but I don't want
-        // private IPassport _passport;
+        public Client(string surname, string name, Guid id, string address = null, string passport = null)
+        {
+            Surname = surname;
+            Name = name;
+            Address = address;
+            Passport = passport;
+            Id = id;
+        }
+
+        public string Name { get; }
+
+        public string Surname { get; }
+
+        public Guid Id { get; }
+
+        public string Address { get; private set; }
+
+        public string Passport { get; private set; }
+
+        public Client WithAddress(string address)
+        {
+            Address = address;
+            return this;
+        }
+
+        public Client WithPassport(string passport)
+        {
+            Passport = passport;
+            return this;
+        }
+
+        public override string ToString()
+        {
+            string address = Address;
+            if (Address == null) address = "-";
+
+            string passport = Passport;
+            if (Passport == null) passport = "-";
+
+            return "(" + Surname + " " + Name + ", " + address + ", " + passport + ")";
+        }
     }
 }
