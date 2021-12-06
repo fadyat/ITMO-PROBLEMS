@@ -1,10 +1,9 @@
 using System;
 using System.IO;
-using Backups.Services;
 using BackupsExtra.Services;
 using Newtonsoft.Json;
 
-namespace BackupsExtra.Classes
+namespace BackupsExtra.Classes.Serialization
 {
     public class StorageMethodExtraJson /*: IStorageMethodExtra*/
     {
