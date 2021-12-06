@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Backups.Classes.JobObjects;
 
 namespace Backups.Classes.StorageMethods
 {
@@ -8,7 +9,7 @@ namespace Backups.Classes.StorageMethods
 
         void MakeDirectory(string path);
 
-        void Archive(IEnumerable<JobObject> from, string where);
+        void Archive(IEnumerable<IJobObject> from, string where);
 
         bool ExistsDirectory(string path);
 

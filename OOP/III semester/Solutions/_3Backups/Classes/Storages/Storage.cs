@@ -1,6 +1,6 @@
 using Backups.Classes.StorageMethods;
 
-namespace Backups.Classes
+namespace Backups.Classes.Storages
 {
     public class Storage
     {

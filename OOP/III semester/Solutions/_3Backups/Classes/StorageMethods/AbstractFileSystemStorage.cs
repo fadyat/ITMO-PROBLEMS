@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Backups.Classes.JobObjects;
 
 namespace Backups.Classes.StorageMethods
 {
@@ -25,7 +26,7 @@ namespace Backups.Classes.StorageMethods
             _pathDirectories.Add(path);
         }
 
-        public void Archive(IEnumerable<JobObject> from, string where)
+        public void Archive(IEnumerable<IJobObject> from, string where)
         {
             _pathFiles.Add(where); // archive
 
