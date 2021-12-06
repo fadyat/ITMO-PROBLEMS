@@ -1,23 +1,22 @@
 using Backups.Classes.StorageMethods;
+using Newtonsoft.Json;
 
 namespace Backups.Classes.Storages
 {
     public class Storage
     {
-        public Storage(string storageName, string path, IStorageMethod storageMethod)
+        public Storage(string storageName, string path)
         {
             Name = storageName + ".zip";
-            StorageMethod = storageMethod;
             Path = path;
-            FullPath = StorageMethod.ConstructPath(path, Name);
+            FullPath = System.IO.Path.Combine(path, Name);
         }
 
         public string Name { get; }
 
         public string Path { get; }
 
+        [JsonIgnore]
         public string FullPath { get; }
-
-        public IStorageMethod StorageMethod { get; }
     }
 }

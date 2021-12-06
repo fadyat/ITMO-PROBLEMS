@@ -3,6 +3,7 @@ using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
+using Newtonsoft.Json;
 
 namespace Backups.Classes.BackupJobs
 {
@@ -12,6 +13,7 @@ namespace Backups.Classes.BackupJobs
 
         string Name { get; }
 
+        [JsonIgnore]
         string FullPath { get; }
 
         IEnumerable<IJobObject> Objects { get; }
@@ -26,6 +28,6 @@ namespace Backups.Classes.BackupJobs
 
         void RemoveJobObject(IJobObject jobObject);
 
-        IRestorePoint CreateRestorePoint(IRestorePoint restorePoint);
+        void CreateRestorePoint(IRestorePoint restorePoint);
     }
 }

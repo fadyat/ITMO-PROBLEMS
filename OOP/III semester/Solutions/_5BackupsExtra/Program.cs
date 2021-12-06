@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using Backups.Classes;
+using Backups.Classes.BackupJobs;
+using Backups.Classes.JobObjects;
+using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
+using Backups.Services;
 using BackupsExtra.Classes.Serialization;
-using BackupsExtra.Services;
 
 namespace BackupsExtra
 {
@@ -18,26 +21,29 @@ namespace BackupsExtra
                 .FullName;
 
             if (position == null) return;
+/*
+            var backupJobService = new BackupJobService(position, new FileSystemStorage());
 
-            var backupJobService = new BackupExtraJobService(position, new FileSystemStorage());
-
-            BackupJob backup = backupJobService.CreateBackup(
-                new HashSet<JobObject>
+            var backup = new BackupJob(
+                backupJobService.FullPath,
+                new HashSet<IJobObject>
                 {
-                    new ("/Users/artyomfadeyev/Documents/a.txt"),
-                    new ("/Users/artyomfadeyev/Documents/b.txt"),
-                    new ("/Users/artyomfadeyev/Documents/c.txt"),
+                    new JobObject("/Users/artyomfadeyev/Documents/a.txt"),
+                    new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
+                    new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
                 },
-                new SplitStorages());
+                new SplitStorages(),
+                backupJobService.StorageMethod);
 
-            backup.CreateRestorePoint();
+            backupJobService.CreateBackup(backup);
+            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));*/
+
             var fix = new StorageMethodExtraJson(position);
 
-            fix.Save(backupJobService);
-
-            // BackupExtraJobService b = fix.Load();
-            // Console.WriteLine(b.Backups == null);
-            // Console.WriteLine(b.Path);
+            // fix.Save(backupJobService);
+            IBackupJobService b = fix.Load();
+            Console.WriteLine(b.Backups == null);
+            Console.WriteLine(b.Path);
             /*
 //             BackupJob b1 = b.CreateBackup(
 //                 new HashSet<JobObject>()

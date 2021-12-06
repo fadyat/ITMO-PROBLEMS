@@ -1,19 +1,23 @@
 using System;
 using System.Collections.Generic;
 using Backups.Classes.Storages;
+using Newtonsoft.Json;
 
 namespace Backups.Classes.RestorePoints
 {
     public interface IRestorePoint
     {
-        string Name { get; }
+        public string Name { get; }
 
-        string Path { get; }
+        public string Path { get; }
 
-        DateTime CreationDate { get; }
+        [JsonIgnore]
+        public string FullPath { get; }
 
-        string FullPath { get; }
+        public DateTime CreationDate { get; }
 
-        IEnumerable<Storage> StoragesI { get; }
+        public IEnumerable<Storage> StoragesI { get; }
+
+        void AddStorages(List<Storage> storages);
     }
 }

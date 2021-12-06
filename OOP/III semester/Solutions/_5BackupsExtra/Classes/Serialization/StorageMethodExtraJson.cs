@@ -1,11 +1,14 @@
 using System;
 using System.IO;
-using BackupsExtra.Services;
+using System.Linq;
+using Backups.Classes.BackupJobs;
+using Backups.Classes.RestorePoints;
+using Backups.Services;
 using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes.Serialization
 {
-    public class StorageMethodExtraJson /*: IStorageMethodExtra*/
+    public class StorageMethodExtraJson : IStorageMethodExtra
     {
         public StorageMethodExtraJson(string path)
         {
@@ -19,7 +22,7 @@ namespace BackupsExtra.Classes.Serialization
 
         private string JsonPath { get; }
 
-        public void Save(BackupExtraJobService backupJobService)
+        public void Save(IBackupJobService backupJobService)
         {
             var settings = new JsonSerializerSettings
             {
@@ -32,7 +35,7 @@ namespace BackupsExtra.Classes.Serialization
             sw.WriteLine(json);
         }
 
-        public BackupExtraJobService Load()
+        public IBackupJobService Load()
         {
             var fileInfo = new FileInfo(JsonPath);
             if (fileInfo.Length == 0) return null;
@@ -43,7 +46,31 @@ namespace BackupsExtra.Classes.Serialization
             };
 
             string json = File.ReadAllText(JsonPath);
-            return JsonConvert.DeserializeObject(json, settings) as BackupExtraJobService;
+
+            if (JsonConvert.DeserializeObject(json, settings) is not IBackupJobService service) return null;
+
+            Console.WriteLine("$" + service.Backups.Count());
+            foreach (var bckp in service.Backups.ToList())
+            {
+                Console.WriteLine(bckp.RestorePoints.Count());
+            }
+
+            foreach (IBackupJob backup in service.Backups.ToList())
+            {
+                service.CreateBackup(backup);
+                foreach (IRestorePoint restorePoint in backup.RestorePoints.ToList())
+                {
+                    backup.CreateRestorePoint(restorePoint);
+                }
+            }
+
+            Console.WriteLine("$" + service.Backups.Count());
+            foreach (var bckp in service.Backups.ToList())
+            {
+                Console.WriteLine(bckp.RestorePoints.Count());
+            }
+
+            return service;
         }
     }
 }

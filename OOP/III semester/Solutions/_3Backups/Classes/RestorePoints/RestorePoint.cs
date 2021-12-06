@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Backups.Classes.JobObjects;
-using Backups.Classes.StorageAlgorithms;
-using Backups.Classes.StorageMethods;
 using Backups.Classes.Storages;
-using Backups.Exceptions;
-using Newtonsoft.Json;
 
 namespace Backups.Classes.RestorePoints
 {
@@ -14,48 +8,31 @@ namespace Backups.Classes.RestorePoints
     {
         public RestorePoint(
             string path,
-            IEnumerable<IJobObject> backupJobObjects,
-            IStorageAlgorithm storageAlgorithm,
-            IStorageMethod storageMethod,
-            DateTime dateTime = default,
-            string name = null)
+            string name = null,
+            DateTime dateTime = default)
         {
-            var jobObjects = backupJobObjects.ToList();
-
+            Storages = new List<Storage>();
             Path = path;
             Name = name ?? Guid.NewGuid().ToString();
-            StorageMethod = storageMethod;
-            BackupJobObjects = jobObjects;
-            StorageAlgorithm = storageAlgorithm;
             CreationDate = dateTime;
-
-            if (Equals(jobObjects.Count, 0))
-                throw new BackupException("No files for restore point!");
-
-            FullPath = StorageMethod.ConstructPath(Path, Name);
-            StorageMethod.MakeDirectory(FullPath);
-            Storages = StorageAlgorithm.CreateStorages(FullPath, jobObjects, StorageMethod);
+            FullPath = System.IO.Path.Combine(Path, Name);
         }
 
         public string Name { get; }
 
         public string Path { get; }
 
-        public DateTime CreationDate { get; }
-
         public string FullPath { get; }
+
+        public DateTime CreationDate { get; }
 
         public IEnumerable<Storage> StoragesI => Storages;
 
-        protected List<Storage> Storages { get; }
+        private List<Storage> Storages { get; set; }
 
-        [JsonProperty]
-        protected IEnumerable<IJobObject> BackupJobObjects { get; }
-
-        [JsonProperty]
-        protected IStorageAlgorithm StorageAlgorithm { get; }
-
-        [JsonProperty]
-        protected IStorageMethod StorageMethod { get; }
+        public void AddStorages(List<Storage> storages)
+        {
+            Storages = storages;
+        }
     }
 }

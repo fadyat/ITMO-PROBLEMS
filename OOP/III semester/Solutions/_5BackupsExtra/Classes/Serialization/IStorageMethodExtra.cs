@@ -1,11 +1,11 @@
 using Backups.Services;
 
-namespace BackupsExtra.Classes
+namespace BackupsExtra.Classes.Serialization
 {
     public interface IStorageMethodExtra
     {
-        void Save(BackupJobService backupJobService);
+        void Save(IBackupJobService backupJobService);
 
-        BackupJobService Loading();
+        IBackupJobService Load();
     }
 }

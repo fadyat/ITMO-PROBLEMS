@@ -1,26 +1,22 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using Backups.Classes;
 using Backups.Classes.BackupJobs;
-using Backups.Classes.JobObjects;
-using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 
 namespace Backups.Services
 {
     public class BackupJobService : IBackupJobService
     {
-        private readonly List<IBackupJob> _backups;
+        private readonly HashSet<IBackupJob> _backups;
 
-        public BackupJobService(string path, IStorageMethod storageMethod, string name = "Repository")
+        public BackupJobService(string path, IStorageMethod storageMethod, string name = null)
         {
             StorageMethod = storageMethod;
-            _backups = new List<IBackupJob>();
-            IssuedBackupId = 100000;
-            Name = name;
+            _backups = new HashSet<IBackupJob>();
+            Name = name ?? Guid.NewGuid().ToString();
             Path = path;
             FullPath = StorageMethod.ConstructPath(Path, Name);
-            StorageMethod.MakeDirectory(Path);
+            StorageMethod.MakeDirectory(FullPath);
         }
 
         public IEnumerable<IBackupJob> Backups => _backups;
@@ -31,17 +27,12 @@ namespace Backups.Services
 
         public string FullPath { get; }
 
-        public int IssuedBackupId { get; private set; }
-
         public IStorageMethod StorageMethod { get; }
 
-        public IBackupJob CreateBackup(IBackupJob backupJob)
+        public void CreateBackup(IBackupJob backupJob)
         {
             _backups.Add(backupJob);
-
-            // change
-            // ...
-            return backupJob;
+            StorageMethod.MakeDirectory(backupJob.FullPath);
         }
     }
 }

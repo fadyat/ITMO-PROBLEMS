@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.StorageMethods;
+using Newtonsoft.Json;
 
 namespace Backups.Services
 {
@@ -14,10 +15,9 @@ namespace Backups.Services
 
         string Name { get; }
 
+        [JsonIgnore]
         string FullPath { get; }
 
-        int IssuedBackupId { get; }
-
-        IBackupJob CreateBackup(IBackupJob backupJob);
+        void CreateBackup(IBackupJob backupJob);
     }
 }

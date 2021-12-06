@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Backups.Classes;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
@@ -82,11 +81,7 @@ namespace Backups.Tests
                 new SplitStorages(),
                 _backupJobService.StorageMethod);
 
-            var b1P1 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b1P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P1);
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.FullPath));
@@ -106,11 +101,7 @@ namespace Backups.Tests
                 new SingleStorage(),
                 _backupJobService.StorageMethod);
 
-            var b2P1 = new RestorePoint(
-                backupJob2.Path,
-                backupJob2.Objects,
-                backupJob2.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b2P1 = new RestorePoint(backupJob2.Path);
 
             backupJob2.CreateRestorePoint(b2P1);
 
@@ -131,11 +122,7 @@ namespace Backups.Tests
                 new SplitStorages(),
                 _backupJobService.StorageMethod);
 
-            var b1P1 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b1P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P1);
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.FullPath));
@@ -145,11 +132,7 @@ namespace Backups.Tests
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
             Assert.AreEqual(2, backupJob1.Objects.ToList().Count);
 
-            var b1P2 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b1P2 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P2);
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P2.FullPath));
@@ -163,11 +146,7 @@ namespace Backups.Tests
             backupJob1.AddJobObject(toRemove);
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
 
-            var b1P3 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b1P3 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P3);
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P3.FullPath));
@@ -188,11 +167,7 @@ namespace Backups.Tests
                 new SingleStorage(),
                 _backupJobService.StorageMethod);
 
-            var b2P1 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b2P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b2P1);
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.FullPath));
@@ -202,11 +177,7 @@ namespace Backups.Tests
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
             Assert.AreEqual(2, backupJob1.Objects.ToList().Count);
 
-            var b2P2 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b2P2 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b2P2);
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P2.FullPath));
@@ -220,11 +191,7 @@ namespace Backups.Tests
             backupJob1.AddJobObject(toRemove);
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
 
-            var b2P3 = new RestorePoint(
-                backupJob1.Path,
-                backupJob1.Objects,
-                backupJob1.StorageAlgorithm,
-                _backupJobService.StorageMethod);
+            var b2P3 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b2P3);
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P3.FullPath));

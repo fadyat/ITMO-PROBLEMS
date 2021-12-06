@@ -28,4 +28,8 @@
     <ProjectReference Include="..\_3Backups\_3Backups.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Classes\Update\Selection" />
+  </ItemGroup>
+
 </Project>

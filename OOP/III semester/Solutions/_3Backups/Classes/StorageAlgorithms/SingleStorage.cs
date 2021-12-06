@@ -9,7 +9,7 @@ namespace Backups.Classes.StorageAlgorithms
     {
         public List<Storage> CreateStorages(string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
-            var storage = new Storage("Single", path, storageMethod);
+            var storage = new Storage("Single", path);
             storageMethod.Archive(objects, storage.FullPath);
             return new List<Storage> { storage };
         }

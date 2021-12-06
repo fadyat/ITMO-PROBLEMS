@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
+using Backups.Classes.Storages;
+using Backups.Exceptions;
 
 namespace Backups.Classes.BackupJobs
 {
@@ -11,20 +14,18 @@ namespace Backups.Classes.BackupJobs
     {
         public BackupJob(
             string path,
-            HashSet<IJobObject> objects,
+            IEnumerable<IJobObject> objects,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod,
             string name = null)
         {
             Name = name ?? Guid.NewGuid().ToString();
             Path = path;
-            SetObjects = objects;
-            LinkedRestorePoints = new LinkedList<IRestorePoint>();
+            SetObjects = objects.ToHashSet();
+            LinkedRestorePoints = new HashSet<IRestorePoint>();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
-
             FullPath = StorageMethod.ConstructPath(Path, Name);
-            StorageMethod.MakeDirectory(FullPath);
         }
 
         public string Path { get; }
@@ -41,9 +42,9 @@ namespace Backups.Classes.BackupJobs
 
         public IStorageMethod StorageMethod { get; }
 
-        protected LinkedList<IRestorePoint> LinkedRestorePoints { get; }
+        private HashSet<IRestorePoint> LinkedRestorePoints { get; }
 
-        protected HashSet<IJobObject> SetObjects { get; }
+        private HashSet<IJobObject> SetObjects { get; }
 
         public void AddJobObject(IJobObject jobObject)
         {
@@ -55,13 +56,18 @@ namespace Backups.Classes.BackupJobs
             SetObjects.Remove(jobObject);
         }
 
-        public IRestorePoint CreateRestorePoint(IRestorePoint restorePoint)
+        public void CreateRestorePoint(IRestorePoint restorePoint)
         {
-            LinkedRestorePoints.AddLast(restorePoint);
+            if (!StorageMethod.ExistsDirectory(FullPath))
+                throw new BackupException("This backup wasn't registered!");
 
-            // change restore point
-            // ...
-            return restorePoint;
+            if (Equals(SetObjects.Count, 0))
+                throw new BackupException("No files for restore point!");
+
+            StorageMethod.MakeDirectory(restorePoint.FullPath);
+            List<Storage> storages = StorageAlgorithm.CreateStorages(restorePoint.FullPath, SetObjects, StorageMethod);
+            restorePoint.AddStorages(storages);
+            LinkedRestorePoints.Add(restorePoint);
         }
     }
 }

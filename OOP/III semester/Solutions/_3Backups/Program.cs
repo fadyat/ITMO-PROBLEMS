@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
-using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 
