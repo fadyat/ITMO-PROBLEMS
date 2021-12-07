@@ -7,7 +7,7 @@ namespace Backups.Services
 {
     public interface IBackupJobService
     {
-        IEnumerable<IBackupJob> Backups { get; }
+        IEnumerable<IBackupJob> BackupsI { get; }
 
         IStorageMethod StorageMethod { get; }
 

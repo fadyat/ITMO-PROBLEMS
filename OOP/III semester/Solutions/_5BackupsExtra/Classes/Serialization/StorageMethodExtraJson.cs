@@ -50,7 +50,7 @@ namespace BackupsExtra.Classes.Serialization
 
             if (JsonConvert.DeserializeObject(json, settings) is not IBackupJobService service) return null;
 
-            foreach (IBackupJob backup in service.Backups.ToList())
+            foreach (IBackupJob backup in service.BackupsI.ToList())
             {
                 service.StorageMethod.MakeDirectory(backup.FullPath);
                 foreach (IRestorePoint restorePoint in backup.RestorePoints.ToList())

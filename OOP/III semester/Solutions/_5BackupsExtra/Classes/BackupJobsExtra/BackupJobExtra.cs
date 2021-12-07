@@ -8,9 +8,9 @@ using Backups.Exceptions;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.StorageMethodsExtra;
 
-namespace BackupsExtra.Classes
+namespace BackupsExtra.Classes.BackupJobsExtra
 {
-    public class BackupJobExtra : BackupJob
+    public class BackupJobExtra : BackupJob, IBackupJobExtra
     {
         public BackupJobExtra(
             string path,

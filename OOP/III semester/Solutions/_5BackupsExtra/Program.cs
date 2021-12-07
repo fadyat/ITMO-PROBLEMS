@@ -4,7 +4,7 @@ using System.IO;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
-using BackupsExtra.Classes;
+using BackupsExtra.Classes.BackupJobsExtra;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.Serialization;
 using BackupsExtra.Classes.StorageMethodsExtra;
@@ -22,7 +22,7 @@ namespace BackupsExtra
                 .FullName;
 
             if (position == null) return;
-            var backupJobService = new BackupExtraJobService(position, new AbstractFileSystemStorageExtra());
+            var backupJobService = new BackupExtraJobService(position, new FileSystemStorageExtra());
 
             var backup = new BackupJobExtra(
                 backupJobService.FullPath,
