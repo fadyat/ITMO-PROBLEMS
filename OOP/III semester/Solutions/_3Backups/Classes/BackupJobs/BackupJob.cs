@@ -22,7 +22,7 @@ namespace Backups.Classes.BackupJobs
             Name = name ?? Guid.NewGuid().ToString();
             Path = path;
             SetObjects = objects.ToHashSet();
-            LinkedRestorePoints = new HashSet<IRestorePoint>();
+            LinkedRestorePoints = new LinkedList<IRestorePoint>();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
             FullPath = StorageMethod.ConstructPath(Path, Name);
@@ -42,9 +42,9 @@ namespace Backups.Classes.BackupJobs
 
         public IStorageMethod StorageMethod { get; }
 
-        private HashSet<IRestorePoint> LinkedRestorePoints { get; }
+        protected LinkedList<IRestorePoint> LinkedRestorePoints { get; set; }
 
-        private HashSet<IJobObject> SetObjects { get; }
+        protected HashSet<IJobObject> SetObjects { get; set; }
 
         public void AddJobObject(IJobObject jobObject)
         {
@@ -68,7 +68,7 @@ namespace Backups.Classes.BackupJobs
             StorageMethod.MakeDirectory(restorePoint.FullPath);
             List<Storage> storages = StorageAlgorithm.CreateStorages(restorePoint.FullPath, SetObjects, StorageMethod);
             restorePoint.AddStorages(storages);
-            LinkedRestorePoints.Add(restorePoint);
+            LinkedRestorePoints.AddLast(restorePoint);
         }
 
         public IJobObject GetJobObject(string jobObjectPath)
