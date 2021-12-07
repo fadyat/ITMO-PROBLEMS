@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
@@ -36,8 +37,11 @@ namespace BackupsExtra
                 backupJobService.StorageMethod);
 
             backupJobService.CreateBackup(backup);
-            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));*/
 
+            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
+            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/a.txt"));
+            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
+*/
             var fix = new StorageMethodExtraJson(position);
 
             // fix.Save(backupJobService);

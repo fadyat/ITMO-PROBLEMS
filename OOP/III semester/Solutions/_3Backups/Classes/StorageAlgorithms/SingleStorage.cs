@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageMethods;
 using Backups.Classes.Storages;
@@ -9,8 +10,9 @@ namespace Backups.Classes.StorageAlgorithms
     {
         public List<Storage> CreateStorages(string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
-            var storage = new Storage("Single", path);
-            storageMethod.Archive(objects, storage.FullPath);
+            IEnumerable<IJobObject> jobObjects = objects.ToList();
+            var storage = new Storage("Single", path, jobObjects);
+            storageMethod.Archive(jobObjects, storage.FullPath);
             return new List<Storage> { storage };
         }
     }

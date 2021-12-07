@@ -53,6 +53,7 @@ namespace Backups.Classes.BackupJobs
 
         public void RemoveJobObject(IJobObject jobObject)
         {
+            jobObject = GetJobObject(jobObject.Path);
             SetObjects.Remove(jobObject);
         }
 
@@ -68,6 +69,11 @@ namespace Backups.Classes.BackupJobs
             List<Storage> storages = StorageAlgorithm.CreateStorages(restorePoint.FullPath, SetObjects, StorageMethod);
             restorePoint.AddStorages(storages);
             LinkedRestorePoints.Add(restorePoint);
+        }
+
+        public IJobObject GetJobObject(string jobObjectPath)
+        {
+            return SetObjects.Single(obj => Equals(obj.Path, jobObjectPath));
         }
     }
 }

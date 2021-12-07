@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.RestorePoints;
+using Backups.Exceptions;
 using Backups.Services;
 using Newtonsoft.Json;
 
@@ -49,25 +50,26 @@ namespace BackupsExtra.Classes.Serialization
 
             if (JsonConvert.DeserializeObject(json, settings) is not IBackupJobService service) return null;
 
-            Console.WriteLine("$" + service.Backups.Count());
-            foreach (var bckp in service.Backups.ToList())
-            {
-                Console.WriteLine(bckp.RestorePoints.Count());
-            }
-
             foreach (IBackupJob backup in service.Backups.ToList())
             {
-                service.CreateBackup(backup);
+                service.StorageMethod.MakeDirectory(backup.FullPath);
                 foreach (IRestorePoint restorePoint in backup.RestorePoints.ToList())
                 {
-                    backup.CreateRestorePoint(restorePoint);
-                }
-            }
+                    if (!backup.StorageMethod.ExistsDirectory(backup.FullPath))
+                        throw new BackupException("This backup wasn't registered!");
 
-            Console.WriteLine("$" + service.Backups.Count());
-            foreach (var bckp in service.Backups.ToList())
-            {
-                Console.WriteLine(bckp.RestorePoints.Count());
+                    if (Equals(backup.Objects.ToList().Count, 0))
+                        throw new BackupException("No files for restore point!");
+
+                    backup.StorageMethod.MakeDirectory(restorePoint.FullPath);
+                    var allRestorePointObjects =
+                        restorePoint.StoragesI.SelectMany(storage => storage.JobObjects).ToHashSet();
+
+                    backup.StorageAlgorithm.CreateStorages(
+                        restorePoint.FullPath,
+                        allRestorePointObjects,
+                        backup.StorageMethod);
+                }
             }
 
             return service;
