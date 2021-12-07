@@ -34,12 +34,5 @@ namespace Backups.Services
             _backups.Add(backupJob);
             StorageMethod.MakeDirectory(backupJob.FullPath);
         }
-
-        public void Print()
-        {
-            foreach (var backups in Backups)
-            {
-            }
-        }
     }
 }

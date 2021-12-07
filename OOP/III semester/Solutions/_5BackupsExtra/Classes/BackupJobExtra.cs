@@ -29,7 +29,7 @@ namespace BackupsExtra.Classes
         public void Clear(ISelection selection)
         {
             if (selection.Fetch(LinkedRestorePoints) is not LinkedList<IRestorePoint> result || !result.Any())
-                throw new BackupException("Clear algorithm can't remove all points!");
+                throw new BackupException("Selection size can't be 0");
 
             foreach (IRestorePoint point in LinkedRestorePoints
                 .TakeWhile(point => !Equals(point, result.First())))
@@ -38,6 +38,26 @@ namespace BackupsExtra.Classes
             }
 
             LinkedRestorePoints = result;
+        }
+
+        public void Merge(ISelection selection)
+        {
+            if (selection.Fetch(LinkedRestorePoints) is not LinkedList<IRestorePoint> result || !result.Any())
+                throw new BackupException("Selection size can't be 0");
+
+            foreach (IRestorePoint point in LinkedRestorePoints
+                .TakeWhile(point => !Equals(point, result.First())))
+            {
+                if (StorageMethod.GetType() == typeof(SingleStorage))
+                {
+                    StorageMethod.RemoveRestorePoint(point);
+                    continue;
+                }
+
+                StorageMethod.Merge(point, result.First());
+            }
+
+            // upd first restore point
         }
     }
 }

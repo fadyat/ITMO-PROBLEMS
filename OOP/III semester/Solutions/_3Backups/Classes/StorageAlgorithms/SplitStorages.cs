@@ -16,7 +16,7 @@ namespace Backups.Classes.StorageAlgorithms
             {
                 string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
                 var obj = new List<IJobObject> { jobObject };
-                var storage = new Storage(fileName, path, obj);
+                var storage = new Storage(fileName + ".zip", path, obj);
                 storageMethod.Archive(obj, storage.FullPath);
                 list.Add(storage);
             }

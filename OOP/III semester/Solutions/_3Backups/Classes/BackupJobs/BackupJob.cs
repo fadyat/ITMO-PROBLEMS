@@ -67,7 +67,11 @@ namespace Backups.Classes.BackupJobs
 
             StorageMethod.MakeDirectory(restorePoint.FullPath);
             List<Storage> storages = StorageAlgorithm.CreateStorages(restorePoint.FullPath, SetObjects, StorageMethod);
-            restorePoint.AddStorages(storages);
+            foreach (Storage storage in storages)
+            {
+                restorePoint.AddStorage(storage);
+            }
+
             LinkedRestorePoints.AddLast(restorePoint);
         }
 

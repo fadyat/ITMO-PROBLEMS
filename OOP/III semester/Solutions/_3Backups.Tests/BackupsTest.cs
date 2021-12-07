@@ -81,6 +81,7 @@ namespace Backups.Tests
                 new SplitStorages(),
                 _backupJobService.StorageMethod);
 
+            _backupJobService.CreateBackup(backupJob1);
             var b1P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P1);
@@ -103,6 +104,7 @@ namespace Backups.Tests
 
             var b2P1 = new RestorePoint(backupJob2.Path);
 
+            _backupJobService.CreateBackup(backupJob2);
             backupJob2.CreateRestorePoint(b2P1);
 
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.FullPath));
@@ -122,6 +124,7 @@ namespace Backups.Tests
                 new SplitStorages(),
                 _backupJobService.StorageMethod);
 
+            _backupJobService.CreateBackup(backupJob1);
             var b1P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b1P1);
@@ -129,8 +132,7 @@ namespace Backups.Tests
 
             IJobObject toRemove = backupJob1.Objects.First();
             backupJob1.RemoveJobObject(toRemove);
-            Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
-            Assert.AreEqual(2, backupJob1.Objects.ToList().Count);
+            Assert.AreEqual(_standardFiles.Count - 1, backupJob1.Objects.ToList().Count);
 
             var b1P2 = new RestorePoint(backupJob1.Path);
 
@@ -167,6 +169,7 @@ namespace Backups.Tests
                 new SingleStorage(),
                 _backupJobService.StorageMethod);
 
+            _backupJobService.CreateBackup(backupJob1);
             var b2P1 = new RestorePoint(backupJob1.Path);
 
             backupJob1.CreateRestorePoint(b2P1);
@@ -174,8 +177,7 @@ namespace Backups.Tests
 
             IJobObject toRemove = backupJob1.Objects.First();
             backupJob1.RemoveJobObject(toRemove);
-            Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
-            Assert.AreEqual(2, backupJob1.Objects.ToList().Count);
+            Assert.AreEqual(_standardFiles.Count - 1, backupJob1.Objects.ToList().Count);
 
             var b2P2 = new RestorePoint(backupJob1.Path);
 

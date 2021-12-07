@@ -30,9 +30,9 @@ namespace Backups.Classes.RestorePoints
 
         private List<Storage> Storages { get; set; }
 
-        public void AddStorages(List<Storage> storages)
+        public void AddStorage(Storage storage)
         {
-            Storages = storages;
+            Storages.Add(storage);
         }
 
         public void Print()

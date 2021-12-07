@@ -11,7 +11,7 @@ namespace Backups.Classes.StorageAlgorithms
         public List<Storage> CreateStorages(string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
             IEnumerable<IJobObject> jobObjects = objects.ToList();
-            var storage = new Storage("Single", path, jobObjects);
+            var storage = new Storage("Single.zip", path, jobObjects);
             storageMethod.Archive(jobObjects, storage.FullPath);
             return new List<Storage> { storage };
         }

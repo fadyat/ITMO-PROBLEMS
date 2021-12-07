@@ -9,7 +9,7 @@ namespace Backups.Classes.Storages
         public Storage(string storageName, string path, IEnumerable<IJobObject> jobObjects)
         {
             JobObjects = jobObjects;
-            Name = storageName + ".zip";
+            Name = storageName;
             Path = path;
             FullPath = System.IO.Path.Combine(path, Name);
         }
