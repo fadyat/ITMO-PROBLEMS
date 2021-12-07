@@ -6,14 +6,15 @@ namespace Backups.Classes.StorageMethods
 {
     public class AbstractFileSystemStorage : IStorageMethod
     {
-        private readonly HashSet<string> _pathDirectories;
-        private readonly HashSet<string> _pathFiles;
-
         public AbstractFileSystemStorage()
         {
-            _pathDirectories = new HashSet<string>();
-            _pathFiles = new HashSet<string>();
+            PathDirectories = new HashSet<string>();
+            PathFiles = new HashSet<string>();
         }
+
+        protected HashSet<string> PathDirectories { get; }
+
+        protected HashSet<string> PathFiles { get; }
 
         public string ConstructPath(string path, string name)
         {
@@ -23,24 +24,24 @@ namespace Backups.Classes.StorageMethods
 
         public void MakeDirectory(string path)
         {
-            _pathDirectories.Add(path);
+            PathDirectories.Add(path);
         }
 
         public void Archive(IEnumerable<IJobObject> from, string where)
         {
-            _pathFiles.Add(where); // archive
+            PathFiles.Add(where); // archive
 
             // files inside ...
         }
 
         public bool ExistsDirectory(string path)
         {
-            return _pathDirectories.Contains(path);
+            return PathDirectories.Contains(path);
         }
 
         public bool ExistsFile(string path)
         {
-            return _pathFiles.Contains(path);
+            return PathFiles.Contains(path);
         }
     }
 }

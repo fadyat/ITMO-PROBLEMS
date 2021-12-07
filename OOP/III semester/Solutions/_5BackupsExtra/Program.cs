@@ -8,7 +8,11 @@ using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
 using Backups.Services;
+using BackupsExtra.Classes;
+using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.Serialization;
+using BackupsExtra.Classes.StorageMethodsExtra;
+using BackupsExtra.Services;
 
 namespace BackupsExtra
 {
@@ -23,9 +27,9 @@ namespace BackupsExtra
 
             if (position == null) return;
 /*
-            var backupJobService = new BackupJobService(position, new FileSystemStorage());
+            var backupJobService = new BackupExtraJobService(position, new FileSystemStorageExtra());
 
-            var backup = new BackupJob(
+            var backup = new BackupJobExtra(
                 backupJobService.FullPath,
                 new HashSet<IJobObject>
                 {
@@ -37,10 +41,10 @@ namespace BackupsExtra
                 backupJobService.StorageMethod);
 
             backupJobService.CreateBackup(backup);
-
             backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
             backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/a.txt"));
             backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
+            backup.Clear(new ByNumberSelection(1));
 */
             var fix = new StorageMethodExtraJson(position);
 

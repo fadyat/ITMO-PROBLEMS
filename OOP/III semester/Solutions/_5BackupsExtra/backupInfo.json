@@ -1,12 +1,18 @@
 {
-  "$type": "Backups.Services.BackupJobService, _3Backups",
+  "$type": "BackupsExtra.Services.BackupExtraJobService, _5BackupsExtra",
+  "StorageMethod": {
+    "$type": "BackupsExtra.Classes.StorageMethodsExtra.FileSystemStorageExtra, _5BackupsExtra"
+  },
   "Backups": {
     "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.BackupJobs.IBackupJob, _3Backups]], System.Private.CoreLib",
     "$values": [
       {
-        "$type": "Backups.Classes.BackupJobs.BackupJob, _3Backups",
-        "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8",
-        "Name": "704b2db8-a961-4aac-9187-121e68772e89",
+        "$type": "BackupsExtra.Classes.BackupJobExtra, _5BackupsExtra",
+        "StorageMethod": {
+          "$type": "BackupsExtra.Classes.StorageMethodsExtra.FileSystemStorageExtra, _5BackupsExtra"
+        },
+        "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/93f81222-197b-4340-8da5-7cd35d9cca50",
+        "Name": "6a56ff0a-0197-4943-a30d-1749baa1fe8c",
         "Objects": {
           "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
           "$values": [
@@ -21,34 +27,20 @@
           ]
         },
         "RestorePoints": {
-          "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.RestorePoints.IRestorePoint, _3Backups]], System.Private.CoreLib",
+          "$type": "System.Collections.Generic.LinkedList`1[[Backups.Classes.RestorePoints.IRestorePoint, _3Backups]], System.Collections",
           "$values": [
             {
               "$type": "Backups.Classes.RestorePoints.RestorePoint, _3Backups",
-              "Name": "d5674a7d-c721-4a50-8902-87b94b5fd26b",
-              "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89",
+              "Name": "6b0c6ce9-acad-4744-b427-e95540ca72c9",
+              "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/93f81222-197b-4340-8da5-7cd35d9cca50/6a56ff0a-0197-4943-a30d-1749baa1fe8c",
               "CreationDate": "0001-01-01T00:00:00",
               "StoragesI": {
                 "$type": "System.Collections.Generic.List`1[[Backups.Classes.Storages.Storage, _3Backups]], System.Private.CoreLib",
                 "$values": [
                   {
                     "$type": "Backups.Classes.Storages.Storage, _3Backups",
-                    "Name": "a.zip",
-                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89/d5674a7d-c721-4a50-8902-87b94b5fd26b",
-                    "JobObjects": {
-                      "$type": "System.Collections.Generic.List`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
-                      "$values": [
-                        {
-                          "$type": "Backups.Classes.JobObjects.JobObject, _3Backups",
-                          "Path": "/Users/artyomfadeyev/Documents/a.txt"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "$type": "Backups.Classes.Storages.Storage, _3Backups",
                     "Name": "b.zip",
-                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89/d5674a7d-c721-4a50-8902-87b94b5fd26b",
+                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/93f81222-197b-4340-8da5-7cd35d9cca50/6a56ff0a-0197-4943-a30d-1749baa1fe8c/6b0c6ce9-acad-4744-b427-e95540ca72c9",
                     "JobObjects": {
                       "$type": "System.Collections.Generic.List`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
                       "$values": [
@@ -62,46 +54,7 @@
                   {
                     "$type": "Backups.Classes.Storages.Storage, _3Backups",
                     "Name": "c.zip",
-                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89/d5674a7d-c721-4a50-8902-87b94b5fd26b",
-                    "JobObjects": {
-                      "$type": "System.Collections.Generic.List`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
-                      "$values": [
-                        {
-                          "$type": "Backups.Classes.JobObjects.JobObject, _3Backups",
-                          "Path": "/Users/artyomfadeyev/Documents/c.txt"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "$type": "Backups.Classes.RestorePoints.RestorePoint, _3Backups",
-              "Name": "65e99c22-75fb-44da-843f-39f8ac3df615",
-              "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89",
-              "CreationDate": "0001-01-01T00:00:00",
-              "StoragesI": {
-                "$type": "System.Collections.Generic.List`1[[Backups.Classes.Storages.Storage, _3Backups]], System.Private.CoreLib",
-                "$values": [
-                  {
-                    "$type": "Backups.Classes.Storages.Storage, _3Backups",
-                    "Name": "b.zip",
-                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89/65e99c22-75fb-44da-843f-39f8ac3df615",
-                    "JobObjects": {
-                      "$type": "System.Collections.Generic.List`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
-                      "$values": [
-                        {
-                          "$type": "Backups.Classes.JobObjects.JobObject, _3Backups",
-                          "Path": "/Users/artyomfadeyev/Documents/b.txt"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "$type": "Backups.Classes.Storages.Storage, _3Backups",
-                    "Name": "c.zip",
-                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7af863fa-53d5-4c19-9eb9-c19f7afcd5c8/704b2db8-a961-4aac-9187-121e68772e89/65e99c22-75fb-44da-843f-39f8ac3df615",
+                    "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/93f81222-197b-4340-8da5-7cd35d9cca50/6a56ff0a-0197-4943-a30d-1749baa1fe8c/6b0c6ce9-acad-4744-b427-e95540ca72c9",
                     "JobObjects": {
                       "$type": "System.Collections.Generic.List`1[[Backups.Classes.JobObjects.IJobObject, _3Backups]], System.Private.CoreLib",
                       "$values": [
@@ -119,16 +72,10 @@
         },
         "StorageAlgorithm": {
           "$type": "Backups.Classes.StorageAlgorithms.SplitStorages, _3Backups"
-        },
-        "StorageMethod": {
-          "$type": "Backups.Classes.StorageMethods.FileSystemStorage, _3Backups"
         }
       }
     ]
   },
   "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra",
-  "Name": "7af863fa-53d5-4c19-9eb9-c19f7afcd5c8",
-  "StorageMethod": {
-    "$type": "Backups.Classes.StorageMethods.FileSystemStorage, _3Backups"
-  }
+  "Name": "93f81222-197b-4340-8da5-7cd35d9cca50"
 }

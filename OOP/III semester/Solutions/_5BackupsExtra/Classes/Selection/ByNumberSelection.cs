@@ -12,16 +12,17 @@ namespace BackupsExtra.Classes.Selection
             _numberToSave = numberToSave;
         }
 
-        public IEnumerable<IRestorePoint> Clear(LinkedList<IRestorePoint> restorePoints)
+        public IEnumerable<IRestorePoint> Fetch(LinkedList<IRestorePoint> restorePoints)
         {
+            var result = new LinkedList<IRestorePoint>(restorePoints);
             int toSave = _numberToSave;
             while (toSave > 0)
             {
-                restorePoints.RemoveFirst();
+                result.RemoveFirst();
                 toSave--;
             }
 
-            return restorePoints;
+            return result;
         }
     }
 }

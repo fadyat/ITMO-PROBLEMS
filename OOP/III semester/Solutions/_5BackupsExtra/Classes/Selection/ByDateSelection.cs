@@ -13,14 +13,15 @@ namespace BackupsExtra.Classes.Selection
             _oldestDate = oldestDate;
         }
 
-        public IEnumerable<IRestorePoint> Clear(LinkedList<IRestorePoint> restorePoints)
+        public IEnumerable<IRestorePoint> Fetch(LinkedList<IRestorePoint> restorePoints)
         {
-            while (restorePoints.First?.Value.CreationDate <= _oldestDate)
+            var result = new LinkedList<IRestorePoint>(restorePoints);
+            while (result.First?.Value.CreationDate <= _oldestDate)
             {
-                restorePoints.RemoveFirst();
+                result.RemoveFirst();
             }
 
-            return restorePoints;
+            return result;
         }
     }
 }

@@ -1,32 +1,16 @@
-using System.Collections.Generic;
-using Backups.Classes.BackupJobs;
-using Backups.Classes.StorageMethods;
 using Backups.Services;
+using BackupsExtra.Classes.StorageMethodsExtra;
 
 namespace BackupsExtra.Services
 {
-    public class BackupExtraJobService : IBackupJobService
+    public class BackupExtraJobService : BackupJobService
     {
-        private readonly BackupJobService _backupJobService;
-
-        public BackupExtraJobService(string path, IStorageMethod storageMethod, string name = null)
+        public BackupExtraJobService(string path, IStorageExtraMethod storageMethod, string name = null)
+            : base(path, storageMethod, name)
         {
-            _backupJobService = new BackupJobService(path, storageMethod, name);
+            StorageMethod = storageMethod;
         }
 
-        public IEnumerable<IBackupJob> Backups => _backupJobService.Backups;
-
-        public IStorageMethod StorageMethod => _backupJobService.StorageMethod;
-
-        public string Path => _backupJobService.Path;
-
-        public string FullPath => _backupJobService.FullPath;
-
-        public string Name => _backupJobService.Name;
-
-        public void CreateBackup(IBackupJob backupJob)
-        {
-            _backupJobService.CreateBackup(backupJob);
-        }
+        public new IStorageExtraMethod StorageMethod { get; }
     }
 }

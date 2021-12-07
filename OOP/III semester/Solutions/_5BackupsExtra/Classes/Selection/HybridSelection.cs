@@ -20,11 +20,11 @@ namespace BackupsExtra.Classes.Selection
             _unite = unite;
         }
 
-        public IEnumerable<IRestorePoint> Clear(LinkedList<IRestorePoint> restorePoints)
+        public IEnumerable<IRestorePoint> Fetch(LinkedList<IRestorePoint> restorePoints)
         {
             var answer = new HashSet<IRestorePoint>(restorePoints);
             foreach (IEnumerable<IRestorePoint> result in _clearAlgorithms
-                .Select(clearAlgo => clearAlgo.Clear(restorePoints)))
+                .Select(clearAlgo => clearAlgo.Fetch(restorePoints)))
             {
                 switch (_unite)
                 {

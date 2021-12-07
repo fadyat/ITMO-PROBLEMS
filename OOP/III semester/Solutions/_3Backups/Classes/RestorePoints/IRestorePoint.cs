@@ -19,5 +19,8 @@ namespace Backups.Classes.RestorePoints
         public IEnumerable<Storage> StoragesI { get; }
 
         void AddStorages(List<Storage> storages);
+
+        // wqeqweqweqweqweqweqweqwewqeqweqweqweqwe
+        void Print();
     }
 }

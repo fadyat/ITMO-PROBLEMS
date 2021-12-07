@@ -34,5 +34,10 @@ namespace Backups.Classes.RestorePoints
         {
             Storages = storages;
         }
+
+        public void Print()
+        {
+            Console.Write(Name + " ");
+        }
     }
 }
