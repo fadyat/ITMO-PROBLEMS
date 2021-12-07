@@ -28,10 +28,11 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 
             foreach (Storage lastStorage in lastVersion.StoragesI)
             {
-                if (!newVersionNames.Contains(lastStorage.Name))
-                {
-                    Move(lastStorage.FullPath, Path.Combine(newVersion.Path, lastStorage.Name));
-                }
+                if (newVersionNames.Contains(lastStorage.Name)) continue;
+
+                var updatedStorage = new Storage(lastStorage.Name, newVersion.FullPath, lastStorage.JobObjects);
+                Move(lastStorage.FullPath, updatedStorage.FullPath);
+                newVersion.AddStorage(updatedStorage);
             }
 
             RemoveRestorePoint(lastVersion);

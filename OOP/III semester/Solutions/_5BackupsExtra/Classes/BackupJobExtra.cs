@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Backups.Classes.BackupJobs;
@@ -45,9 +44,11 @@ namespace BackupsExtra.Classes
             if (selection.Fetch(LinkedRestorePoints) is not LinkedList<IRestorePoint> result || !result.Any())
                 throw new BackupException("Selection size can't be 0");
 
+            var merged = new LinkedList<IRestorePoint>(LinkedRestorePoints);
             foreach (IRestorePoint point in LinkedRestorePoints
                 .TakeWhile(point => !Equals(point, result.First())))
             {
+                merged.Remove(point);
                 if (StorageMethod.GetType() == typeof(SingleStorage))
                 {
                     StorageMethod.RemoveRestorePoint(point);
@@ -57,7 +58,7 @@ namespace BackupsExtra.Classes
                 StorageMethod.Merge(point, result.First());
             }
 
-            // upd first restore point
+            LinkedRestorePoints = merged;
         }
     }
 }

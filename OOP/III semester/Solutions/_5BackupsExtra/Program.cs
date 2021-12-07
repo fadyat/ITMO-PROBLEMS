@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
@@ -21,7 +22,7 @@ namespace BackupsExtra
                 .FullName;
 
             if (position == null) return;
-            var backupJobService = new BackupExtraJobService(position, new FileSystemStorageExtra());
+            var backupJobService = new BackupExtraJobService(position, new AbstractFileSystemStorageExtra());
 
             var backup = new BackupJobExtra(
                 backupJobService.FullPath,
@@ -38,12 +39,34 @@ namespace BackupsExtra
             backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
             backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/a.txt"));
             backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
+
+            foreach (var rp in backup.RestorePoints)
+            {
+                rp.Print();
+                foreach (var st in rp.StoragesI)
+                {
+                    Console.Write(st.Name + " ");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
             backup.Merge(new ByNumberSelection(1));
 
-            var fix = new StorageMethodExtraJson(position);
+            foreach (var rp in backup.RestorePoints)
+            {
+                rp.Print();
+                foreach (var st in rp.StoragesI)
+                {
+                    Console.Write(st.Name + " ");
+                }
 
-            fix.Save(backupJobService);
+                Console.WriteLine();
+            }
 
+            // var fix = new StorageMethodExtraJson(position);
+            // fix.Save(backupJobService);
             // IBackupJobService b = fix.Load();
             // Console.WriteLine(b.Backups == null);
             // Console.WriteLine(b.Path);
