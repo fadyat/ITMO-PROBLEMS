@@ -43,7 +43,7 @@
 <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Programming/I%20semester/Labs/labb14/main.c"> "Life" game </a>
 
 <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Programming/I%20semester/Problems/labb15.pdf"> 15. </a> # 
-<a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Programming/I%20semester/Labs/labb15.c"> File archiver </a>
+<a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Programming/I%20semester/Labs/labb15/labb15.c"> File archiver </a>
 
 
 
