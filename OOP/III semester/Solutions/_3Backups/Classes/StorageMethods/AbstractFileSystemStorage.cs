@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Backups.Classes.JobObjects;
 
 namespace Backups.Classes.StorageMethods
@@ -10,11 +11,14 @@ namespace Backups.Classes.StorageMethods
         {
             PathDirectories = new HashSet<string>();
             PathFiles = new HashSet<string>();
+            ArchivedFiles = new Dictionary<string, int>();
         }
 
         protected HashSet<string> PathDirectories { get; }
 
         protected HashSet<string> PathFiles { get; }
+
+        protected Dictionary<string, int> ArchivedFiles { get; }
 
         public string ConstructPath(string path, string name)
         {
@@ -29,9 +33,8 @@ namespace Backups.Classes.StorageMethods
 
         public void Archive(IEnumerable<IJobObject> from, string where)
         {
-            PathFiles.Add(where); // archive
-
-            // files inside ...
+            PathFiles.Add(where);
+            ArchivedFiles.Add(where, from.Count()); // pseudo-archive
         }
 
         public bool ExistsDirectory(string path)

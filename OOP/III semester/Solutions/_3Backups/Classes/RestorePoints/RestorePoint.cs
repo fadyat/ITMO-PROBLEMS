@@ -4,16 +4,15 @@ using Backups.Classes.Storages;
 
 namespace Backups.Classes.RestorePoints
 {
-    public class RestorePoint : IRestorePoint
+    public class RestorePoint
     {
-        public RestorePoint(
-            string path,
-            string name = null,
-            DateTime dateTime = default)
+        private readonly List<Storage> _storages;
+
+        public RestorePoint(string path, List<Storage> storages, string name, DateTime dateTime)
         {
-            Storages = new List<Storage>();
+            _storages = storages;
             Path = path;
-            Name = name ?? Guid.NewGuid().ToString();
+            Name = name;
             CreationDate = dateTime;
             FullPath = System.IO.Path.Combine(Path, Name);
         }
@@ -26,18 +25,6 @@ namespace Backups.Classes.RestorePoints
 
         public DateTime CreationDate { get; }
 
-        public IEnumerable<Storage> StoragesI => Storages;
-
-        private List<Storage> Storages { get; set; }
-
-        public void AddStorage(Storage storage)
-        {
-            Storages.Add(storage);
-        }
-
-        public void Print()
-        {
-            Console.Write(Name + " ");
-        }
+        public IEnumerable<Storage> StoragesI => _storages;
     }
 }

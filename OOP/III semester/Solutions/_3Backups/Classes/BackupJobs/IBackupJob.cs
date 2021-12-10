@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
@@ -9,6 +10,8 @@ namespace Backups.Classes.BackupJobs
 {
     public interface IBackupJob
     {
+        Guid Id { get; }
+
         string Path { get; }
 
         string Name { get; }
@@ -18,7 +21,7 @@ namespace Backups.Classes.BackupJobs
 
         IEnumerable<IJobObject> Objects { get; }
 
-        IEnumerable<IRestorePoint> RestorePoints { get; }
+        IEnumerable<RestorePoint> RestorePoints { get; }
 
         IStorageAlgorithm StorageAlgorithm { get; }
 
@@ -28,6 +31,6 @@ namespace Backups.Classes.BackupJobs
 
         void RemoveJobObject(IJobObject jobObject);
 
-        void CreateRestorePoint(IRestorePoint restorePoint);
+        RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default);
     }
 }

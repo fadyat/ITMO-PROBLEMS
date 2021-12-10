@@ -13,20 +13,24 @@ namespace Backups.Classes.BackupJobs
     public class BackupJob : IBackupJob
     {
         public BackupJob(
+            Guid id,
             string path,
             IEnumerable<IJobObject> objects,
             IStorageAlgorithm storageAlgorithm,
             IStorageMethod storageMethod,
-            string name = null)
+            string name)
         {
-            Name = name ?? Guid.NewGuid().ToString();
+            Id = id;
+            Name = name;
             Path = path;
             SetObjects = objects.ToHashSet();
-            LinkedRestorePoints = new LinkedList<IRestorePoint>();
+            LinkedRestorePoints = new LinkedList<RestorePoint>();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
             FullPath = StorageMethod.ConstructPath(Path, Name);
         }
+
+        public Guid Id { get; }
 
         public string Path { get; }
 
@@ -36,13 +40,13 @@ namespace Backups.Classes.BackupJobs
 
         public IEnumerable<IJobObject> Objects => SetObjects;
 
-        public IEnumerable<IRestorePoint> RestorePoints => LinkedRestorePoints;
+        public IEnumerable<RestorePoint> RestorePoints => LinkedRestorePoints;
 
         public IStorageAlgorithm StorageAlgorithm { get; }
 
         public IStorageMethod StorageMethod { get; }
 
-        protected LinkedList<IRestorePoint> LinkedRestorePoints { get; set; }
+        protected LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
 
         protected HashSet<IJobObject> SetObjects { get; set; }
 
@@ -57,22 +61,19 @@ namespace Backups.Classes.BackupJobs
             SetObjects.Remove(jobObject);
         }
 
-        public void CreateRestorePoint(IRestorePoint restorePoint)
+        public RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
-            if (!StorageMethod.ExistsDirectory(FullPath))
-                throw new BackupException("This backup wasn't registered!");
-
             if (Equals(SetObjects.Count, 0))
                 throw new BackupException("No files for restore point!");
 
-            StorageMethod.MakeDirectory(restorePoint.FullPath);
-            List<Storage> storages = StorageAlgorithm.CreateStorages(restorePoint.FullPath, SetObjects, StorageMethod);
-            foreach (Storage storage in storages)
-            {
-                restorePoint.AddStorage(storage);
-            }
-
+            name ??= Guid.NewGuid().ToString();
+            string futureRestorePath = System.IO.Path.Combine(FullPath, name);
+            StorageMethod.MakeDirectory(futureRestorePath);
+            List<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, SetObjects, StorageMethod);
+            var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
             LinkedRestorePoints.AddLast(restorePoint);
+
+            return restorePoint;
         }
 
         public IJobObject GetJobObject(string jobObjectPath)
