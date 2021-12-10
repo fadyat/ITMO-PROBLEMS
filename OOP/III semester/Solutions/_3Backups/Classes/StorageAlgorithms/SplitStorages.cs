@@ -15,9 +15,8 @@ namespace Backups.Classes.StorageAlgorithms
             foreach (IJobObject jobObject in objects)
             {
                 string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
-                var obj = new List<IJobObject> { jobObject };
-                var storage = new Storage(fileName + ".zip", path, obj);
-                storageMethod.Archive(obj, storage.FullPath);
+                var storage = new Storage(fileName + ".zip", path, new List<IJobObject> { jobObject });
+                storageMethod.Archive(storage);
                 list.Add(storage);
             }
 

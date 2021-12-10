@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Backups.Classes.JobObjects;
+using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
@@ -31,10 +31,10 @@ namespace Backups.Classes.StorageMethods
             PathDirectories.Add(path);
         }
 
-        public void Archive(IEnumerable<IJobObject> from, string where)
+        public void Archive(Storage from)
         {
-            PathFiles.Add(where);
-            ArchivedFiles.Add(where, from.Count()); // pseudo-archive
+            PathFiles.Add(from.FullPath);
+            ArchivedFiles.Add(from.FullPath, from.JobObjects.Count()); // pseudo-archive
         }
 
         public bool ExistsDirectory(string path)

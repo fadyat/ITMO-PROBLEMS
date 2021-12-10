@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using Backups.Classes.JobObjects;
+using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
@@ -18,10 +18,10 @@ namespace Backups.Classes.StorageMethods
             Directory.CreateDirectory(path);
         }
 
-        public void Archive(IEnumerable<IJobObject> from, string where)
+        public void Archive(Storage from)
         {
-            ZipArchive zipArchive = ZipFile.Open(where, ZipArchiveMode.Create);
-            foreach (IJobObject jobObject in from)
+            ZipArchive zipArchive = ZipFile.Open(from.FullPath, ZipArchiveMode.Create);
+            foreach (IJobObject jobObject in from.JobObjects)
             {
                 string fileName = Path.GetFileName(jobObject.Path);
                 if (jobObject.Path == null || fileName == null) continue;

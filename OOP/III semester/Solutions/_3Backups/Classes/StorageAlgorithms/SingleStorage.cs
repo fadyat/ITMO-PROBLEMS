@@ -12,7 +12,7 @@ namespace Backups.Classes.StorageAlgorithms
         {
             IEnumerable<IJobObject> jobObjects = objects.ToList();
             var storage = new Storage("Single.zip", path, jobObjects);
-            storageMethod.Archive(jobObjects, storage.FullPath);
+            storageMethod.Archive(storage);
             return new List<Storage> { storage };
         }
     }
