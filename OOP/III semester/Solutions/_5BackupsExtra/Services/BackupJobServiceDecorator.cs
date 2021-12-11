@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
@@ -13,11 +14,13 @@ namespace BackupsExtra.Services
         protected BackupJobServiceDecorator(BackupJobServiceComponent component)
         {
             Component = component;
-            Name = Component.Name;
             Path = Component.Path;
-            FullPath = Component.FullPath;
             StorageMethod = Component.StorageMethod;
+            Name = Component.Name;
+            FullPath = Component.FullPath;
         }
+
+        public new ImmutableList<BackupJob> BackupsI => Component.BackupsI;
 
         [JsonProperty]
         protected BackupJobServiceComponent Component { get; }

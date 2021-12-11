@@ -4,21 +4,23 @@
     "$type": "BackupsExtra.Classes.StorageMethodsExtra.AbstractFileSystemStorageExtra, _5BackupsExtra"
   },
   "BackupsI": {
-    "$type": "System.Collections.Generic.HashSet`1[[BackupsExtra.Classes.BackupJobsExtra.BackupJobExtra, _5BackupsExtra]], System.Private.CoreLib",
+    "$type": "System.Collections.Immutable.ImmutableList`1[[BackupsExtra.Classes.BackupJobsExtra.BackupJobExtra, _5BackupsExtra]], System.Collections.Immutable",
     "$values": []
   },
   "Component": {
     "$type": "Backups.Services.BackupJobService, _3Backups",
-    "BackupsI": {
-      "$type": "System.Collections.Generic.HashSet`1[[Backups.Classes.BackupJobs.BackupJob, _3Backups]], System.Private.CoreLib",
-      "$values": []
-    },
     "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra",
-    "Name": "7",
     "StorageMethod": {
       "$type": "BackupsExtra.Classes.StorageMethodsExtra.AbstractFileSystemStorageExtra, _5BackupsExtra"
-    }
+    },
+    "Name": "7",
+    "BackupsI": {
+      "$type": "System.Collections.Immutable.ImmutableList`1[[Backups.Classes.BackupJobs.BackupJob, _3Backups]], System.Collections.Immutable",
+      "$values": []
+    },
+    "FullPath": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7"
   },
   "Path": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra",
-  "Name": "7"
+  "Name": "7",
+  "FullPath": "/Users/artyomfadeyev/ITMO-PROBLEMS/OOP/III semester/Solutions/_5BackupsExtra/7"
 }

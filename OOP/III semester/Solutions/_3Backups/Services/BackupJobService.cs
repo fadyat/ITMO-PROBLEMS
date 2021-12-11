@@ -12,10 +12,10 @@ namespace Backups.Services
     {
         public BackupJobService(string path, IStorageMethodComponent storageMethod, string name = null)
         {
-            StorageMethod = storageMethod;
-            Backups = new HashSet<BackupJob>();
-            Name = name ?? Guid.NewGuid().ToString();
             Path = path;
+            StorageMethod = storageMethod;
+            Name = name ?? Guid.NewGuid().ToString();
+            Backups = new HashSet<BackupJob>();
             FullPath = StorageMethod.ConstructPath(Path, Name);
             StorageMethod.MakeDirectory(FullPath);
         }
@@ -26,6 +26,7 @@ namespace Backups.Services
             name ??= Guid.NewGuid().ToString();
             var backupJob =
                 new BackupJob(Guid.NewGuid(), FullPath, objects, storageAlgorithm, StorageMethod, name);
+
             Backups.Add(backupJob);
             StorageMethod.MakeDirectory(backupJob.FullPath);
 

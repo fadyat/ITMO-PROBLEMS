@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
@@ -13,16 +13,16 @@ namespace BackupsExtra.Services
 {
     public class BackupExtraJobService : BackupJobServiceDecorator
     {
-        public BackupExtraJobService(BackupJobServiceComponent component, IStorageExtraMethod storageExtraMethod)
+        public BackupExtraJobService(BackupJobServiceComponent component, IStorageExtraMethod storageMethod)
             : base(component)
         {
-            StorageMethod = storageExtraMethod;
+            StorageMethod = storageMethod;
             Backups = new HashSet<BackupJobExtra>();
         }
 
         public new IStorageExtraMethod StorageMethod { get; }
 
-        public new IEnumerable<BackupJobExtra> BackupsI => Backups;
+        public new ImmutableList<BackupJobExtra> BackupsI => Backups.ToImmutableList();
 
         protected new HashSet<BackupJobExtra> Backups { get; }
 
@@ -34,8 +34,6 @@ namespace BackupsExtra.Services
                 new BackupJobExtra(
                     new BackupJob(Guid.NewGuid(), FullPath, objects, storageAlgorithm, StorageMethod, name),
                     StorageMethod);
-
-            var str = backupJob.Path;
 
             Backups.Add(backupJob);
             StorageMethod.MakeDirectory(backupJob.FullPath);
