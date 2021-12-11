@@ -26,15 +26,15 @@ namespace BackupsExtra
                 new BackupJobService(path, new AbstractFileSystemStorageExtra(), "7"),
                 new AbstractFileSystemStorageExtra());
 
-            // BackupJobExtra backup = service.CreateBackup(
-                // new HashSet<IJobObject>
-                // {
-                    // new JobObject("/Users/artyomfadeyev/Documents/a.txt"),
-                    // new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
-                    // new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
-                // },
-                // new SplitStorages(),
-                // "backup");
+            BackupJobExtra backup = service.CreateBackup(
+                new HashSet<IJobObject>
+                {
+                    new JobObject("/Users/artyomfadeyev/Documents/a.txt"),
+                    new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
+                    new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
+                },
+                new SplitStorages(),
+                "backup");
 
             // backup.CreateRestorePoint("1");
             // backup.CreateRestorePoint("2");
@@ -52,6 +52,12 @@ namespace BackupsExtra
             json.Save(service);
             BackupExtraJobService load = json.Load();
             Console.WriteLine(load.FullPath);
+            foreach (var back in load.BackupsI)
+            {
+                Console.Write(back.Name + " ");
+            }
+
+            Console.WriteLine();
         }
     }
 }

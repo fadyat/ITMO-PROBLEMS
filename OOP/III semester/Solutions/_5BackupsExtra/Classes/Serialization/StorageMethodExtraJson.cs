@@ -57,12 +57,6 @@ namespace BackupsExtra.Classes.Serialization
                 service.StorageMethod.MakeDirectory(backup.FullPath);
                 foreach (RestorePoint restorePoint in backup.RestorePoints.ToList())
                 {
-                    if (!backup.StorageMethod.ExistsDirectory(backup.FullPath))
-                        throw new BackupException("This backup wasn't registered!");
-
-                    if (Equals(backup.Objects.ToList().Count, 0))
-                        throw new BackupException("No files for restore point!");
-
                     backup.StorageMethod.MakeDirectory(restorePoint.FullPath);
                     var allRestorePointObjects =
                         restorePoint.StoragesI.SelectMany(storage => storage.JobObjects).ToHashSet();

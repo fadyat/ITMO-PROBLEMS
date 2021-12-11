@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
+using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes.BackupJobsExtra
 {
@@ -19,10 +20,12 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             StorageMethod = Component.StorageMethod;
         }
 
-        public new ImmutableList<IJobObject> Objects => Component.Objects;
+        [JsonIgnore]
+        public new ImmutableList<IJobObject> PublicObjects => Component.PublicObjects;
 
         public new ImmutableList<RestorePoint> RestorePoints => Component.RestorePoints;
 
+        [JsonProperty]
         protected BackupJobComponent Component { get; }
 
         public override void AddJobObject(IJobObject jobObject)

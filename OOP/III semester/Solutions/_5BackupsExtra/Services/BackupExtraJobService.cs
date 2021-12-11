@@ -8,6 +8,7 @@ using Backups.Classes.StorageAlgorithms;
 using Backups.Services;
 using BackupsExtra.Classes.BackupJobsExtra;
 using BackupsExtra.Classes.StorageMethodsExtra;
+using Newtonsoft.Json;
 
 namespace BackupsExtra.Services
 {
@@ -22,9 +23,11 @@ namespace BackupsExtra.Services
 
         public new IStorageExtraMethod StorageMethod { get; }
 
+        [JsonIgnore]
         public new ImmutableList<BackupJobExtra> BackupsI => Backups.ToImmutableList();
 
-        protected new HashSet<BackupJobExtra> Backups { get; }
+        [JsonProperty] // to protected (works with public)
+        public new HashSet<BackupJobExtra> Backups { get; init; }
 
         public new BackupJobExtra CreateBackup(
             IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name = null)

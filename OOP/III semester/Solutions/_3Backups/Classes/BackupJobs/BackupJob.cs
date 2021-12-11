@@ -21,24 +21,24 @@ namespace Backups.Classes.BackupJobs
             string name)
         {
             Id = id;
-            Name = name;
             Path = path;
-            SetObjects = objects.ToHashSet();
-            LinkedRestorePoints = new LinkedList<RestorePoint>();
+            Objects = objects.ToHashSet();
             StorageAlgorithm = storageAlgorithm;
             StorageMethod = storageMethod;
+            Name = name;
+            LinkedRestorePoints = new LinkedList<RestorePoint>();
             FullPath = StorageMethod.ConstructPath(Path, Name);
         }
 
         public override void AddJobObject(IJobObject jobObject)
         {
-            SetObjects.Add(jobObject);
+            Objects.Add(jobObject);
         }
 
         public override void RemoveJobObject(IJobObject jobObject)
         {
             jobObject = GetJobObject(jobObject.Path);
-            SetObjects.Remove(jobObject);
+            Objects.Remove(jobObject);
         }
 
         public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
@@ -58,7 +58,7 @@ namespace Backups.Classes.BackupJobs
 
         private IJobObject GetJobObject(string jobObjectPath)
         {
-            return SetObjects.Single(obj => Equals(obj.Path, jobObjectPath));
+            return Objects.Single(obj => Equals(obj.Path, jobObjectPath));
         }
     }
 }
