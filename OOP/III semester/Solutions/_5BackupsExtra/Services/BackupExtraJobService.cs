@@ -13,10 +13,8 @@ namespace BackupsExtra.Services
 {
     public class BackupExtraJobService : BackupJobServiceDecorator
     {
-        public BackupExtraJobService(
-            BackupJobServiceComponent backupJobService,
-            IStorageExtraMethod storageExtraMethod)
-            : base(backupJobService)
+        public BackupExtraJobService(BackupJobServiceComponent component, IStorageExtraMethod storageExtraMethod)
+            : base(component)
         {
             StorageMethod = storageExtraMethod;
             Backups = new HashSet<BackupJobExtra>();

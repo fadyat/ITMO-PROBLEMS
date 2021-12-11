@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Dynamic;
-using System.Runtime.CompilerServices;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
-using Backups.Classes.StorageAlgorithms;
-using Backups.Classes.StorageMethods;
 
 namespace BackupsExtra.Classes.BackupJobsExtra
 {
@@ -16,12 +11,12 @@ namespace BackupsExtra.Classes.BackupJobsExtra
         protected BackupJobDecorator(BackupJobComponent component)
         {
             Component = component;
-            Id = component.Id;
-            Path = component.Path;
-            Name = component.Name;
-            FullPath = component.FullPath;
-            StorageAlgorithm = component.StorageAlgorithm;
-            StorageMethod = component.StorageMethod;
+            Id = Component.Id;
+            Path = Component.Path;
+            Name = Component.Name;
+            FullPath = Component.FullPath;
+            StorageAlgorithm = Component.StorageAlgorithm;
+            StorageMethod = Component.StorageMethod;
         }
 
         public new ImmutableList<IJobObject> Objects => Component.Objects;

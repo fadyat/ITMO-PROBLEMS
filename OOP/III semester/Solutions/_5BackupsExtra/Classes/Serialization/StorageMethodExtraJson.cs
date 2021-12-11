@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using Backups.Classes.BackupJobs;
 using Backups.Classes.RestorePoints;
 using Backups.Exceptions;
-using Backups.Services;
 using BackupsExtra.Classes.BackupJobsExtra;
 using BackupsExtra.Services;
 using Newtonsoft.Json;
@@ -47,6 +45,7 @@ namespace BackupsExtra.Classes.Serialization
             var settings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented,
             };
 
             string json = File.ReadAllText(JsonPath);

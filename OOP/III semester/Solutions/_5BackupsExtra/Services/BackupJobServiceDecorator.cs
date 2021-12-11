@@ -4,6 +4,7 @@ using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Services;
+using Newtonsoft.Json;
 
 namespace BackupsExtra.Services
 {
@@ -12,12 +13,13 @@ namespace BackupsExtra.Services
         protected BackupJobServiceDecorator(BackupJobServiceComponent component)
         {
             Component = component;
-            Name = component.Name;
-            Path = component.Path;
-            FullPath = component.FullPath;
-            StorageMethod = component.StorageMethod;
+            Name = Component.Name;
+            Path = Component.Path;
+            FullPath = Component.FullPath;
+            StorageMethod = Component.StorageMethod;
         }
 
+        [JsonProperty]
         protected BackupJobServiceComponent Component { get; }
 
         public override BackupJob CreateBackup(
