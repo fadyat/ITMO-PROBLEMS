@@ -33,7 +33,7 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 
                 var updatedStorage = new Storage(lastStorage.Name, newVersion.FullPath, lastStorage.JobObjects);
                 Move(lastStorage.FullPath, updatedStorage.FullPath);
-                addedStorages?.AddFirst(updatedStorage);
+                addedStorages.AddFirst(updatedStorage);
             }
 
             RemoveRestorePoint(lastVersion);

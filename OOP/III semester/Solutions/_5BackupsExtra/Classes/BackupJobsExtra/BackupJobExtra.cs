@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.RestorePoints;
@@ -16,9 +18,28 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             : base(component)
         {
             StorageMethod = storageExtraMethod;
+            LinkedRestorePoints = new LinkedList<RestorePoint>();
         }
 
         public new IStorageExtraMethod StorageMethod { get; }
+
+        private new LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
+
+        public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
+        {
+            /* copied from BackupJob -.- */
+            if (Equals(Objects.Count, 0))
+                throw new BackupException("No files for restore point!");
+
+            name ??= Guid.NewGuid().ToString();
+            string futureRestorePath = System.IO.Path.Combine(FullPath, name);
+            StorageMethod.MakeDirectory(futureRestorePath);
+            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, Objects, StorageMethod);
+            var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
+            LinkedRestorePoints.AddLast(restorePoint);
+
+            return restorePoint;
+        }
 
         public void Clear(ISelection selection)
         {
@@ -31,11 +52,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
                 StorageMethod.RemoveRestorePoint(point);
             }
 
-            LinkedRestorePoints.Clear();
-            foreach (RestorePoint res in result)
-            {
-                LinkedRestorePoints.AddLast(res);
-            }
+            LinkedRestorePoints = result;
         }
 
         public void Merge(ISelection selection)
@@ -43,20 +60,11 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             if (selection.Fetch(LinkedRestorePoints) is not LinkedList<RestorePoint> result || !result.Any())
                 throw new BackupException("Selection size can't be 0");
 
-            // mistake
-            // mistake
-            // mistake
-            // mistake
-            // mistake
-            var toMerge = new List<RestorePoint>();
-            while (result.First() != LinkedRestorePoints.First())
-            {
-                toMerge.Add(LinkedRestorePoints.First());
-                LinkedRestorePoints.RemoveFirst();
-            }
+            var toMerge = LinkedRestorePoints.Except(result)
+                .Reverse()
+                .ToList();
 
-            toMerge.Reverse();
-
+            LinkedRestorePoints = result;
             foreach (RestorePoint point in toMerge)
             {
                 if (StorageMethod.GetType() == typeof(SingleStorage))
@@ -65,10 +73,20 @@ namespace BackupsExtra.Classes.BackupJobsExtra
                     continue;
                 }
 
-                IEnumerable<Storage> addedStorages = StorageMethod.Merge(point, result.First());
                 RestorePoint correctRestorePoint = LinkedRestorePoints.First();
-                var newStorages = correctRestorePoint.StoragesI.Concat(addedStorages) as LinkedList<Storage>;
                 LinkedRestorePoints.RemoveFirst();
+
+                IEnumerable<Storage> addedStorages = StorageMethod.Merge(point, correctRestorePoint);
+                var newStorages = new LinkedList<Storage>();
+                foreach (Storage storage in correctRestorePoint.StoragesI)
+                {
+                    newStorages.AddLast(storage);
+                }
+
+                foreach (Storage storage in addedStorages)
+                {
+                    newStorages.AddLast(storage);
+                }
 
                 var newRestorePoint = new RestorePoint(
                     correctRestorePoint.Path,

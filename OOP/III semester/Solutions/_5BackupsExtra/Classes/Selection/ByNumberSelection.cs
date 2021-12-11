@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Backups.Classes.RestorePoints;
 
@@ -15,11 +16,11 @@ namespace BackupsExtra.Classes.Selection
         public IEnumerable<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
         {
             var result = new LinkedList<RestorePoint>(restorePoints);
-            int toSave = _numberToSave;
-            while (toSave > 0)
+            int toRemove = Math.Max(result.Count - _numberToSave, 0);
+            while (toRemove > 0)
             {
                 result.RemoveFirst();
-                toSave--;
+                toRemove--;
             }
 
             return result;

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Backups.Classes.JobObjects;
 using Newtonsoft.Json;
 
@@ -8,7 +10,7 @@ namespace Backups.Classes.Storages
     {
         public Storage(string storageName, string path, IEnumerable<IJobObject> jobObjects)
         {
-            JobObjects = jobObjects;
+            Objects = jobObjects.ToHashSet();
             Name = storageName;
             Path = path;
             FullPath = System.IO.Path.Combine(path, Name);
@@ -21,6 +23,8 @@ namespace Backups.Classes.Storages
         [JsonIgnore]
         public string FullPath { get; }
 
-        public IEnumerable<IJobObject> JobObjects { get; }
+        public ImmutableList<IJobObject> JobObjects => Objects.ToImmutableList();
+
+        private HashSet<IJobObject> Objects { get; }
     }
 }

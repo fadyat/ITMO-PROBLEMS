@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
@@ -19,9 +20,9 @@ namespace Backups.Classes.BackupJobs
         [JsonIgnore]
         public string FullPath { get; protected init; }
 
-        public IEnumerable<IJobObject> Objects => SetObjects;
+        public ImmutableList<IJobObject> Objects => SetObjects.ToImmutableList();
 
-        public IEnumerable<RestorePoint> RestorePoints => LinkedRestorePoints;
+        public ImmutableList<RestorePoint> RestorePoints => LinkedRestorePoints.ToImmutableList();
 
         public IStorageAlgorithm StorageAlgorithm { get; protected init; }
 

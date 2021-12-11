@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Backups.Classes.BackupJobs;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
-using Backups.Classes.StorageMethods;
 using Backups.Services;
 
 namespace BackupsExtra.Services
@@ -21,7 +20,8 @@ namespace BackupsExtra.Services
 
         protected BackupJobServiceComponent Component { get; }
 
-        public override BackupJob CreateBackup(IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name)
+        public override BackupJob CreateBackup(
+            IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name = null)
         {
             return Component.CreateBackup(objects, storageAlgorithm, name);
         }

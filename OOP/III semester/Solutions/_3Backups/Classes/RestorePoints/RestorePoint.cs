@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Backups.Classes.Storages;
 using Newtonsoft.Json;
 
@@ -25,8 +26,8 @@ namespace Backups.Classes.RestorePoints
 
         public DateTime CreationDate { get; }
 
-        public IEnumerable<Storage> StoragesI => Storages;
+        public ImmutableList<Storage> StoragesI => Storages.ToImmutableList();
 
-        protected LinkedList<Storage> Storages { get; }
+        private LinkedList<Storage> Storages { get; }
     }
 }
