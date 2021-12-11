@@ -5,7 +5,7 @@ using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
-    public class AbstractFileSystemStorage : IStorageMethod
+    public class AbstractFileSystemStorage : IStorageMethodComponent
     {
         public AbstractFileSystemStorage()
         {

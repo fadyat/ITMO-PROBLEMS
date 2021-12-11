@@ -2,7 +2,7 @@ using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
-    public interface IStorageMethod
+    public interface IStorageMethodComponent
     {
         string ConstructPath(string path, string name);
 

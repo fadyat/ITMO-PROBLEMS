@@ -8,31 +8,19 @@ using Backups.Classes.StorageMethods;
 
 namespace Backups.Services
 {
-    public class BackupJobService : IBackupJobService
+    public class BackupJobService : BackupJobServiceComponent
     {
-        public BackupJobService(string path, IStorageMethod storageMethod, string name = null)
+        public BackupJobService(string path, IStorageMethodComponent storageMethod, string name = null)
         {
             StorageMethod = storageMethod;
-            Backups = new HashSet<IBackupJob>();
+            Backups = new HashSet<BackupJob>();
             Name = name ?? Guid.NewGuid().ToString();
             Path = path;
             FullPath = StorageMethod.ConstructPath(Path, Name);
             StorageMethod.MakeDirectory(FullPath);
         }
 
-        public IEnumerable<IBackupJob> BackupsI => Backups;
-
-        public string Path { get; }
-
-        public string Name { get; }
-
-        public string FullPath { get; }
-
-        public IStorageMethod StorageMethod { get; }
-
-        private HashSet<IBackupJob> Backups { get; }
-
-        public IBackupJob CreateBackup(
+        public override BackupJob CreateBackup(
             IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name = null)
         {
             name ??= Guid.NewGuid().ToString();
@@ -44,7 +32,7 @@ namespace Backups.Services
             return backupJob;
         }
 
-        public IBackupJob GetBackup(Guid id)
+        public override BackupJob GetBackup(Guid id)
         {
             return Backups.Single(b => Equals(b.Id, id));
         }

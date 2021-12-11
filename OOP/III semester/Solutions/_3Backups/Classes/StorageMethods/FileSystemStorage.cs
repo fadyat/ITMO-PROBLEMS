@@ -5,7 +5,7 @@ using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
-    public class FileSystemStorage : IStorageMethod
+    public class FileSystemStorage : IStorageMethodComponent
     {
         public string ConstructPath(string path, string name)
         {

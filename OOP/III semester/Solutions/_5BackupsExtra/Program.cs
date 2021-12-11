@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using Backups.Classes.JobObjects;
-using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
+using Backups.Services;
 using BackupsExtra.Classes.BackupJobsExtra;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.Serialization;
@@ -16,72 +16,43 @@ namespace BackupsExtra
     {
         private static void Main()
         {
-            string position = Directory.GetParent(Directory.GetCurrentDirectory())?
+            string path = Directory.GetParent(Directory.GetCurrentDirectory())?
                 .Parent?
                 .Parent?
                 .FullName;
 
-            if (position == null) return;
-            var backupJobService = new BackupExtraJobService(position, new FileSystemStorageExtra());
+            var service = new BackupExtraJobService(
+                new BackupJobService(path, new FileSystemStorageExtra()),
+                new FileSystemStorageExtra());
 
-            var backup = new BackupJobExtra(
-                backupJobService.FullPath,
+            BackupJobExtra backup = service.CreateBackup(
                 new HashSet<IJobObject>
                 {
                     new JobObject("/Users/artyomfadeyev/Documents/a.txt"),
                     new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
                     new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
                 },
-                new SplitStorages(),
-                backupJobService.StorageMethod);
+                new SplitStorages());
 
-            backupJobService.CreateBackup(backup);
-            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
-            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/a.txt"));
-            backup.CreateRestorePoint(new RestorePoint(backup.FullPath));
+            backup.CreateRestorePoint();
+            backup.CreateRestorePoint();
+            backup.CreateRestorePoint();
 
-            foreach (var rp in backup.RestorePoints)
-            {
-                rp.Print();
-                foreach (var st in rp.StoragesI)
-                {
-                    Console.Write(st.Name + " ");
-                }
+            backup.Clear(new ByNumberSelection(2));
+            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/c.txt"));
+            backup.CreateRestorePoint();
+            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/b.txt"));
+            backup.CreateRestorePoint();
+            backup.AddJobObject(new JobObject("/Users/artyomfadeyev/Documents/d.txt"));
+            backup.CreateRestorePoint();
 
-                Console.WriteLine();
-            }
+            backup.Merge(new ByNumberSelection(3));
 
-            Console.WriteLine();
-            backup.Merge(new ByNumberSelection(1));
+            // var json = new StorageMethodExtraJson(path);
 
-            foreach (var rp in backup.RestorePoints)
-            {
-                rp.Print();
-                foreach (var st in rp.StoragesI)
-                {
-                    Console.Write(st.Name + " ");
-                }
-
-                Console.WriteLine();
-            }
-
-            // var fix = new StorageMethodExtraJson(position);
-            // fix.Save(backupJobService);
-            // IBackupJobService b = fix.Load();
-            // Console.WriteLine(b.Backups == null);
-            // Console.WriteLine(b.Path);
-            /*
-//             BackupJob b1 = b.CreateBackup(
-//                 new HashSet<JobObject>()
-//                 {
-//                     new ("Users/artyomfadeyev/Documents/a.txt"),
-//                     new ("Users/artyomfadeyev/Documents/b.txt"),
-//                     new ("Users/artyomfadeyev/Documents/c.txt"),
-//                 },
-//                 new SplitStorages(),
-//                 "lol1");
-//
-//             b1.CreateRestorePoint();*/
+            // json.Save(service);
+            // BackupExtraJobService load = json.Load();
+            // Console.WriteLine(load.FullPath);
         }
     }
 }

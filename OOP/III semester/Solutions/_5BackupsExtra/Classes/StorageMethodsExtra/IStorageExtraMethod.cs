@@ -1,13 +1,15 @@
+using System.Collections.Generic;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageMethods;
+using Backups.Classes.Storages;
 
 namespace BackupsExtra.Classes.StorageMethodsExtra
 {
-    public interface IStorageExtraMethod : IStorageMethod
+    public interface IStorageExtraMethod : IStorageMethodComponent
     {
-        void RemoveRestorePoint(IRestorePoint restorePoint);
+        void RemoveRestorePoint(RestorePoint restorePoint);
 
-        void Merge(IRestorePoint lastVersion, IRestorePoint newVersion);
+        IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion);
 
         void Move(string from, string too);
     }

@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Backups.Classes.Storages;
+using Newtonsoft.Json;
 
 namespace Backups.Classes.RestorePoints
 {
     public class RestorePoint
     {
-        private readonly List<Storage> _storages;
-
-        public RestorePoint(string path, List<Storage> storages, string name, DateTime dateTime)
+        public RestorePoint(string path, LinkedList<Storage> storages, string name, DateTime dateTime)
         {
-            _storages = storages;
+            Storages = storages;
             Path = path;
             Name = name;
             CreationDate = dateTime;
@@ -21,10 +20,13 @@ namespace Backups.Classes.RestorePoints
 
         public string Path { get; }
 
+        [JsonIgnore]
         public string FullPath { get; }
 
         public DateTime CreationDate { get; }
 
-        public IEnumerable<Storage> StoragesI => _storages;
+        public IEnumerable<Storage> StoragesI => Storages;
+
+        protected LinkedList<Storage> Storages { get; }
     }
 }

@@ -8,19 +8,20 @@ namespace Backups.Classes.StorageAlgorithms
 {
     public class SplitStorages : IStorageAlgorithm
     {
-        public List<Storage> CreateStorages(string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
+        public LinkedList<Storage> CreateStorages(
+            string path, IEnumerable<IJobObject> objects, IStorageMethodComponent storageMethod)
         {
-            var list = new List<Storage>();
+            var linked = new LinkedList<Storage>();
 
             foreach (IJobObject jobObject in objects)
             {
                 string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
                 var storage = new Storage(fileName + ".zip", path, new List<IJobObject> { jobObject });
                 storageMethod.Archive(storage);
-                list.Add(storage);
+                linked.AddLast(storage);
             }
 
-            return list;
+            return linked;
         }
     }
 }

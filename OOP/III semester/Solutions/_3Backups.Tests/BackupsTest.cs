@@ -17,7 +17,7 @@ namespace Backups.Tests
     {
         private BackupJobService _backupJobService;
         private string _position;
-        private IStorageMethod _fileSystemStorage;
+        private IStorageMethodComponent _fileSystemStorage;
         private HashSet<IJobObject> _standardFiles;
 
         [SetUp]
@@ -45,7 +45,7 @@ namespace Backups.Tests
         [Test]
         public void BackupCreationSplitStorages()
         {
-            IBackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
+            BackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
 
             Assert.True(_fileSystemStorage.ExistsDirectory(backupJob1.FullPath));
             Assert.AreEqual(_standardFiles.Count, backupJob1.Objects.ToList().Count);
@@ -54,7 +54,7 @@ namespace Backups.Tests
         [Test]
         public void BackupCreationSingleStorage()
         {
-            IBackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
+            BackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
 
             Assert.True(_fileSystemStorage.ExistsDirectory(backupJob2.FullPath));
             Assert.AreEqual(_standardFiles.Count, backupJob2.Objects.ToList().Count);
@@ -63,7 +63,7 @@ namespace Backups.Tests
         [Test]
         public void RestorePointCreationSplitStorages()
         {
-            IBackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
+            BackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
             RestorePoint b1P1 = backupJob1.CreateRestorePoint();
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.FullPath));
             Assert.AreEqual(backupJob1.Objects.ToList().Count, b1P1.StoragesI.ToList().Count);
@@ -76,7 +76,7 @@ namespace Backups.Tests
         [Test]
         public void RestorePointCreationSingleStorage()
         {
-            IBackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
+            BackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
             RestorePoint b2P1 = backupJob2.CreateRestorePoint();
 
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.FullPath));
@@ -90,7 +90,7 @@ namespace Backups.Tests
         [Test]
         public void BackupOperationsSplitStorages()
         {
-            IBackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
+            BackupJob backupJob1 = _backupJobService.CreateBackup(_standardFiles, new SplitStorages());
             RestorePoint b1P1 = backupJob1.CreateRestorePoint();
             Assert.True(_fileSystemStorage.ExistsDirectory(b1P1.FullPath));
 
@@ -123,7 +123,7 @@ namespace Backups.Tests
         [Test]
         public void BackupOperationsSingleStorage()
         {
-            IBackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
+            BackupJob backupJob2 = _backupJobService.CreateBackup(_standardFiles, new SingleStorage());
             RestorePoint b2P1 = backupJob2.CreateRestorePoint();
             Assert.True(_fileSystemStorage.ExistsDirectory(b2P1.FullPath));
 

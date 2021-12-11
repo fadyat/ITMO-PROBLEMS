@@ -12,9 +12,9 @@ namespace BackupsExtra.Classes.Selection
             _numberToSave = numberToSave;
         }
 
-        public IEnumerable<IRestorePoint> Fetch(LinkedList<IRestorePoint> restorePoints)
+        public IEnumerable<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
         {
-            var result = new LinkedList<IRestorePoint>(restorePoints);
+            var result = new LinkedList<RestorePoint>(restorePoints);
             int toSave = _numberToSave;
             while (toSave > 0)
             {

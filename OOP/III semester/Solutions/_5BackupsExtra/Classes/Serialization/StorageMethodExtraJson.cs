@@ -5,6 +5,8 @@ using Backups.Classes.BackupJobs;
 using Backups.Classes.RestorePoints;
 using Backups.Exceptions;
 using Backups.Services;
+using BackupsExtra.Classes.BackupJobsExtra;
+using BackupsExtra.Services;
 using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes.Serialization
@@ -23,20 +25,21 @@ namespace BackupsExtra.Classes.Serialization
 
         private string JsonPath { get; }
 
-        public void Save(IBackupJobService backupJobService)
+        public void Save(BackupExtraJobService backupJobService)
         {
             var settings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented,
             };
 
-            string json = JsonConvert.SerializeObject(backupJobService, Formatting.Indented, settings);
+            string json = JsonConvert.SerializeObject(backupJobService, settings);
 
             using var sw = new StreamWriter(JsonPath, false, System.Text.Encoding.Default);
             sw.WriteLine(json);
         }
 
-        public IBackupJobService Load()
+        public BackupExtraJobService Load()
         {
             var fileInfo = new FileInfo(JsonPath);
             if (fileInfo.Length == 0) return null;
@@ -48,12 +51,12 @@ namespace BackupsExtra.Classes.Serialization
 
             string json = File.ReadAllText(JsonPath);
 
-            if (JsonConvert.DeserializeObject(json, settings) is not IBackupJobService service) return null;
+            if (JsonConvert.DeserializeObject(json, settings) is not BackupExtraJobService service) return null;
 
-            foreach (IBackupJob backup in service.BackupsI.ToList())
+            foreach (BackupJobExtra backup in service.BackupsI.ToList())
             {
                 service.StorageMethod.MakeDirectory(backup.FullPath);
-                foreach (IRestorePoint restorePoint in backup.RestorePoints.ToList())
+                foreach (RestorePoint restorePoint in backup.RestorePoints.ToList())
                 {
                     if (!backup.StorageMethod.ExistsDirectory(backup.FullPath))
                         throw new BackupException("This backup wasn't registered!");

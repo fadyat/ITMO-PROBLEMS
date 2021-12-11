@@ -10,14 +10,14 @@ using Backups.Exceptions;
 
 namespace Backups.Classes.BackupJobs
 {
-    public class BackupJob : IBackupJob
+    public class BackupJob : BackupJobComponent
     {
         public BackupJob(
             Guid id,
             string path,
             IEnumerable<IJobObject> objects,
             IStorageAlgorithm storageAlgorithm,
-            IStorageMethod storageMethod,
+            IStorageMethodComponent storageMethod,
             string name)
         {
             Id = id;
@@ -30,38 +30,18 @@ namespace Backups.Classes.BackupJobs
             FullPath = StorageMethod.ConstructPath(Path, Name);
         }
 
-        public Guid Id { get; }
-
-        public string Path { get; }
-
-        public string Name { get; }
-
-        public string FullPath { get; }
-
-        public IEnumerable<IJobObject> Objects => SetObjects;
-
-        public IEnumerable<RestorePoint> RestorePoints => LinkedRestorePoints;
-
-        public IStorageAlgorithm StorageAlgorithm { get; }
-
-        public IStorageMethod StorageMethod { get; }
-
-        protected LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
-
-        protected HashSet<IJobObject> SetObjects { get; set; }
-
-        public void AddJobObject(IJobObject jobObject)
+        public override void AddJobObject(IJobObject jobObject)
         {
             SetObjects.Add(jobObject);
         }
 
-        public void RemoveJobObject(IJobObject jobObject)
+        public override void RemoveJobObject(IJobObject jobObject)
         {
             jobObject = GetJobObject(jobObject.Path);
             SetObjects.Remove(jobObject);
         }
 
-        public RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
+        public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
             if (Equals(SetObjects.Count, 0))
                 throw new BackupException("No files for restore point!");
@@ -69,7 +49,7 @@ namespace Backups.Classes.BackupJobs
             name ??= Guid.NewGuid().ToString();
             string futureRestorePath = System.IO.Path.Combine(FullPath, name);
             StorageMethod.MakeDirectory(futureRestorePath);
-            List<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, SetObjects, StorageMethod);
+            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, SetObjects, StorageMethod);
             var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
             LinkedRestorePoints.AddLast(restorePoint);
 

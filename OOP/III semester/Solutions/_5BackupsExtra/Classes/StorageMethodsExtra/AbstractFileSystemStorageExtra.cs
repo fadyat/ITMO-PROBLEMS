@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageMethods;
 using Backups.Classes.Storages;
@@ -8,7 +7,7 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 {
     public class AbstractFileSystemStorageExtra : AbstractFileSystemStorage, IStorageExtraMethod
     {
-        public void RemoveRestorePoint(IRestorePoint restorePoint)
+        public void RemoveRestorePoint(RestorePoint restorePoint)
         {
             foreach (Storage storages in restorePoint.StoragesI)
             {
@@ -18,7 +17,7 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
             PathDirectories.Remove(restorePoint.FullPath);
         }
 
-        public void Merge(IRestorePoint lastVersion, IRestorePoint newVersion)
+        public IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion)
         {
             var newVersionNames = new HashSet<string>();
             foreach (Storage storage in newVersion.StoragesI)
@@ -26,16 +25,18 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
                 newVersionNames.Add(storage.Name);
             }
 
+            var addedStorages = new LinkedList<Storage>();
             foreach (Storage lastStorage in lastVersion.StoragesI)
             {
                 if (newVersionNames.Contains(lastStorage.Name)) continue;
 
                 var updatedStorage = new Storage(lastStorage.Name, newVersion.FullPath, lastStorage.JobObjects);
                 Move(lastStorage.FullPath, updatedStorage.FullPath);
-                newVersion.AddStorage(updatedStorage);
+                addedStorages?.AddFirst(updatedStorage);
             }
 
             RemoveRestorePoint(lastVersion);
+            return addedStorages;
         }
 
         public void Move(string from, string too)
