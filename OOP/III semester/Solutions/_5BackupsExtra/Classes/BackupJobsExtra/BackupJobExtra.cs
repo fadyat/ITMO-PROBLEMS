@@ -9,32 +9,37 @@ using Backups.Classes.Storages;
 using Backups.Exceptions;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.StorageMethodsExtra;
+using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes.BackupJobsExtra
 {
     public class BackupJobExtra : BackupJobDecorator
     {
-        public BackupJobExtra(BackupJobComponent component, IStorageExtraMethod storageExtraMethod)
+        public BackupJobExtra(BackupJobComponent component, IStorageExtraMethod storageMethod)
             : base(component)
         {
-            StorageMethod = storageExtraMethod;
+            StorageMethod = storageMethod;
             LinkedRestorePoints = new LinkedList<RestorePoint>();
         }
 
         public new IStorageExtraMethod StorageMethod { get; }
 
-        private new LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
+        [JsonIgnore]
+        public new ImmutableList<RestorePoint> RestorePoints => LinkedRestorePoints.ToImmutableList();
+
+        [JsonProperty] // to protected field
+        public new LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
 
         public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
             /* copied from BackupJob -.- */
-            if (Equals(Objects.Count, 0))
+            if (Equals(PublicObjects.Count, 0))
                 throw new BackupException("No files for restore point!");
 
             name ??= Guid.NewGuid().ToString();
             string futureRestorePath = System.IO.Path.Combine(FullPath, name);
             StorageMethod.MakeDirectory(futureRestorePath);
-            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, Objects, StorageMethod);
+            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, PublicObjects, StorageMethod);
             var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
             LinkedRestorePoints.AddLast(restorePoint);
 
@@ -78,7 +83,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
                 IEnumerable<Storage> addedStorages = StorageMethod.Merge(point, correctRestorePoint);
                 var newStorages = new LinkedList<Storage>();
-                foreach (Storage storage in correctRestorePoint.StoragesI)
+                foreach (Storage storage in correctRestorePoint.PublicStorages)
                 {
                     newStorages.AddLast(storage);
                 }

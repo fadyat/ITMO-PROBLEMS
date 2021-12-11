@@ -33,8 +33,10 @@ namespace Backups.Classes.BackupJobs
         [JsonIgnore]
         public ImmutableList<IJobObject> PublicObjects => Objects.ToImmutableList();
 
+        [JsonIgnore]
         public ImmutableList<RestorePoint> RestorePoints => LinkedRestorePoints.ToImmutableList();
 
+        [JsonProperty]
         protected LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
 
         public abstract void AddJobObject(IJobObject jobObject);

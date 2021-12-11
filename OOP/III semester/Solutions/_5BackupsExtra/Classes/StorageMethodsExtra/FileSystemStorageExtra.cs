@@ -10,7 +10,7 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
     {
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {
-            foreach (Storage storages in restorePoint.StoragesI)
+            foreach (Storage storages in restorePoint.PublicStorages)
             {
                 File.Delete(storages.FullPath);
             }
@@ -21,13 +21,13 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
         public IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion)
         {
             var newVersionNames = new HashSet<string>();
-            foreach (Storage storage in newVersion.StoragesI)
+            foreach (Storage storage in newVersion.PublicStorages)
             {
                 newVersionNames.Add(storage.Name);
             }
 
             var addedStorages = new LinkedList<Storage>();
-            foreach (Storage lastStorage in lastVersion.StoragesI)
+            foreach (Storage lastStorage in lastVersion.PublicStorages)
             {
                 if (newVersionNames.Contains(lastStorage.Name)) continue;
 

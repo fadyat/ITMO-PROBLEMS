@@ -23,6 +23,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
         [JsonIgnore]
         public new ImmutableList<IJobObject> PublicObjects => Component.PublicObjects;
 
+        [JsonIgnore]
         public new ImmutableList<RestorePoint> RestorePoints => Component.RestorePoints;
 
         [JsonProperty]

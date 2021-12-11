@@ -21,10 +21,10 @@ namespace BackupsExtra
                 .Parent?
                 .Parent?
                 .FullName;
-
+/*
             var service = new BackupExtraJobService(
-                new BackupJobService(path, new AbstractFileSystemStorageExtra(), "7"),
-                new AbstractFileSystemStorageExtra());
+                new BackupJobService(path, new FileSystemStorageExtra(), "7"),
+                new FileSystemStorageExtra());
 
             BackupJobExtra backup = service.CreateBackup(
                 new HashSet<IJobObject>
@@ -36,25 +36,28 @@ namespace BackupsExtra
                 new SplitStorages(),
                 "backup");
 
-            // backup.CreateRestorePoint("1");
-            // backup.CreateRestorePoint("2");
-            // backup.CreateRestorePoint("3");
-            // backup.Clear(new ByNumberSelection(2));
-            // backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/c.txt"));
-            // backup.CreateRestorePoint("4");
-            // backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/b.txt"));
-            // backup.CreateRestorePoint("5");
-            // backup.AddJobObject(new JobObject("/Users/artyomfadeyev/Documents/d.txt"));
-            // backup.CreateRestorePoint("6");
+            backup.CreateRestorePoint("1");
 
-            // backup.Merge(new ByNumberSelection(1));
+            backup.CreateRestorePoint("2");
+            backup.CreateRestorePoint("3");
+            backup.Clear(new ByNumberSelection(2));
+            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/c.txt"));
+            backup.CreateRestorePoint("4");
+            backup.RemoveJobObject(new JobObject("/Users/artyomfadeyev/Documents/b.txt"));
+            backup.CreateRestorePoint("5");
+            backup.AddJobObject(new JobObject("/Users/artyomfadeyev/Documents/d.txt"));
+            backup.CreateRestorePoint("6");
+
+            // backup.Merge(new ByNumberSelection(1));*/
             var json = new StorageMethodExtraJson(path);
-            json.Save(service);
+
+            // json.Save(service);
             BackupExtraJobService load = json.Load();
+
             Console.WriteLine(load.FullPath);
-            foreach (var back in load.BackupsI)
+            foreach (BackupJobExtra back in load.BackupsI)
             {
-                Console.Write(back.Name + " ");
+                Console.Write(back.Name + " " + back.RestorePoints.Count);
             }
 
             Console.WriteLine();

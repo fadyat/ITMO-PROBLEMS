@@ -59,7 +59,7 @@ namespace BackupsExtra.Classes.Serialization
                 {
                     backup.StorageMethod.MakeDirectory(restorePoint.FullPath);
                     var allRestorePointObjects =
-                        restorePoint.StoragesI.SelectMany(storage => storage.JobObjects).ToHashSet();
+                        restorePoint.PublicStorages.SelectMany(storage => storage.JobObjects).ToHashSet();
 
                     backup.StorageAlgorithm.CreateStorages(
                         restorePoint.FullPath,

@@ -8,10 +8,10 @@ namespace Backups.Classes.Storages
 {
     public class Storage
     {
-        public Storage(string storageName, string path, IEnumerable<IJobObject> jobObjects)
+        public Storage(string name, string path, IEnumerable<IJobObject> objects)
         {
-            Objects = jobObjects.ToHashSet();
-            Name = storageName;
+            Objects = objects.ToHashSet();
+            Name = name;
             Path = path;
             FullPath = System.IO.Path.Combine(path, Name);
         }
@@ -20,11 +20,12 @@ namespace Backups.Classes.Storages
 
         public string Path { get; }
 
-        [JsonIgnore]
         public string FullPath { get; }
 
+        [JsonIgnore]
         public ImmutableList<IJobObject> JobObjects => Objects.ToImmutableList();
 
+        [JsonProperty]
         private HashSet<IJobObject> Objects { get; }
     }
 }

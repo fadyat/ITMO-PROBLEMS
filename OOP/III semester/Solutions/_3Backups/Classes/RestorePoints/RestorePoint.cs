@@ -8,12 +8,12 @@ namespace Backups.Classes.RestorePoints
 {
     public class RestorePoint
     {
-        public RestorePoint(string path, LinkedList<Storage> storages, string name, DateTime dateTime)
+        public RestorePoint(string path, LinkedList<Storage> storages, string name, DateTime creationDate)
         {
             Storages = storages;
             Path = path;
             Name = name;
-            CreationDate = dateTime;
+            CreationDate = creationDate;
             FullPath = System.IO.Path.Combine(Path, Name);
         }
 
@@ -21,13 +21,14 @@ namespace Backups.Classes.RestorePoints
 
         public string Path { get; }
 
-        [JsonIgnore]
         public string FullPath { get; }
 
         public DateTime CreationDate { get; }
 
-        public ImmutableList<Storage> StoragesI => Storages.ToImmutableList();
+        [JsonIgnore]
+        public ImmutableList<Storage> PublicStorages => Storages.ToImmutableList();
 
+        [JsonProperty]
         private LinkedList<Storage> Storages { get; }
     }
 }

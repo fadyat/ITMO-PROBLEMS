@@ -43,13 +43,13 @@ namespace Backups.Classes.BackupJobs
 
         public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
-            if (Equals(Objects.Count, 0))
+            if (Equals(PublicObjects.Count, 0))
                 throw new BackupException("No files for restore point!");
 
             name ??= Guid.NewGuid().ToString();
             string futureRestorePath = System.IO.Path.Combine(FullPath, name);
             StorageMethod.MakeDirectory(futureRestorePath);
-            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, Objects, StorageMethod);
+            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, PublicObjects, StorageMethod);
             var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
             LinkedRestorePoints.AddLast(restorePoint);
 
