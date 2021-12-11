@@ -9,7 +9,7 @@ namespace Backups.Classes.StorageAlgorithms
     public class SingleStorage : IStorageAlgorithm
     {
         public LinkedList<Storage> CreateStorages(
-            string path, IEnumerable<IJobObject> objects, IStorageMethodComponent storageMethod)
+            string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
             IEnumerable<IJobObject> jobObjects = objects.ToList();
             var storage = new Storage("Single.zip", path, jobObjects);

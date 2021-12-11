@@ -2,7 +2,7 @@ using BackupsExtra.Services;
 
 namespace BackupsExtra.Classes.Serialization
 {
-    public interface IStorageMethodExtra
+    public interface ISerialize
     {
         void Save(BackupExtraJobService backupJobService);
 

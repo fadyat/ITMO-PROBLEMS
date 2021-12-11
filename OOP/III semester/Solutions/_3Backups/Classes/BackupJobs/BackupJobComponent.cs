@@ -23,7 +23,7 @@ namespace Backups.Classes.BackupJobs
         public IStorageAlgorithm StorageAlgorithm { get; protected init; }
 #pragma warning restore SA1202
 
-        public IStorageMethodComponent StorageMethod { get; protected init; }
+        public IStorageMethod StorageMethod { get; protected init; }
 
         public string Name { get; protected init; }
         /* ---- */

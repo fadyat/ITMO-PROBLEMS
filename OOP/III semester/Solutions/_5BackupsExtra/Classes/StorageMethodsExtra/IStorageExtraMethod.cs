@@ -5,7 +5,7 @@ using Backups.Classes.Storages;
 
 namespace BackupsExtra.Classes.StorageMethodsExtra
 {
-    public interface IStorageExtraMethod : IStorageMethodComponent
+    public interface IStorageExtraMethod : IStorageMethod
     {
         void RemoveRestorePoint(RestorePoint restorePoint);
 

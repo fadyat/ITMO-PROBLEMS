@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace BackupsExtra.Classes.Serialization
 {
-    public class StorageMethodExtraJson : IStorageMethodExtra
+    public class StorageMethodExtraJson : ISerialize
     {
         public StorageMethodExtraJson(string path)
         {

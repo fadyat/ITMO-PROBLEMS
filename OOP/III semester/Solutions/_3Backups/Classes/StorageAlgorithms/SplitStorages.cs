@@ -9,7 +9,7 @@ namespace Backups.Classes.StorageAlgorithms
     public class SplitStorages : IStorageAlgorithm
     {
         public LinkedList<Storage> CreateStorages(
-            string path, IEnumerable<IJobObject> objects, IStorageMethodComponent storageMethod)
+            string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
             var linked = new LinkedList<Storage>();
 

@@ -9,11 +9,6 @@ namespace BackupsExtra.Classes.Selection
         private readonly List<ISelection> _clearAlgorithms;
         private readonly bool _unite;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HybridSelection"/> class.
-        /// </summary>
-        /// <param name="clearAlgorithms"> List of clear algorithms that will used. </param>
-        /// <param name="unite"> Need to delete restore point if she incorrect in all algorithms. </param>
         public HybridSelection(List<ISelection> clearAlgorithms, bool unite)
         {
             _clearAlgorithms = clearAlgorithms;

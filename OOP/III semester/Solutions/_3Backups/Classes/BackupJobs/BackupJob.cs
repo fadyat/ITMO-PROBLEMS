@@ -17,7 +17,7 @@ namespace Backups.Classes.BackupJobs
             string path,
             IEnumerable<IJobObject> objects,
             IStorageAlgorithm storageAlgorithm,
-            IStorageMethodComponent storageMethod,
+            IStorageMethod storageMethod,
             string name)
         {
             Id = id;

@@ -10,7 +10,7 @@ namespace Backups.Services
 {
     public class BackupJobService : BackupJobServiceComponent
     {
-        public BackupJobService(string path, IStorageMethodComponent storageMethod, string name = null)
+        public BackupJobService(string path, IStorageMethod storageMethod, string name = null)
         {
             Path = path;
             StorageMethod = storageMethod;

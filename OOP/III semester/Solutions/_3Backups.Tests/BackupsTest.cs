@@ -17,7 +17,7 @@ namespace Backups.Tests
     {
         private BackupJobService _backupJobService;
         private string _position;
-        private IStorageMethodComponent _fileSystemStorage;
+        private IStorageMethod _fileSystemStorage;
         private HashSet<IJobObject> _standardFiles;
 
         [SetUp]

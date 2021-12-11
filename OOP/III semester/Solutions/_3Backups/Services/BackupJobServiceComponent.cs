@@ -14,7 +14,7 @@ namespace Backups.Services
         /* for json constructor */
         public string Path { get; protected init; }
 
-        public IStorageMethodComponent StorageMethod { get; protected init; }
+        public IStorageMethod StorageMethod { get; protected init; }
 
         public string Name { get; protected init; }
         /* ---- */
