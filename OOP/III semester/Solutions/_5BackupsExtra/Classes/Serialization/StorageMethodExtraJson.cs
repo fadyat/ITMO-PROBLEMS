@@ -15,10 +15,10 @@ namespace BackupsExtra.Classes.Serialization
         {
             JsonPath = Path.Combine(path, "backupInfo.json");
 
-            if (File.Exists(JsonPath)) return;
-
-            Console.WriteLine(JsonPath);
-            File.Create(JsonPath);
+            if (!File.Exists(JsonPath))
+            {
+                File.Create(JsonPath);
+            }
         }
 
         private string JsonPath { get; }
