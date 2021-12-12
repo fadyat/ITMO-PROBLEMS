@@ -7,6 +7,7 @@ using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Services;
 using BackupsExtra.Classes.BackupJobsExtra;
+using BackupsExtra.Classes.BackupLogs;
 using BackupsExtra.Classes.StorageMethodsExtra;
 using Newtonsoft.Json;
 
@@ -27,16 +28,20 @@ namespace BackupsExtra.Services
         public new ImmutableList<BackupJobExtra> BackupsI => Backups.ToImmutableList();
 
         [JsonProperty] // to protected (works with public)
-        public new HashSet<BackupJobExtra> Backups { get; init; }
+        protected new HashSet<BackupJobExtra> Backups { get; init; }
 
-        public new BackupJobExtra CreateBackup(
-            IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name = null)
+        public BackupJobExtra CreateBackup(
+            IEnumerable<IJobObject> objects,
+            IStorageAlgorithm storageAlgorithm,
+            IMyLogger myLogger,
+            string name = null)
         {
             name ??= Guid.NewGuid().ToString();
             var backupJob =
                 new BackupJobExtra(
                     new BackupJob(Guid.NewGuid(), FullPath, objects, storageAlgorithm, StorageMethod, name),
-                    StorageMethod);
+                    StorageMethod,
+                    myLogger);
 
             Backups.Add(backupJob);
             StorageMethod.MakeDirectory(backupJob.FullPath);

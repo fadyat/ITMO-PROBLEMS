@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Backups.Classes.BackupJobs;
+using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.Storages;
 using Backups.Exceptions;
+using BackupsExtra.Classes.BackupLogs;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.StorageMethodsExtra;
 using Newtonsoft.Json;
@@ -15,20 +17,36 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 {
     public class BackupJobExtra : BackupJobDecorator
     {
-        public BackupJobExtra(BackupJobComponent component, IStorageExtraMethod storageMethod)
+        public BackupJobExtra(BackupJobComponent component, IStorageExtraMethod storageMethod, IMyLogger myLogger)
             : base(component)
         {
             StorageMethod = storageMethod;
+            MyLogger = myLogger;
             LinkedRestorePoints = new LinkedList<RestorePoint>();
+            MyLogger.Info("BackupExtraJob was created!");
         }
 
         public new IStorageExtraMethod StorageMethod { get; }
+
+        public IMyLogger MyLogger { get; }
 
         [JsonIgnore]
         public new ImmutableList<RestorePoint> RestorePoints => LinkedRestorePoints.ToImmutableList();
 
         [JsonProperty] // to protected field
         public new LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
+
+        public override void AddJobObject(IJobObject jobObject)
+        {
+            base.AddJobObject(jobObject);
+            MyLogger.Info("Add new jobObject!");
+        }
+
+        public override void RemoveJobObject(IJobObject jobObject)
+        {
+            base.RemoveJobObject(jobObject);
+            MyLogger.Info("Remove jobObject!");
+        }
 
         public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
@@ -39,10 +57,12 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             name ??= Guid.NewGuid().ToString();
             string futureRestorePath = System.IO.Path.Combine(FullPath, name);
             StorageMethod.MakeDirectory(futureRestorePath);
-            LinkedList<Storage> storages = StorageAlgorithm.CreateStorages(futureRestorePath, PublicObjects, StorageMethod);
+            LinkedList<Storage> storages =
+                StorageAlgorithm.CreateStorages(futureRestorePath, PublicObjects, StorageMethod);
             var restorePoint = new RestorePoint(FullPath, storages, name, dateTime);
             LinkedRestorePoints.AddLast(restorePoint);
 
+            MyLogger.Info($"Restore point was created with {storages.Count} storages!");
             return restorePoint;
         }
 
@@ -58,6 +78,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             }
 
             LinkedRestorePoints = result;
+            MyLogger.Info("Cleared restore points by selection!");
         }
 
         public void Merge(ISelection selection)
@@ -101,6 +122,8 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
                 LinkedRestorePoints.AddFirst(newRestorePoint);
             }
+
+            MyLogger.Info("Merged restore points by selection!");
         }
     }
 }

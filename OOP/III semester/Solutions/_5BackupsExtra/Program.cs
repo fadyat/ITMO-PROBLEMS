@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
-using Backups.Classes.StorageMethods;
 using Backups.Services;
 using BackupsExtra.Classes.BackupJobsExtra;
+using BackupsExtra.Classes.BackupLogs;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.Serialization;
 using BackupsExtra.Classes.StorageMethodsExtra;
 using BackupsExtra.Services;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace BackupsExtra
 {
@@ -21,7 +23,7 @@ namespace BackupsExtra
                 .Parent?
                 .Parent?
                 .FullName;
-/*
+
             var service = new BackupExtraJobService(
                 new BackupJobService(path, new FileSystemStorageExtra(), "7"),
                 new FileSystemStorageExtra());
@@ -34,6 +36,7 @@ namespace BackupsExtra
                     new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
                 },
                 new SplitStorages(),
+                new ConsoleLogger(),
                 "backup");
 
             backup.CreateRestorePoint("1");
@@ -49,18 +52,20 @@ namespace BackupsExtra
             backup.CreateRestorePoint("6");
 
             // backup.Merge(new ByNumberSelection(1));*/
+/*
             var json = new StorageMethodExtraJson(path);
 
-            // json.Save(service);
-            BackupExtraJobService load = json.Load();
+            json.Save(service);*/
 
-            Console.WriteLine(load.FullPath);
-            foreach (BackupJobExtra back in load.BackupsI)
-            {
-                Console.Write(back.Name + " " + back.RestorePoints.Count);
-            }
+            // BackupExtraJobService load = json.Load();
 
-            Console.WriteLine();
+            // Console.WriteLine(load.FullPath);
+            // foreach (BackupJobExtra back in load.BackupsI)
+            // {
+            // Console.Write(back.Name + " " + back.RestorePoints.Count);
+            // }
+
+            // Console.WriteLine();
         }
     }
 }
