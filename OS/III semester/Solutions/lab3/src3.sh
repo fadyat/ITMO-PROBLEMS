@@ -3,5 +3,4 @@
 #             [-e] for all started crontab processes
 
 #!/bin/bash
-echo "*/5 * * * * /home/user/lab2/src1.sh" | crontab
-
+echo "*/5 * * * Sun /home/user/lab2/src1.sh" | crontab
