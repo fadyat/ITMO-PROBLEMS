@@ -27,6 +27,8 @@ namespace Backups.Classes.StorageMethods
                 if (jobObject.Path == null || fileName == null) continue;
                 zipArchive.CreateEntryFromFile(jobObject.Path, fileName);
             }
+
+            zipArchive.Dispose();
         }
 
         public bool ExistsDirectory(string path)
