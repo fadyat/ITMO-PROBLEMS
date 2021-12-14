@@ -1,4 +1,5 @@
 using System.IO;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Core;
 
@@ -8,12 +9,20 @@ namespace BackupsExtra.Classes.BackupLogs
     {
         private readonly Logger _logger;
 
-        public FileLogger(string path, string toFile = "backupLogger.txt")
+        public FileLogger(string path, string name = "backupLogger.txt")
         {
+            Path = path;
+            Name = name;
             _logger = new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(path, toFile))
+                .WriteTo.File(System.IO.Path.Combine(Path, Name))
                 .CreateLogger();
         }
+
+        [JsonProperty]
+        public string Path { get; }
+
+        [JsonProperty]
+        public string Name { get; }
 
         public void Info(string message)
         {

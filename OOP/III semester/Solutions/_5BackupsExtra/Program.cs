@@ -21,15 +21,15 @@ namespace BackupsExtra
     {
         private static void Main()
         {
-            string path = Directory.GetParent(Directory.GetCurrentDirectory())?
-                .Parent?
-                .Parent?
-                .FullName;
-
-            if (path == null) return;
-
+            string dataStorage = Path.Combine(
+                Path.Combine(
+                    Directory.GetParent(Directory.GetCurrentDirectory())?
+                        .Parent?
+                        .FullName!),
+                "Data");
+/*
             var service = new BackupExtraJobService(
-                new BackupJobService(path, new FileSystemStorageExtra(), "7"),
+                new BackupJobService(dataStorage, new FileSystemStorageExtra()),
                 new FileSystemStorageExtra());
 
             BackupJobExtra backup = service.CreateBackup(
@@ -39,12 +39,11 @@ namespace BackupsExtra
                     new JobObject("/Users/artyomfadeyev/Documents/b.txt"),
                     new JobObject("/Users/artyomfadeyev/Documents/c.txt"),
                 },
-                new SingleStorage(),
-                new ConsoleLogger(),
+                new SplitStorages(),
+                new FileLogger(dataStorage),
                 "backup");
 
             backup.CreateRestorePoint("1");
-
             backup.CreateRestorePoint("2");
             backup.CreateRestorePoint("3");
             backup.Clear(new ByNumberSelection(2));
@@ -57,15 +56,14 @@ namespace BackupsExtra
             backup.CreateRestorePoint("6");
             backup.Merge(new ByNumberSelection(1));
             RestorePoint lastRp = backup.Top();
-            var recovery = new DifferentLocationRecover(Path.Combine(path, "RECOVER"));
-            recovery.Restore(backup.StorageMethod, lastRp);
 
-            /*
-            var json = new StorageMethodExtraJson(path);
+            var recovery = new DifferentLocationRecover(Path.Combine(dataStorage, "recover"));
+            recovery.Restore(backup.StorageMethod, lastRp);*/
 
-            json.Save(service);*/
+            var json = new JsonSerialization(dataStorage);
 
-            // BackupExtraJobService load = json.Load();
+            // json.Save(service);
+            BackupExtraJobService load = json.Load();
 
             // Console.WriteLine(load.FullPath);
             // foreach (BackupJobExtra back in load.BackupsI)
