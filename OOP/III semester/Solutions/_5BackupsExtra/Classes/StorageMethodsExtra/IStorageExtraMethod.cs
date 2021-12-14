@@ -12,5 +12,11 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
         IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion);
 
         void Move(string from, string too);
+
+        void Recover(string from, string too);
+
+        void RemoveDirectory(string path);
+
+        void RemoveFile(string path);
     }
 }

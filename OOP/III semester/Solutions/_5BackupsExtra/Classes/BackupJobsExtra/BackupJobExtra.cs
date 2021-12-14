@@ -125,5 +125,10 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
             MyLogger.Info("Merged restore points by selection!");
         }
+
+        public RestorePoint Top()
+        {
+            return LinkedRestorePoints.Last();
+        }
     }
 }

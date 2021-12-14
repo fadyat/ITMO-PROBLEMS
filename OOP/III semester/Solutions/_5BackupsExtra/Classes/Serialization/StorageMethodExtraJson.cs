@@ -50,25 +50,7 @@ namespace BackupsExtra.Classes.Serialization
 
             string json = File.ReadAllText(JsonPath);
 
-            if (JsonConvert.DeserializeObject(json, settings) is not BackupExtraJobService service) return null;
-
-            foreach (BackupJobExtra backup in service.BackupsI.ToList())
-            {
-                service.StorageMethod.MakeDirectory(backup.FullPath);
-                foreach (RestorePoint restorePoint in backup.RestorePoints.ToList())
-                {
-                    backup.StorageMethod.MakeDirectory(restorePoint.FullPath);
-                    var allRestorePointObjects =
-                        restorePoint.PublicStorages.SelectMany(storage => storage.JobObjects).ToHashSet();
-
-                    backup.StorageAlgorithm.CreateStorages(
-                        restorePoint.FullPath,
-                        allRestorePointObjects,
-                        backup.StorageMethod);
-                }
-            }
-
-            return service;
+            return JsonConvert.DeserializeObject(json, settings) is not BackupExtraJobService service ? null : service;
         }
     }
 }

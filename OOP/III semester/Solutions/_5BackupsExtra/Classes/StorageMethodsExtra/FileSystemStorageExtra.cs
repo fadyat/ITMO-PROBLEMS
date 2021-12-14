@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageMethods;
 using Backups.Classes.Storages;
@@ -10,12 +12,12 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
     {
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {
-            foreach (Storage storages in restorePoint.PublicStorages)
+            foreach (Storage storage in restorePoint.PublicStorages)
             {
-                File.Delete(storages.FullPath);
+                RemoveFile(storage.FullPath);
             }
 
-            Directory.Delete(restorePoint.FullPath);
+            RemoveDirectory(restorePoint.FullPath);
         }
 
         public IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion)
@@ -42,7 +44,23 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 
         public void Move(string from, string too)
         {
-            File.Move(from, too);
+            File.Move(from, too, true);
+        }
+
+        public void Recover(string from, string too)
+        {
+            ZipArchive zipArchive = ZipFile.Open(from, ZipArchiveMode.Update);
+            zipArchive.ExtractToDirectory(too, true);
+        }
+
+        public void RemoveDirectory(string path)
+        {
+            Directory.Delete(path);
+        }
+
+        public void RemoveFile(string path)
+        {
+            File.Delete(path);
         }
     }
 }

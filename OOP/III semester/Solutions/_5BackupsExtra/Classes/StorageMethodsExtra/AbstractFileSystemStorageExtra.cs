@@ -9,12 +9,12 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
     {
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {
-            foreach (Storage storages in restorePoint.PublicStorages)
+            foreach (Storage storage in restorePoint.PublicStorages)
             {
-                PathFiles.Remove(storages.FullPath);
+                RemoveFile(storage.FullPath);
             }
 
-            PathDirectories.Remove(restorePoint.FullPath);
+            RemoveDirectory(restorePoint.FullPath);
         }
 
         public IEnumerable<Storage> Merge(RestorePoint lastVersion, RestorePoint newVersion)
@@ -32,7 +32,7 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 
                 var updatedStorage = new Storage(lastStorage.Name, newVersion.FullPath, lastStorage.JobObjects);
                 Move(lastStorage.FullPath, updatedStorage.FullPath);
-                addedStorages?.AddFirst(updatedStorage);
+                addedStorages.AddFirst(updatedStorage);
             }
 
             RemoveRestorePoint(lastVersion);
@@ -43,6 +43,21 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
         {
             PathFiles.Remove(from);
             PathFiles.Add(too);
+        }
+
+        public void Recover(string from, string too)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RemoveDirectory(string path)
+        {
+            PathDirectories.Remove(path);
+        }
+
+        public void RemoveFile(string path)
+        {
+            PathFiles.Remove(path);
         }
     }
 }
