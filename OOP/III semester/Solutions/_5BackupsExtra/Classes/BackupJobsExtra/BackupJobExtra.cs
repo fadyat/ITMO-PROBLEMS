@@ -9,6 +9,7 @@ using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.Storages;
 using Backups.Exceptions;
 using BackupsExtra.Classes.BackupLogs;
+using BackupsExtra.Classes.Recovery;
 using BackupsExtra.Classes.Selection;
 using BackupsExtra.Classes.StorageMethodsExtra;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 {
     public class BackupJobExtra : BackupJobDecorator
     {
-        public BackupJobExtra(BackupJobComponent component, IStorageExtraMethod storageMethod, IMyLogger myLogger)
+        public BackupJobExtra(BackupJobComponent component, IStorageMethodExtra storageMethod, IMyLogger myLogger)
             : base(component)
         {
             StorageMethod = storageMethod;
@@ -26,7 +27,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             MyLogger.Info("BackupExtraJob was created!");
         }
 
-        public new IStorageExtraMethod StorageMethod { get; }
+        public new IStorageMethodExtra StorageMethod { get; }
 
         public IMyLogger MyLogger { get; }
 
@@ -68,7 +69,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
         public void Clear(ISelection selection)
         {
-            if (selection.Fetch(LinkedRestorePoints) is not LinkedList<RestorePoint> result || !result.Any())
+            if (selection.Fetch(LinkedRestorePoints) is not { } result || !result.Any())
                 throw new BackupException("Selection size can't be 0");
 
             foreach (RestorePoint point in LinkedRestorePoints
@@ -83,7 +84,7 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
         public void Merge(ISelection selection)
         {
-            if (selection.Fetch(LinkedRestorePoints) is not LinkedList<RestorePoint> result || !result.Any())
+            if (selection.Fetch(LinkedRestorePoints) is not { } result || !result.Any())
                 throw new BackupException("Selection size can't be 0");
 
             var toMerge = LinkedRestorePoints.Except(result)
@@ -126,9 +127,19 @@ namespace BackupsExtra.Classes.BackupJobsExtra
             MyLogger.Info("Merged restore points by selection!");
         }
 
+        public void Recover(IRecovery recovery, RestorePoint restorePoint)
+        {
+            recovery.Recover(StorageMethod, restorePoint);
+        }
+
         public RestorePoint Top()
         {
             return LinkedRestorePoints.Last();
+        }
+
+        public RestorePoint Front()
+        {
+            return LinkedRestorePoints.First();
         }
     }
 }

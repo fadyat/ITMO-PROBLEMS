@@ -1,12 +1,17 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
 using Backups.Classes.StorageMethods;
 using Backups.Classes.Storages;
 
 namespace BackupsExtra.Classes.StorageMethodsExtra
 {
-    public class AbstractFileSystemStorageExtra : AbstractFileSystemStorage, IStorageExtraMethod
+    public class AbstractFileSystemStorageExtra : AbstractFileSystemStorage, IStorageMethodExtra
     {
+        // public ImmutableList<string> Files => PathFiles.ToImmutableList();
+        // public ImmutableList<string> Directories => PathDirectories.ToImmutableList();
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {
             foreach (Storage storage in restorePoint.PublicStorages)
@@ -47,7 +52,13 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 
         public void Recover(string from, string too)
         {
-            throw new System.NotImplementedException();
+            List<IJobObject> archivedObjects = ArchivedFiles[from];
+            foreach (string futureLocation in archivedObjects
+                .Select(jobObject => System.IO.Path.GetFileName(jobObject.Path))
+                .Select(name => System.IO.Path.Combine(too, name !)))
+            {
+                PathFiles.Add(futureLocation);
+            }
         }
 
         public void RemoveDirectory(string path)

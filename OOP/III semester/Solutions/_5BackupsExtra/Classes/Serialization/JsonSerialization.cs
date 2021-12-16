@@ -21,7 +21,7 @@ namespace BackupsExtra.Classes.Serialization
 
         private string JsonPath { get; }
 
-        public void Save(BackupExtraJobService backupJobService)
+        public void Save(BackupJobServiceExtra backupJobService)
         {
             var settings = new JsonSerializerSettings
             {
@@ -35,7 +35,7 @@ namespace BackupsExtra.Classes.Serialization
             sw.WriteLine(json);
         }
 
-        public BackupExtraJobService Load()
+        public BackupJobServiceExtra Load()
         {
             var fileInfo = new FileInfo(JsonPath);
             if (fileInfo.Length == 0) return null;
@@ -47,7 +47,7 @@ namespace BackupsExtra.Classes.Serialization
             };
 
             string json = File.ReadAllText(JsonPath);
-            if (JsonConvert.DeserializeObject(json, settings) is not BackupExtraJobService service) return null;
+            if (JsonConvert.DeserializeObject(json, settings) is not BackupJobServiceExtra service) return null;
 
             foreach (BackupJobExtra backup in service.BackupsI.ToList())
             {

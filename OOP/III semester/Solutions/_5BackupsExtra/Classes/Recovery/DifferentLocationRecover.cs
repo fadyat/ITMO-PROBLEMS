@@ -6,7 +6,7 @@ using BackupsExtra.Classes.StorageMethodsExtra;
 
 namespace BackupsExtra.Classes.Recovery
 {
-    public class DifferentLocationRecover
+    public class DifferentLocationRecover : IRecovery
     {
         private readonly string _toDirectory;
 
@@ -15,7 +15,7 @@ namespace BackupsExtra.Classes.Recovery
             _toDirectory = toDirectory;
         }
 
-        public void Restore(IStorageExtraMethod storageExtraMethod, RestorePoint restorePoint)
+        public void Recover(IStorageMethodExtra storageExtraMethod, RestorePoint restorePoint)
         {
             if (!storageExtraMethod.ExistsDirectory(_toDirectory))
             {

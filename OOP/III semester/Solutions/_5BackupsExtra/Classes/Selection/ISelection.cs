@@ -5,6 +5,6 @@ namespace BackupsExtra.Classes.Selection
 {
     public interface ISelection
     {
-        IEnumerable<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints);
+        LinkedList<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints);
     }
 }

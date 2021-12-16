@@ -8,7 +8,7 @@ using Backups.Classes.Storages;
 
 namespace BackupsExtra.Classes.StorageMethodsExtra
 {
-    public class FileSystemStorageExtra : FileSystemStorage, IStorageExtraMethod
+    public class FileSystemStorageExtra : FileSystemStorage, IStorageMethodExtra
     {
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {

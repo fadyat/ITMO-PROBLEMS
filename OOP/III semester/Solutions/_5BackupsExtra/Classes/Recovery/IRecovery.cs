@@ -5,6 +5,6 @@ namespace BackupsExtra.Classes.Recovery
 {
     public interface IRecovery
     {
-        void Restore(IStorageExtraMethod storageExtraMethod, RestorePoint restorePoint);
+        void Recover(IStorageMethodExtra storageExtraMethod, RestorePoint restorePoint);
     }
 }

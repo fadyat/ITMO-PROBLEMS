@@ -8,11 +8,11 @@ namespace BackupsExtra.Classes.Recovery
 {
     public class OriginRecover : IRecovery
     {
-        public void Restore(IStorageExtraMethod storageExtraMethod, RestorePoint restorePoint)
+        public void Recover(IStorageMethodExtra storageExtraMethod, RestorePoint restorePoint)
         {
+            string toDirectory = Path.Combine(Directory.GetCurrentDirectory(), "tmp");
             foreach (Storage storage in restorePoint.PublicStorages)
             {
-                string toDirectory = Path.Combine(Directory.GetCurrentDirectory(), "tmp");
                 storageExtraMethod.MakeDirectory(toDirectory);
                 storageExtraMethod.Recover(storage.FullPath, toDirectory);
                 foreach (IJobObject jobObject in storage.JobObjects)

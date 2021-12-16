@@ -28,7 +28,7 @@ namespace BackupsExtra
                         .FullName!),
                 "Data");
 /*
-            var service = new BackupExtraJobService(
+            var service = new BackupJobServiceExtra(
                 new BackupJobService(dataStorage, new FileSystemStorageExtra()),
                 new FileSystemStorageExtra());
 
@@ -63,7 +63,7 @@ namespace BackupsExtra
             var json = new JsonSerialization(dataStorage);
 
             // json.Save(service);
-            BackupExtraJobService load = json.Load();
+            BackupJobServiceExtra load = json.Load();
 
             // Console.WriteLine(load.FullPath);
             // foreach (BackupJobExtra back in load.BackupsI)

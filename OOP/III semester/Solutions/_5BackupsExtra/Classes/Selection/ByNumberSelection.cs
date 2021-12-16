@@ -13,7 +13,7 @@ namespace BackupsExtra.Classes.Selection
             _numberToSave = numberToSave;
         }
 
-        public IEnumerable<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
+        public LinkedList<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
         {
             var result = new LinkedList<RestorePoint>(restorePoints);
             int toRemove = Math.Max(result.Count - _numberToSave, 0);

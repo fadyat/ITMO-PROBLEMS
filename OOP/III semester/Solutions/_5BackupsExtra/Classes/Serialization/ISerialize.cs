@@ -4,8 +4,8 @@ namespace BackupsExtra.Classes.Serialization
 {
     public interface ISerialize
     {
-        void Save(BackupExtraJobService backupJobService);
+        void Save(BackupJobServiceExtra backupJobService);
 
-        BackupExtraJobService Load();
+        BackupJobServiceExtra Load();
     }
 }

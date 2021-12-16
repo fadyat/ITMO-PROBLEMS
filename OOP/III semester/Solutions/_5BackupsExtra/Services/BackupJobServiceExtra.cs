@@ -13,16 +13,16 @@ using Newtonsoft.Json;
 
 namespace BackupsExtra.Services
 {
-    public class BackupExtraJobService : BackupJobServiceDecorator
+    public class BackupJobServiceExtra : BackupJobServiceDecorator
     {
-        public BackupExtraJobService(BackupJobServiceComponent component, IStorageExtraMethod storageMethod)
+        public BackupJobServiceExtra(BackupJobServiceComponent component, IStorageMethodExtra storageMethod)
             : base(component)
         {
             StorageMethod = storageMethod;
             Backups = new HashSet<BackupJobExtra>();
         }
 
-        public new IStorageExtraMethod StorageMethod { get; }
+        public new IStorageMethodExtra StorageMethod { get; }
 
         [JsonIgnore]
         public new ImmutableList<BackupJobExtra> BackupsI => Backups.ToImmutableList();

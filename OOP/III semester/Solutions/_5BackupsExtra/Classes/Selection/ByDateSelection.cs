@@ -13,7 +13,7 @@ namespace BackupsExtra.Classes.Selection
             _oldestDate = oldestDate;
         }
 
-        public IEnumerable<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
+        public LinkedList<RestorePoint> Fetch(LinkedList<RestorePoint> restorePoints)
         {
             var result = new LinkedList<RestorePoint>(restorePoints);
             while (result.First?.Value.CreationDate <= _oldestDate)

@@ -15,11 +15,13 @@ namespace Backups.Classes.StorageMethods
 
         public void MakeDirectory(string path)
         {
+            if (ExistsDirectory(path)) return;
             Directory.CreateDirectory(path);
         }
 
         public void Archive(Storage from)
         {
+            if (ExistsFile(from.FullPath)) return;
             ZipArchive zipArchive = ZipFile.Open(from.FullPath, ZipArchiveMode.Create);
             foreach (IJobObject jobObject in from.JobObjects)
             {
