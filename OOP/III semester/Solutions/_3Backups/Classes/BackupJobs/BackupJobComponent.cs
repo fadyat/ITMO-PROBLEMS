@@ -11,23 +11,17 @@ namespace Backups.Classes.BackupJobs
 {
     public abstract class BackupJobComponent
     {
-        /* for json */
         public Guid Id { get; protected init; }
 
         public string Path { get; protected init; }
 
-        [JsonProperty]
-        protected HashSet<IJobObject> Objects { get; set; }
-
-#pragma warning disable SA1202
         public IStorageAlgorithm StorageAlgorithm { get; protected init; }
-#pragma warning restore SA1202
 
         public IStorageMethod StorageMethod { get; protected init; }
 
         public string Name { get; protected init; }
-        /* ---- */
 
+        [JsonIgnore]
         public string FullPath { get; protected init; }
 
         [JsonIgnore]
@@ -38,6 +32,9 @@ namespace Backups.Classes.BackupJobs
 
         [JsonProperty]
         protected LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
+
+        [JsonProperty]
+        protected HashSet<IJobObject> Objects { get; set; }
 
         public abstract void AddJobObject(IJobObject jobObject);
 

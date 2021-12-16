@@ -20,6 +20,7 @@ namespace Backups.Classes.Storages
 
         public string Path { get; }
 
+        [JsonIgnore]
         public string FullPath { get; }
 
         [JsonIgnore]

@@ -27,7 +27,7 @@ namespace BackupsExtra
                         .Parent?
                         .FullName!),
                 "Data");
-/*
+
             var service = new BackupJobServiceExtra(
                 new BackupJobService(dataStorage, new FileSystemStorageExtra()),
                 new FileSystemStorageExtra());
@@ -58,11 +58,11 @@ namespace BackupsExtra
             RestorePoint lastRp = backup.Top();
 
             var recovery = new DifferentLocationRecover(Path.Combine(dataStorage, "recover"));
-            recovery.Restore(backup.StorageMethod, lastRp);*/
+            recovery.Recover(backup.StorageMethod, lastRp);
 
             var json = new JsonSerialization(dataStorage);
 
-            // json.Save(service);
+            json.Save(service);
             BackupJobServiceExtra load = json.Load();
 
             // Console.WriteLine(load.FullPath);

@@ -21,6 +21,7 @@ namespace Backups.Classes.RestorePoints
 
         public string Path { get; }
 
+        [JsonIgnore]
         public string FullPath { get; }
 
         public DateTime CreationDate { get; }

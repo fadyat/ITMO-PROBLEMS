@@ -29,13 +29,14 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
         public new IStorageMethodExtra StorageMethod { get; }
 
-        public IMyLogger MyLogger { get; }
-
         [JsonIgnore]
         public new ImmutableList<RestorePoint> RestorePoints => LinkedRestorePoints.ToImmutableList();
 
         [JsonProperty] // to protected field
         public new LinkedList<RestorePoint> LinkedRestorePoints { get; set; }
+
+        [JsonProperty]
+        private IMyLogger MyLogger { get; }
 
         public override void AddJobObject(IJobObject jobObject)
         {
@@ -51,7 +52,6 @@ namespace BackupsExtra.Classes.BackupJobsExtra
 
         public override RestorePoint CreateRestorePoint(string name = null, DateTime dateTime = default)
         {
-            /* copied from BackupJob -.- */
             if (Equals(PublicObjects.Count, 0))
                 throw new BackupException("No files for restore point!");
 

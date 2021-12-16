@@ -1,4 +1,3 @@
-using System.IO;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Core;
@@ -19,10 +18,10 @@ namespace BackupsExtra.Classes.BackupLogs
         }
 
         [JsonProperty]
-        public string Path { get; }
+        private string Path { get; }
 
         [JsonProperty]
-        public string Name { get; }
+        private string Name { get; }
 
         public void Info(string message)
         {

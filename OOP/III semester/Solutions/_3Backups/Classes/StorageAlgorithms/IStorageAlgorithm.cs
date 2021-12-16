@@ -7,7 +7,6 @@ namespace Backups.Classes.StorageAlgorithms
 {
     public interface IStorageAlgorithm
     {
-        LinkedList<Storage> CreateStorages(
-            string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod);
+        LinkedList<Storage> CreateStorages(string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod);
     }
 }

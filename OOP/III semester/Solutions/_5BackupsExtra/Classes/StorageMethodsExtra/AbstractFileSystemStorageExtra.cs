@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Backups.Classes.JobObjects;
 using Backups.Classes.RestorePoints;
@@ -10,8 +9,6 @@ namespace BackupsExtra.Classes.StorageMethodsExtra
 {
     public class AbstractFileSystemStorageExtra : AbstractFileSystemStorage, IStorageMethodExtra
     {
-        // public ImmutableList<string> Files => PathFiles.ToImmutableList();
-        // public ImmutableList<string> Directories => PathDirectories.ToImmutableList();
         public void RemoveRestorePoint(RestorePoint restorePoint)
         {
             foreach (Storage storage in restorePoint.PublicStorages)

@@ -36,7 +36,7 @@ namespace Backups.Classes.StorageMethods
         public void Archive(Storage from)
         {
             PathFiles.Add(from.FullPath);
-            ArchivedFiles.Add(from.FullPath, from.JobObjects.ToList()); // pseudo-archive
+            ArchivedFiles.Add(from.FullPath, from.JobObjects.ToList());
         }
 
         public bool ExistsDirectory(string path)
