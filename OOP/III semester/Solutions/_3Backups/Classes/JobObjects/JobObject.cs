@@ -1,6 +1,6 @@
-namespace Backups.Classes
+namespace Backups.Classes.JobObjects
 {
-    public class JobObject
+    public class JobObject : IJobObject
     {
         public JobObject(string path)
         {

@@ -1,18 +1,25 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Backups.Classes.JobObjects;
+using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageMethods
 {
     public class AbstractFileSystemStorage : IStorageMethod
     {
-        private readonly HashSet<string> _pathDirectories;
-        private readonly HashSet<string> _pathFiles;
-
         public AbstractFileSystemStorage()
         {
-            _pathDirectories = new HashSet<string>();
-            _pathFiles = new HashSet<string>();
+            PathDirectories = new HashSet<string>();
+            PathFiles = new HashSet<string>();
+            ArchivedFiles = new Dictionary<string, List<IJobObject>>();
         }
+
+        protected HashSet<string> PathDirectories { get; }
+
+        protected HashSet<string> PathFiles { get; }
+
+        protected Dictionary<string, List<IJobObject>> ArchivedFiles { get; }
 
         public string ConstructPath(string path, string name)
         {
@@ -22,24 +29,24 @@ namespace Backups.Classes.StorageMethods
 
         public void MakeDirectory(string path)
         {
-            _pathDirectories.Add(path);
+            if (PathDirectories.Contains(path)) return;
+            PathDirectories.Add(path);
         }
 
-        public void Archive(IEnumerable<JobObject> from, string where)
+        public void Archive(Storage from)
         {
-            _pathFiles.Add(where); // archive
-
-            // files inside ...
+            PathFiles.Add(from.FullPath);
+            ArchivedFiles.Add(from.FullPath, from.JobObjects.ToList());
         }
 
         public bool ExistsDirectory(string path)
         {
-            return _pathDirectories.Contains(path);
+            return PathDirectories.Contains(path);
         }
 
         public bool ExistsFile(string path)
         {
-            return _pathFiles.Contains(path);
+            return PathFiles.Contains(path);
         }
     }
 }

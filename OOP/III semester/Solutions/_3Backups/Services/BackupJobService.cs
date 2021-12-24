@@ -1,65 +1,41 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Backups.Classes;
+using Backups.Classes.BackupJobs;
+using Backups.Classes.JobObjects;
 using Backups.Classes.StorageAlgorithms;
 using Backups.Classes.StorageMethods;
-using Backups.Exceptions;
 
 namespace Backups.Services
 {
-    public class BackupJobService
+    public class BackupJobService : BackupJobServiceComponent
     {
-        private readonly List<BackupJob> _backups;
-        private readonly IStorageMethod _storageMethod;
-        private readonly string _location;
-        private int _issuedBackupId;
-
-        public BackupJobService(
-            string location,
-            IStorageMethod storageMethod,
-            string folderName = "Repository")
+        public BackupJobService(string path, IStorageMethod storageMethod, string name = null)
         {
-            _storageMethod = storageMethod;
-            _backups = new List<BackupJob>();
-            _issuedBackupId = 100000;
-            _location = _storageMethod.ConstructPath(location, folderName);
-            storageMethod.MakeDirectory(_location);
+            Path = path;
+            StorageMethod = storageMethod;
+            Name = name ?? Guid.NewGuid().ToString();
+            Backups = new HashSet<BackupJob>();
+            FullPath = StorageMethod.ConstructPath(Path, Name);
+            StorageMethod.MakeDirectory(FullPath);
         }
 
-        public BackupJob CreateBackup(
-            HashSet<JobObject> objects,
-            IStorageAlgorithm storageAlgorithm,
-            string name = "backupJob_")
+        public override BackupJob CreateBackup(
+            IEnumerable<IJobObject> objects, IStorageAlgorithm storageAlgorithm, string name = null)
         {
-            if (Equals(name, null))
-            {
-                throw new BackupException("Backup name couldn't be null!");
-            }
+            name ??= Guid.NewGuid().ToString();
+            var backupJob =
+                new BackupJob(Guid.NewGuid(), FullPath, objects, storageAlgorithm, StorageMethod, name);
 
-            name += name.EndsWith("_") ? (_backups.Count + 1).ToString() : string.Empty;
+            Backups.Add(backupJob);
+            StorageMethod.MakeDirectory(backupJob.FullPath);
 
-            var backupJob = new BackupJob(
-                _issuedBackupId++,
-                _location,
-                objects,
-                name,
-                storageAlgorithm,
-                _storageMethod);
-
-            _backups.Add(backupJob);
             return backupJob;
         }
 
-        public BackupJob GetBackup(int id)
+        public override BackupJob GetBackup(Guid id)
         {
-            BackupJob backup = _backups.SingleOrDefault(backup => Equals(backup.Id, id));
-
-            if (Equals(backup, null))
-            {
-                throw new BackupException("No such backup!");
-            }
-
-            return backup;
+            return Backups.Single(b => Equals(b.Id, id));
         }
     }
 }

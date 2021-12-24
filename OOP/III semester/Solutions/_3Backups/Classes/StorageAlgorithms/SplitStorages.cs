@@ -1,30 +1,27 @@
 using System.Collections.Generic;
 using System.IO;
+using Backups.Classes.JobObjects;
 using Backups.Classes.StorageMethods;
+using Backups.Classes.Storages;
 
 namespace Backups.Classes.StorageAlgorithms
 {
     public class SplitStorages : IStorageAlgorithm
     {
-        public List<Storage> Compression(
-            string path,
-            IEnumerable<JobObject> objects,
-            IStorageMethod storageMethod)
+        public LinkedList<Storage> CreateStorages(
+            string path, IEnumerable<IJobObject> objects, IStorageMethod storageMethod)
         {
-            var list = new List<Storage>();
+            var linked = new LinkedList<Storage>();
 
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (JobObject jobObject in objects)
+            foreach (IJobObject jobObject in objects)
             {
                 string fileName = Path.GetFileNameWithoutExtension(jobObject.Path);
-                list.Add(new Storage(
-                    fileName,
-                    path,
-                    new List<JobObject> { jobObject },
-                    storageMethod));
+                var storage = new Storage(fileName + ".zip", path, new List<IJobObject> { jobObject });
+                storageMethod.Archive(storage);
+                linked.AddLast(storage);
             }
 
-            return list;
+            return linked;
         }
     }
 }
