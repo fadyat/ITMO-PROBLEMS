@@ -6,6 +6,6 @@ uniq -c |
 awk '{
  printf("%s%s", $2, ", ")
 }' > emails.lst
-sed -i "s/..$/" emails.lst
+sed -i "s/..$//" emails.lst
 echo -e >> emails.lst
 exit 0

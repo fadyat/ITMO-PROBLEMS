@@ -5,7 +5,7 @@ for pid in $(ps -A -o pid=); do
  if [[ $etime -le $seconds ]]; then
   io="/proc/$pid/io"
   rdBytes=`grep -s "^read_bytes:" $io | awk '{ print $2 }'`
-  if [[ rdBytes != "" ]]; then
+  if [[ $rdBytes != "" ]]; then
    cmd=`ps -p $pid -o cmd=`
    echo $pid : $rdBytes : $cmd >> tmp
   fi

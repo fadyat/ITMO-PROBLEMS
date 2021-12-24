@@ -38,5 +38,6 @@ else
  cat renamedFiles >> /home/user/backup-report
 fi
 
+cat /home/user/backup-report
 [ -f newFiles ] && rm newFiles
 [ -f renamedFiles ] && rm renamedFiles

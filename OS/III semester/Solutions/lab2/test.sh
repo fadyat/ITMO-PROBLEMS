@@ -1,8 +1,6 @@
-# Have processName (ps -o cmd), u should get his pid
-
 #!/bin/bash
 processCmd=$1
-for pid in $(ps -A -o -pid=); do
+for pid in $(ps -A -o pid=); do
  pidFile="/proc/$pid"
  if [[ $pidFile == "" ]]; then continue; fi
  currentProcessCmd=`ps -p $pid -o cmd=`

@@ -1,6 +1,3 @@
-# rename all files in directory with first line equal to
-# "#!/bin/bash" -> change his extension on *.sh
-
 #!/bin/bash
 correctLine="#!/bin/bash"
 for file in $PWD/*
@@ -10,7 +7,7 @@ do
   then
    tmp=`echo "$file" | sed 's/\.[[:lower:]]\{1,\}//g'`
    if [[ "$file" != "$tmp.sh" ]]
-    then 
+   then
      mv "$file" "$tmp.sh"
    fi
  fi

@@ -1,14 +1,13 @@
 #!/bin/bash
-
 while [ true ]
 do
 	echo "
-	------------
-	| 1. nano  |
-	| 2. vi    |
-	| 3. links |	
-	| 4. exit  |
-	------------"
+	-------------
+	| 1. nano   |
+	| 2. vi     |
+	| 3. links  |
+	| 4. exit   |
+	------------- "
 	read b
 	case "$b" in
 	 1 ) nano ;;
@@ -19,4 +18,3 @@ do
 	clear
 done
 exit 0
-

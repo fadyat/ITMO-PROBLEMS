@@ -1,5 +1,3 @@
-# ! start script from ~
-
 #!/bin/bash
 id="$(cat id)"
 [ $# -ne 1 ] && exit
@@ -11,3 +9,4 @@ rm $PWD/"$1"
 echo "$PWD@$1@$id" >> ~/.trash.log
 ((id++))
 echo "$id" > id
+

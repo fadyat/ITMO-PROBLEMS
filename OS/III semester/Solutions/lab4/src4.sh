@@ -9,3 +9,5 @@ for file in $backupData; do
  [ "$copy" == "$file" ] && continue
  cp $path/$file $restore
 done
+
+ls $restore
