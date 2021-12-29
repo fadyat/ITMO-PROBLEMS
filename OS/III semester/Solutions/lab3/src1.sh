@@ -1,5 +1,5 @@
 #!/bin/bash
-dateTime=$(date + "%d-%m-%y_%T")
+dateTime=$(date "+%d-%m-%y_%T")
 mkdir ~/test && echo "catalog test was created successfully" > ~/report &&
 	touch ~/test/$dateTime
 web="www.net_nikogo.ru"
