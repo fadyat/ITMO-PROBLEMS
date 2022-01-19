@@ -34,9 +34,3 @@
 <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/III%20semester/Solutions/lab4/src4.sh">4.</a>
   Скрипт upback
   - Скрипт должен скопировать в каталог /home/user/restore/ все файлы из актуального на данный момент каталога резервного копирования (имеющего в имени наиболее свежую дату), за исключением файлов с предыдущими версиями.
-
-<h2></h2>
-
-<div align=middle>
-  <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/OS/III%20semester/Solutions/lab4/test.sh"> TEST</a>
-</div>
