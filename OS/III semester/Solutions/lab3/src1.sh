@@ -1,6 +1,5 @@
 #!/bin/bash
-dateTime=$(date "+%d-%m-%y_%T")
+dateTime=$(date "+%d-%m-%Y_%T")
 mkdir ~/test && echo "catalog test was created successfully" > ~/report &&
 	touch ~/test/$dateTime
-web="www.net_nikogo.ru"
-ping -c 1 $web || echo $dateTime $web "doesn't exist!" >> ~/report
+ping -c 1 https://www.net_nikogo.ru || echo "$dateTime net_nikogo.ru doesn't exist!" >> ~/report
