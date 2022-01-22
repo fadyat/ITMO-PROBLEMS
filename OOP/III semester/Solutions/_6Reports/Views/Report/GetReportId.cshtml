@@ -1,0 +1,24 @@
+@model ReportsViewModel
+<div class="row">
+    <h3>Get tasks by report id</h3>
+    <form asp-controller="Report" asp-action="GetReportId" method="post" class="form-horizontal">
+        <div class="form-group mt-5">
+            <label asp-for="Id">Report Id</label>
+            <div class="col-md-5">
+                <input required asp-for="Id" class="form-control"/>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 mt-4">
+                <input class="btn btn-success p-1" type="submit" value="Get tasks"/>
+            </div>
+        </div>
+    </form>
+</div>
+@if (TempData["EM"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["EM"]
+    </div>
+}

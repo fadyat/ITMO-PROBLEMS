@@ -1,0 +1,18 @@
+@model EmployeesViewModel
+<div class="row">
+    <h3>Employee form</h3>
+    <form asp-controller="Employee" asp-action="Register" method="post" class="form-horizontal">
+        <div class="form-group mt-5">
+            <label asp-for="Name"></label>
+            <div class="col-md-5">
+                <input required asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    <div class="form-group">
+            <div class="col-md-5 mt-4">
+                <input class="btn btn-success p-1" type="submit" value="Register employee"/>
+                </div>
+        </div>
+    </form>
+</div>

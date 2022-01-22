@@ -1,0 +1,69 @@
+@using Task = lab_6.DAL.Data.Models.Task
+<br><br>
+<div class="table-responsive">
+    <table class="table text-center col-7">
+        <thead class="thead-light">
+        <tr>
+            <th>Report id</th>
+            <th>Employee Name</th>
+            @*<th></th>*@
+        </tr>
+        </thead>
+        <tbody>
+        
+        @foreach (ReportsViewModel report in ViewBag.onePageOfReports)
+        {
+            <tr id="@report.Id">
+                <td name="Id">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(reportItem => report.Id, new
+                                {
+                                    htmlAttributes =
+                                        new {@class = "form-control", @readonly = "readonly"}
+                                })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="EmployeeName">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(reportItem => report.Employee.Name, new {htmlAttributes =
+                                    new {@class="form-control", @readonly="readonly"}})
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<br>
+@Html.PagedListPager(ViewBag.onePageOfReports as IPagedList,
+    page => Url.Action("List", new {page}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+    })
+@section Scripts{
+}

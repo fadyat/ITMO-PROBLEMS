@@ -32,6 +32,7 @@ namespace BackupsExtra
                 new BackupJobService(dataStorage, new FileSystemStorageExtra()),
                 new FileSystemStorageExtra());
 
+            /*
             BackupJobExtra backup = service.CreateBackup(
                 new HashSet<IJobObject>
                 {
@@ -63,7 +64,7 @@ namespace BackupsExtra
             var json = new JsonSerialization(dataStorage);
 
             json.Save(service);
-            BackupJobServiceExtra load = json.Load();
+            BackupJobServiceExtra load = json.Load();*/
 
             // Console.WriteLine(load.FullPath);
             // foreach (BackupJobExtra back in load.BackupsI)

@@ -1,0 +1,205 @@
+@using Task = lab_6.DAL.Data.Models.Task
+<select id="StatusFilter" name="StatusFilter">  
+    @foreach (var filter in ViewBag.FiltersByStatus)
+    {
+        if (ViewBag.SelectedStatusFilter == filter.Value)
+        {
+            <option selected="selected" value="@filter.Value">@filter.Text</option>
+        }
+        else
+        {
+            <option value="@filter.Value">@filter.Text</option> 
+        }
+    }
+</select>
+<select id="EmployeeFilter" name="EmployeeFilter">
+    <option value="All">All</option>
+    @foreach (var filter in ViewBag.FiltersByEmployee)
+    {
+        if (ViewBag.SelectedEmployeeFilter == filter.Value)
+        {
+            <option selected="selected" value="@filter.Value">@filter.Text</option>
+        }
+        else
+        {
+            <option value="@filter.Value">@filter.Text</option>
+        }
+    }
+</select>
+<br><br>
+<div class="table-responsive">
+    <table class="table text-center col-7">
+        <thead class="thead-light">
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Creation date</th>
+            <th>Last modified date</th>
+            <th>Comment</th>
+            <th>Employee Id</th>
+            @*<th></th>*@
+        </tr>
+        </thead>
+        <tbody>
+        
+        @foreach (TasksViewModel task in ViewBag.onePageOfTasks)
+        {
+            <tr id="@task.Id"
+                class="task-list-row"
+                data-status="@((int)task.Status)"
+                data-employee="@(task.Employee?.Name)">
+                <td name="Id">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.Id, new
+                                {
+                                    htmlAttributes =
+                                        new {@class = "form-control", @readonly = "readonly"}
+                                })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="Description">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.Description, new {htmlAttributes =
+                                    new {@class="form-control", @readonly="readonly"}})
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="Status">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.Status, new
+                                {
+                                    htmlAttributes =
+                                        new {@class = "form-control", @readonly = "readonly"}
+                                })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="CreationDate">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.CreationDate, new {htmlAttributes =
+                                    new {@class="form-control date", @type="datetime-local", @readonly="readonly"}})
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="ModifiedDate">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.LastModifiedDate, new
+                                {
+                                    htmlAttributes =
+                                        new {@class = "form-control", @type = "datetime-local", @readonly = "readonly"}
+                                })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="Comment">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.Comment, new {htmlAttributes =
+                                    new {@class="form-control", @readonly="readonly"}})
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td name="EmployeeId">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="ajaxdivtd"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-0">
+                                <div class="ui-icon ui-icon-arrowthick-2-n-s" style="margin-top: 10px; "></div>
+                            </div>
+                            <div class="col">
+                                @Html.EditorFor(taskItem => task.Employee.Id, new {htmlAttributes =
+                                    new {@class="form-control", @readonly="readonly"}})
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<br>
+@Html.PagedListPager(ViewBag.onePageOfTasks as IPagedList,
+    page => Url.Action("List", new {page, filterStatusId = ViewBag.SelectedStatusFilter, filterEmployee=ViewBag.SelectedEmployeeFilter}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+    })
+@section Scripts{
+    <script src="~/js/CustomScripts/ChangeStatusColor.js"></script>
+    <script src="~/js/CustomScripts/EditTaskData.js"></script>
+    @*<script src="~/js/CustomScripts/kekpek.js"></script>*@
+    <script src="~/js/CustomScripts/StatusFilter.js"></script>
+    <script src="~/js/CustomScripts/EmployeeFilter.js"></script>
+}

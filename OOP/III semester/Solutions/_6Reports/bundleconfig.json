@@ -1,0 +1,20 @@
+[
+  {
+    "outputFileName": "wwwroot/css/bundle.css",
+    "inputFiles": [
+      "wwwroot/css/bootstrap.min.css",
+      "wwwroot/css/style.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/bundles.js",
+    "inputFiles": [
+      "wwwroot/js/bootstrap.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

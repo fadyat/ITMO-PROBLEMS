@@ -1,0 +1,13 @@
+<h1>_6Reports page</h1>
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+<br>
+<a class="btn btn-success" type="submit" asp-controller="Report" asp-action="Register">Register report</a><br/><br/>
+<a class="btn btn-success" type="submit" asp-controller="Report" asp-action="AddTask">Add task to report</a><br/>
+<a class="btn btn-success mt-3" type="submit" asp-controller="Report" asp-action="List">Get all reports</a><br/>
+<a class="btn btn-success mt-3" type="submit" asp-controller="Report" asp-action="GetReportId">Get tasks by id</a><br/>
+

@@ -1,0 +1,36 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="thead-light">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Leader Id</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        @foreach (EmployeesViewModel employee in ViewBag.onePageOfEmployees)
+        {
+            <tr>
+                <td>@employee.Id</td>
+                <td>@employee.Name</td>
+                <td>@employee.Leader.Id</td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new{id = employee.Id}, new {@class = "delete btn btn-danger"})
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+@Html.PagedListPager(ViewBag.onePageOfEmployees as IPagedList,
+    page => Url.Action("List", new {page}),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+    })
+@section Scripts
+{
+    <script src="~/js/CustomScripts/EmployeeDeletion.js"></script>
+}

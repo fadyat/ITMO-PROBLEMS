@@ -1,0 +1,9 @@
+<h1>Employee page</h1>
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+<a class="btn btn-success" type="submit" asp-controller="Employee" asp-action="Register">Add Employee</a><br/>
+<a class="btn btn-success mt-3" type="submit" asp-controller="Employee" asp-action="List">Get All Employees</a>

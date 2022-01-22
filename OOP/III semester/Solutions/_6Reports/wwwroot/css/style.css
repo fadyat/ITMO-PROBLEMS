@@ -1,0 +1,52 @@
+body{
+    background: #fcfcfc;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    color: #5a5a5a;
+}
+.btn-success{
+    width: 150px !important;
+}
+
+td{
+    
+}
+.single-line{
+    text-align: center;
+}
+#Name{
+    width: 250px;
+}
+#NewTaskId{
+    width: 250px;
+}
+input#Id{
+    width: 250px;
+}
+input#Employee_Id{
+    width: 250px;
+}
+#Description{
+    width: 250px;
+}
+#task_Id{
+    width: 150px;
+}
+#task_Description{
+    width: 80px;
+}
+#task_Status{
+    width: 100px;
+}
+#task_CreationDate{
+    width: 250px;
+}
+#task_LastModifiedDate{
+    width: 250px;
+}
+#task_Comment{
+    width: 150px;
+}
+#task_Employee_Id{
+    width: 150px;
+}

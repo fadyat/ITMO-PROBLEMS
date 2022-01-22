@@ -1,0 +1,10 @@
+<h1>Task page</h1>
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+<a class="btn btn-success" type="submit" asp-controller="Task" asp-action="Register">Add Task</a><br/>
+<a class="btn btn-success mt-3" type="submit" asp-controller="Task" asp-action="List">Get All Tasks</a>
+    
