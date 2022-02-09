@@ -51,7 +51,7 @@ HAVING COUNT(ProductID) > 5
 SELECT CustomerID
 FROM Sales.SalesOrderHeader
 GROUP BY CustomerID, OrderDate
-HAVING COUNT(SalesOrderID)
+HAVING COUNT(SalesOrderID) > 1
 ```
 
 - Найти и вывести на экран все номера чеков, на которые приходится более трех продуктов.
