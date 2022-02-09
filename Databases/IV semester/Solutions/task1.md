@@ -37,7 +37,7 @@ ORDER BY StandardCost
 - Найти и вывести на экран название и размер первых трех самых дорогих товаров с цветом Black.
 
 ```SQL
-SELECT TOP 3 Name, Size
+SELECT TOP 3 WITH TIES Name, Size
 From Production.Product
 WHERE Color = 'Black'
 ORDER BY StandardCost DESC
