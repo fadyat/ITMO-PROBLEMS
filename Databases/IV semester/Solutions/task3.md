@@ -123,7 +123,7 @@ ORDER BY SUM(SalesOrderDetail.OrderQty) DESC;
 
 ```SQL
 SELECT ProductCategory.Name,
-       COUNT(DISTINCT ProductSubcategory.ProductSubcategoryID) AS SubacategoriesCount,
+       COUNT(DISTINCT ProductSubcategory.ProductSubcategoryID) AS SubcategoriesCount,
        COUNT(Product.ProductID) AS ProductsCount
 FROM AdventureWorks2017.Production.Product AS Product
          INNER JOIN AdventureWorks2017.Production.ProductSubcategory AS ProductSubcategory
