@@ -74,7 +74,7 @@ WHERE Name LIKE 'L_N%'
 ```SQL
 SELECT Name
 FROM Production.Product
-WHERE (Name LIKE 'D%' OR NAME LIKE 'M%')
+WHERE Name LIKE '[DM]%'
   AND LEN(Name) > 3
 ```
 
