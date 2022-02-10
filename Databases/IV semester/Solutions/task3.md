@@ -12,11 +12,13 @@ FROM AdventureWorks2017.Production.Product AS Product
                     ON Category.ProductCategoryID = Subcategory.ProductCategoryID;
 ```
 
-- Вывести на экран названия подкатегорий с совпадающими именами. [?]
+- Вывести на экран названия подкатегорий с совпадающими именами.
 
 ```SQL
-
-
+SELECT ps1.Name
+FROM AdventureWorks2017.Production.ProductSubcategory AS ps1
+         INNER JOIN AdventureWorks2017.Production.ProductSubcategory AS ps2
+                    ON ps1.ProductSubcategoryID != ps2.ProductSubcategoryID AND ps1.Name = ps2.Name
 ```
 
 - Вывести на экран название категорий и количество товаров в данной категории.
@@ -32,7 +34,7 @@ FROM AdventureWorks2017.Production.Product AS Product
 GROUP BY Category.Name
 ```
 
-- Вывести на экран название подкатегории, а также количество товаров в данной подкатегории с учетом ситуации, что могут существовать подкатегории с одинаковыми именами. [?]
+- Вывести на экран название подкатегории, а также количество товаров в данной подкатегории с учетом ситуации, что могут существовать подкатегории с одинаковыми именами.
 
 ```SQL
 SELECT SubCategory.Name,
@@ -40,7 +42,7 @@ SELECT SubCategory.Name,
 FROM AdventureWorks2017.Production.Product AS Product
          INNER JOIN AdventureWorks2017.Production.ProductSubcategory AS SubCategory
                     ON Product.ProductSubcategoryID = SubCategory.ProductSubcategoryID
-GROUP BY SubCategory.Name
+GROUP BY SubCategory.Name, SubCategory.ProductCategoryID
 ```
 
 - Вывести на экран название первых трех подкатегорий с небольшим количеством товаров.
@@ -117,16 +119,30 @@ GROUP BY Category.Name
 ORDER BY SUM(SalesOrderDetail.OrderQty) DESC;
 ```
 
-- Вывести на экран названия категорий, количество подкатегорий и количество товаров в них. [?]
+- Вывести на экран названия категорий, количество подкатегорий и количество товаров в них.
 
 ```SQL
-
-
+SELECT ProductCategory.Name,
+       COUNT(DISTINCT ProductSubcategory.ProductSubcategoryID) AS SubacategoriesCount,
+       COUNT(Product.ProductID) AS ProductsCount
+FROM AdventureWorks2017.Production.Product AS Product
+         INNER JOIN AdventureWorks2017.Production.ProductSubcategory AS ProductSubcategory
+                    ON Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID
+         INNER JOIN AdventureWorks2017.Production.ProductCategory AS ProductCategory
+                    ON ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID
+GROUP BY ProductCategory.Name
 ```
 
-- Вывести на экран номер кредитного рейтинга и количество товаров, поставляемых компаниями, имеющими этот кредитный рейтинг. [?]
+- Вывести на экран номер кредитного рейтинга и количество товаров, поставляемых компаниями, имеющими этот кредитный рейтинг.
 
 ``` SQL
-
-
+SELECT Vendor.CreditRating,
+       SUM(PurchaseOrderDetail.OrderQty) AS ProductsCount
+FROM AdventureWorks2017.Purchasing.Vendor AS Vendor
+         INNER JOIN AdventureWorks2017.Purchasing.PurchaseOrderHeader AS PurchaseOrderHeader
+                    ON Vendor.BusinessEntityID = PurchaseOrderHeader.VendorID
+         INNER JOIN AdventureWorks2017.Purchasing.PurchaseOrderDetail AS PurchaseOrderDetail
+                    ON PurchaseOrderHeader.PurchaseOrderID = PurchaseOrderDetail.PurchaseOrderID
+GROUP BY Vendor.CreditRating
+ORDER BY Vendor.CreditRating
 ```
