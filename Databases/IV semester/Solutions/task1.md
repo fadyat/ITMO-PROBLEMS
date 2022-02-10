@@ -83,7 +83,7 @@ WHERE Name LIKE '[DM]%'
 ```SQL
 SELECT Name
 FROM Production.Product
-WHERE YEAR(SellStartDate) >= 2012
+WHERE YEAR(SellStartDate) <= 2012
 ```
 
 - Найти и вывести на экран названия всех подкатегорий товаров.
