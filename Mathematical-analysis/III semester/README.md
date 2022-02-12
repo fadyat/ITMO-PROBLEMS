@@ -20,4 +20,4 @@
 
 [Task 1](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Mathematical-analysis/III%20semester/TypicalCalc/totalTaskpdf.pdf) \#
 [Task 2](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Mathematical-analysis/III%20semester/TypicalCalc/secondPart.pdf) \#
-[Solution](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Mathematical-analysis/III%20semester/TypicalCalc/solution.pdf)
+[Solution.](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Mathematical-analysis/III%20semester/TypicalCalc/solution.pdf)
