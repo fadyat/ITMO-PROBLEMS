@@ -12,10 +12,10 @@
     | ECM                | [✔](./Electronic-counter-machine/I%20semester) |                                            |                                            |
     | English            | [✔](./English/I%20semester)                    | [✔](./English/II%20semester)               | [✔](./English/III%20semester)              |
     | Life-Safety        |                                                |                                            | [✔](./Life-Safety/III%20semester)          |
-    | Linal              | [✔](./Linal/I%20semester)                      | [✔](./Linal/II%20semester)                 |                                            |
-    | Math               | [✔](./Mathematical-analysis/I%20semester)      | [✔](./Mathematical-analysis/II%20semester) | [✔](./Mathematical-analysis/III%20semester) |
+    | Linear-algebra              | [✔](./Linal/I%20semester)                      | [✔](./Linal/II%20semester)                 |                                            |
+    | Mathematical-analysis               | [✔](./Mathematical-analysis/I%20semester)      | [✔](./Mathematical-analysis/II%20semester) | [✔](./Mathematical-analysis/III%20semester) |
     | OOP                |                                                |                                            | [✔](./OOP/III%20semester)                  |
-    | OS                 |                                                |                                            | [✔](./OS/III%20semester)                   |
+    | Operating-systems                |                                                |                                            | [✔](./OS/III%20semester)                   |
     | Physics            |                                                | [✔](./Physics/II%20semester)               | [✔](./Physics/III%20semester)              |
     | Probability-theory |                                                |                                            | [✔](./Probability-theory/III%20semester)   |
     | Programming        | [✔](./Programming/I%20semester)                | [✔](./Programming/II%20semester)           |                                            |
