@@ -1,41 +1,31 @@
 <h3 align="center"> Solutions & Problems & Tests</h3><hr>
-  <div>
-      <a href = "./Problems/lab0.md">0.</a> #
-      <a href = "./Solutions/_0Isu"> Isu </a> #
-      <a href = "./Solutions/_0Isu.Tests"> Isu.Tests </a>
-  </div>
 
-  <div>
-      <a href = "./Problems/lab1.md">1.</a> #
-      <a href = "./Solutions/_1Shops"> Shops </a> #
-      <a href = "./Solutions/_1Shops.Tests"> Shops.Tests </a>
-  </div>
-
-  <div>
-      <a href = "./Problems/lab2.md">2.</a> #
-      <a href = "./Solutions/_2IsuExtra"> IsuExtra </a> #
-      <a href = "./Solutions/_2IsuExtra.Tests"> IsuExtra.Tests </a>
-  </div>
+  > Not the best solution.
+  > 
+  > [0.](./Problems/lab0.md) # [Isu](./Solutions/_0Isu) # [Isu.Tests](./Solutions/_0Isu.Tests)
   
-  <div>
-      <a href = "./Problems/lab3.md">3.</a> #
-      <a href = "./Solutions/_3Backups"> Backups </a> #
-      <a href = "./Solutions/_3Backups.Tests"> Backups.Tests </a>
-  </div>
+  > Solution using services, repository pattern.
+  > 
+  > [1.](./Problems/lab1.md) # [Shops](./Solutions/_1Shops) # [Shops.Tests](./Solutions/_1Shops.Tests)
 
-  <div>
-      <a href = "./Problems/lab4.md">4.</a> #
-      <a href = "./Solutions/_4Banks"> Banks </a> #
-      <a href = "./Solutions/_4Banks.Tests"> Banks.Tests </a>
-  </div>
+  > Weird solution, lots of bugs.
+  >
+  > [2.](./Problems/lab2.md) # [IsuExtra](./Solutions/_2IsuExtra) # [IsuExtra.Tests](./Solutions/_2IsuExtra.Tests)
 
-  <div>
-      <a href = "./Problems/lab5.md">5.</a> #
-      <a href = "./Solutions/_5BackupsExtra"> BackupsExtra </a> #
-      <a href = "./Solutions/_5BackupsExtra.Tests"> BackupsExtra.Tests </a>
-  </div>
-  <div>
-      <a href = "./Problems/lab6.md">6.</a> #
-      <a href = "./Solutions/_6Reports"> Reports </a> #
-      <a href = "./Solutions/_6Reports.Tests"> Reports.Tests </a>
-  </div>
+  > Solution using decorator pattern for Backups.Extra, SOLID
+  > 
+  > [3.](./Problems/lab3.md) # [Backups](./Solutions/_3Backups) # [Backups.Test](./Solutions/_3Backups.Tests)
+  
+  > Solution using chain of responsobility, command pattern, UI  
+  > May be bugs
+  > 
+  > [4.](./Problems/lab4.md) # [Banks](./Solutions/_4Banks) # [Banks.Tests](./Solutions/_4Banks.Tests)
+
+  > Solution using decorator pattern, JSON Serialization, logging  
+  > Some bugs with protected fields during serialization
+  > 
+  > [5.](./Problems/lab5.md) # [BackupsExtra](./Solutions/_5BackupsExtra) # [BackupsExtra.Tests](./Solutions/_5BackupsExtra.Tests)
+  
+  > Solution from [@DoKep2](https://github.com/DoKep2)
+  >
+  > [6.](./Problems/lab6.md) # [Reports](./Solutions/_6Reports)
