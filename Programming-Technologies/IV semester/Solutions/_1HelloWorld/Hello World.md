@@ -187,9 +187,10 @@ dependencies {
 
 - Add an identifier to the plugins that tells Gradle that we are creating an application.
 - Write 'mainClassName' and 'jar.manifest' to understand the Java entry point.
-- Click gradle/build/assemble to create a snapshot with our programm, he located in /build/libs/
+- Click gradle/build/assemble to create a snapshot with our programm, he will be located in /build/libs/
 - Create new project
-- Go to File/Project Structure/Dependencies and add your .jar file - DONE!
+- Go to File > Project Structure > Dependencies and add your .jar file
+- Now you can use `import com.artyomfadeyev.graphAlgo` in your new project
 
 ...
 
