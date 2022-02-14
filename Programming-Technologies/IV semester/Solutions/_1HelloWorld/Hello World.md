@@ -56,7 +56,7 @@ public class Main {
     native int sum(int a, int b);
 
     static {
-		System.load("/Users/artyomfadeyev/IdeaProjects/Project/Java_Main_sum.dylib");
+	    System.load("/Users/artyomfadeyev/IdeaProjects/Project/Java_Main_sum.dylib");
     }
 
     public static void main(String[] args) {
