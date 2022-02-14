@@ -72,10 +72,77 @@ public class Main {
 
 > Написать немного кода на Scala и F# с использованием функциональных возможностей языка - Pipe operator, Discriminated Union, CE и т.д. . Вызвать написанный код из обычных соответствующих ООП языков (Java/Kotlin и С#) и посмотреть во что превращается написанный раннее код.
 
+...
 
 ## 3. Packages
 
 > Написать алгоритм обхода графа (DFS и BFS) на языке Java, собрать в пакет и опубликовать (хоть в Maven, хоть в Gradle, не имеет значения). Использовать в другом проекте на Java/Kotlin этот пакет. Повторить это с F# → C#. В отчёте написать про алгоритм работы пакетных менеджеров, особенности их работы в C# и Java мирах.
+
+### Kotlin
+- Create project
+
+```Kotlin
+import java.util.LinkedList
+import java.util.Queue
+
+class Graph(size: Int) {
+    private val n: Int
+    private val graph: MutableList<MutableList<Int>>
+
+    init {
+        n = size
+        graph = MutableList(n) { mutableListOf() }
+    }
+
+    fun addEdge(v: Int, u: Int) {
+        graph[v].add(u)
+    }
+
+    fun bfs(v: Int) {
+        val queue: Queue<Int> = LinkedList()
+        val d = Array(n) { 0 }
+        val used = Array(n) { false }
+
+        queue.add(v)
+        used[v] = true
+        while (!queue.isEmpty()) {
+            val u: Int = queue.poll()
+            for (to in graph[u]) {
+                if (!used[to]) {
+                    used[to] = true
+                    d[to] = d[u] + 1
+                    queue.add(to)
+                }
+            }
+        }
+    }
+
+    fun dfs(v: Int) {
+        val used = Array(n) { false }
+        val d = Array(n) { 0 }
+
+        fun dfsExec(v: Int) {
+            used[v] = true
+            graph[v].forEach {
+                if (!used[it]) {
+                    d[it] = d[v] + 1
+                    dfsExec(it)
+                }
+            }
+        }
+
+        dfsExec(v)
+    }
+
+    fun print() {
+        graph.forEach {
+            it.forEach { k -> print(k) }
+            println()
+        }
+    }
+}
+```
+...
 
 ## 4. Benchmarking
 
