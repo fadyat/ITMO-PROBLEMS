@@ -159,7 +159,7 @@ fun main() {
 ```
 
 build.gradle:
-```
+```gradle
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
     id 'application'
