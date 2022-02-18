@@ -1,3 +1,9 @@
+# Apple
 .DS_Store
+
+# JetBrains
 .idea
+
+# Jupyter notebook
 .ipynb_checkpoints
+octave-workspace
