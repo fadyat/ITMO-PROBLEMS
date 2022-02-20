@@ -4,12 +4,14 @@
 - Найти и вывести на экран название продуктов и название категорий товаров, к которым относится этот продукт, с учетом того, что в выборку попадут только товары с цветом Red и ценой не менее 100.
 
 ```SQL
-SELECT Product.Name, Category.Name
+SELECT Product.Name  AS ProductName,
+       Category.Name AS CategoryName
 FROM AdventureWorks2017.Production.Product AS Product
          INNER JOIN AdventureWorks2017.Production.ProductSubcategory AS Subcategory
                     ON Product.ProductSubcategoryID = Subcategory.ProductSubcategoryID
          INNER JOIN AdventureWorks2017.Production.ProductCategory AS Category
-                    ON Category.ProductCategoryID = Subcategory.ProductCategoryID;
+                    ON Category.ProductCategoryID = Subcategory.ProductCategoryID
+WHERE Product.Color = 'Red' AND Product.StandardCost >= 100;
 ```
 
 - Вывести на экран названия подкатегорий с совпадающими именами.
