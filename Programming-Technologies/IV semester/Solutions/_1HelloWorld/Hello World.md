@@ -187,12 +187,84 @@ dependencies {
 
 - Add an identifier to the plugins that tells Gradle that we are creating an application.
 - Write 'mainClassName' and 'jar.manifest' to understand the Java entry point.
-- Click gradle/build/assemble to create a snapshot with our programm, he will be located in /build/libs/
+- Click **gradle/build/assemble** to create a snapshot with our programm, he will be located in **/build/libs/**
 - Create new project
-- Go to File > Project Structure > Dependencies and add your .jar file
+- Go to **File > Project Structure > Dependencies** and add your .jar file
 - Now you can use `import com.artyomfadeyev.graphAlgo` in your new project
 
-...
+### C#
+- Pick your project and right click on it
+- Go to **Properties > NuGet** and configure your package settings
+- Write `dotnet pack` at console.
+- We can find your package at **./bin/Debug/ProjectName.nupkg**
+- Create new project
+- Go to NuGet/Sources/Feeds click '+' and add new package OR go to 'NuGet.Config.xml' and add new packageSource
+
+Graph.cs
+```C#
+namespace Graphs;
+
+public class Graph
+{
+    private int _n;
+    private readonly List<List<int>> _graph;
+
+    public Graph(int n)
+    {
+        _n = n;
+        _graph = new List<List<int>>();
+        for (var i = 0; i < n; i++)
+        {
+            _graph.Add(new List<int>());
+        }
+    }
+
+    public void AddEdge(int v, int u)
+    {
+        _graph[v].Add(u);
+    }
+
+    public void Dfs(int v)
+    {
+        // ...
+    }
+
+    public void Bfs(int v)
+    {
+        // ...
+    }
+
+    public void Print()
+    {
+        // ...  
+    }
+}
+```
+
+Main.cs
+```C#
+namespace Graphs;
+
+public static class Program
+{
+    public static void Main()
+    {
+        // ...
+    }
+}
+```
+
+NuGet.Config.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+    <packageSources>
+        <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+        <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" />
+    </packageSources>
+</configuration>
+```
 
 ## 4. Benchmarking
 
