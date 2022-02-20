@@ -6,6 +6,7 @@
 
 - Создадим C++ файл с функцией для суммы чисел:
 
+### C++
 ```cpp
 extern "C" int sum(int a, int b) {
     return a + b;
@@ -19,7 +20,7 @@ extern "C" int sum(int a, int b) {
 g++ --verbose -dynamiclib -o sum.dylib sum.cpp
 ```
 
-### C++ >> C#
+### C#
 
 - Создадим проект C# 
 
@@ -44,7 +45,7 @@ namespace Project
 - Перекинем **.dylib** в **Project/bin/Debug/net6.0**
 
 
-### C++ >> Java
+### Java
 
 - Создадим проект Java
 
@@ -261,7 +262,9 @@ NuGet.Config.xml
 <configuration>
     <packageSources>
         <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-        <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" />
+
+        <!--- Link to my local directory with packages-->
+        <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" /> /
     </packageSources>
 </configuration>
 ```
@@ -269,6 +272,152 @@ NuGet.Config.xml
 ## 4. Benchmarking
 
 > Изучить инструменты для оценки производительности в C# и Java. Написать несколько алгоритмов сортировок (и взять стандартную) и запустить бенчмарки (в бенчмарках помимо времени выполнения проверить аллокации памяти). В отчёт написать про инструменты для бенчмаркинга, их особености, анализ результатов проверок.
+
+### C#
+- Create classes at project
+
+Sorts.cs
+```C#
+namespace Example;
+
+public class Sorts
+{
+    public static void bubbleSort(int[] lst)
+    {
+        var n = lst.Length;
+        for (var i = 0; i < n - 1; i++)
+        {
+            for (var j = 0; j < n - i - 1; j++)
+            {
+                if (lst[j] > lst[j + 1])
+                {
+                    (lst[j], lst[j + 1]) = (lst[j + 1], lst[j]);
+                }
+            }
+        }
+    }
+
+    private static void merge(int[] lst, int l, int m, int r)
+    {
+        var left = new int[m - l + 1];
+        var right = new int[r - m];
+        
+        Array.Copy(lst, l, left, 0, m - l + 1);
+        Array.Copy(lst, m + 1, right, 0, r - m);
+
+        var i = 0;
+        var j = 0;
+        for (var k = l; k < r + 1; k++)
+        {
+            if (i == left.Length)
+            {
+                lst[k] = right[j++];
+            }
+            else if (j == right.Length)
+            {
+                lst[k] = left[i++];
+            }
+            else if (left[i] <= right[j])
+            {
+                lst[k] = left[i++];
+            }
+            else
+            {
+                lst[k] = right[j++];
+            }
+        }
+    }
+
+    public static void mergeSort(int[] lst, int l = 0, int r = -1)
+    {
+        if (r == -1) r = lst.Length - 1;
+        if (l >= r) return;
+        var m = (l + r) / 2;
+
+        mergeSort(lst, l, m);
+        mergeSort(lst, m + 1, r);
+        merge(lst, l, m, r);
+    }
+
+    public static void standartSort(int[] lst)
+    {
+        Array.Sort(lst);
+    }
+
+    public static void print(IEnumerable<int> list)
+    {
+        foreach (var i in list)
+        {
+            Console.Write($"{i} ");
+        }
+        Console.WriteLine();
+    }
+}
+```
+
+SortsBenchmark.cs
+```C#
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
+
+namespace Example;
+
+[MemoryDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest)]
+[RankColumn]
+public class SortsBenchmark
+{
+    private readonly int[] _list;
+
+    public SortsBenchmark()
+    {
+        var rnd = new Random();
+        var n = rnd.Next(0, Convert.ToInt32(1e4));
+
+        _list = new int[n];
+        for (var i = 0; i < n; i++)
+        {
+            _list[i] = rnd.Next(0, int.MaxValue);
+        }
+    }
+
+    [Benchmark]
+    public void bubbleSort()
+    {
+        Sorts.bubbleSort(_list);
+    }
+    
+    [Benchmark]
+    public void mergeSort()
+    {
+        Sorts.mergeSort(_list);
+    }
+    
+    [Benchmark]
+    public void standartSort()
+    {
+        Sorts.standartSort(_list);
+    }
+}
+```
+
+Program.cs
+```C#
+using BenchmarkDotNet.Running;
+using Example;
+
+
+BenchmarkRunner.Run<SortsBenchmark>();
+```
+
+- Build project `dotnet build -c Release`
+- Run benchmarking `dotnet /Users/artyomfadeyev/RiderProjects/Benchmarking/Example/bin/Release/net6.0/Example.dll`
+
+|       Method |        Mean |     Error |    StdDev | Rank |    Gen 0 | Allocated |
+|------------- |------------:|----------:|----------:|-----:|---------:|----------:|
+| standartSort |    35.10 us |  0.139 us |  0.130 us |    1 |        - |         - |
+|    mergeSort |   271.45 us |  0.928 us |  0.823 us |    2 | 334.4727 | 699,904 B |
+|   bubbleSort | 5,076.75 us | 17.044 us | 14.232 us |    3 |        - |       5 B |
 
 ## 5. Code analysis
 
