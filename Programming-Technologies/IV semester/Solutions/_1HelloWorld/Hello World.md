@@ -2,7 +2,7 @@
 
 ## 1. Interop
 
-> Изучить механизм интеропа между языками, попробовать у себя вызывать C++ код (суммы чисел достаточно) из Java и C#. В отчёте описать логику работы, сложности и ограничения этих механизмов.
+> Изучить механизм интеропа между языками, попробовать у себя вызывать C/C++ (Не C++/CLI) код (суммы чисел достаточно) из Java и C#. В отчёте описать логику работы, сложности и ограничения этих механизмов.
 
 - Создадим C++ файл с функцией для суммы чисел:
 
@@ -71,13 +71,13 @@ public class Main {
 
 ## 2. Functional programming
 
-> Написать немного кода на Scala и F# с использованием функциональных возможностей языка - Pipe operator, Discriminated Union, CE и т.д. . Вызвать написанный код из обычных соответствующих ООП языков (Java/Kotlin и С#) и посмотреть во что превращается написанный раннее код.
+> Написать немного кода на Scala **и** F# с использованием уникальных возможностей языка - Pipe operator, Discriminated Union, Computation expressions и т.д. . Вызвать написанный код из обычных соответствующих ООП языков (Java **и** С#) и посмотреть во что превращается написанный раннее код после декомпиляции в них.
 
 ...
 
 ## 3. Packages
 
-> Написать алгоритм обхода графа (DFS и BFS) на языке Java, собрать в пакет и опубликовать (хоть в Maven, хоть в Gradle, не имеет значения). Использовать в другом проекте на Java/Kotlin этот пакет. Повторить это с F# → C#. В отчёте написать про алгоритм работы пакетных менеджеров, особенности их работы в C# и Java мирах.
+> Написать алгоритм обхода графа (DFS и BFS) на языке Java, собрать в пакет и опубликовать (хоть в Maven, хоть в Gradle, не имеет значения). Использовать в другом проекте на Java/Scala этот пакет. Повторить это с C#/F#. В отчёте написать про алгоритм работы пакетных менеджеров, особенности их работы в C# и Java мирах.
 
 ### Kotlin
 - Create Gradle Project > Kotlin
@@ -263,7 +263,7 @@ NuGet.Config.xml
     <packageSources>
         <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
 
-        <!--- Link to my local directory with packages-->
+        - Link to my local directory with packages
         <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" /> /
     </packageSources>
 </configuration>
@@ -382,21 +382,27 @@ public class SortsBenchmark
     }
 
     [Benchmark]
-    public void bubbleSort()
-    {
-        Sorts.bubbleSort(_list);
-    }
-    
-    [Benchmark]
     public void mergeSort()
     {
+        var lst = new int[_list.Length];
+        _list.CopyTo(lst, 0);
         Sorts.mergeSort(_list);
     }
     
     [Benchmark]
     public void standartSort()
     {
+        var lst = new int[_list.Length];
+        _list.CopyTo(lst, 0);
         Sorts.standartSort(_list);
+    }
+    
+    [Benchmark]
+    public void bubbleSort()
+    {
+        var lst = new int[_list.Length];
+        _list.CopyTo(lst, 0);
+        Sorts.bubbleSort(_list);
     }
 }
 ```
@@ -413,11 +419,16 @@ BenchmarkRunner.Run<SortsBenchmark>();
 - Build project `dotnet build -c Release`
 - Run benchmarking `dotnet /Users/artyomfadeyev/RiderProjects/Benchmarking/Example/bin/Release/net6.0/Example.dll`
 
-|       Method |        Mean |     Error |    StdDev | Rank |    Gen 0 | Allocated |
-|------------- |------------:|----------:|----------:|-----:|---------:|----------:|
-| standartSort |    35.10 us |  0.139 us |  0.130 us |    1 |        - |         - |
-|    mergeSort |   271.45 us |  0.928 us |  0.823 us |    2 | 334.4727 | 699,904 B |
-|   bubbleSort | 5,076.75 us | 17.044 us | 14.232 us |    3 |        - |       5 B |
+|       Method |         Mean |      Error |     StdDev | Rank |    Gen 0 | Allocated |
+|------------- |-------------:|-----------:|-----------:|-----:|---------:|----------:|
+| standartSort |     3.818 us |  0.0172 us |  0.0161 us |    1 |   1.9836 |      4 KB |
+|    mergeSort |   178.300 us |  0.3572 us |  0.3166 us |    2 | 224.6094 |    459 KB |
+|   bubbleSort | 7,599.588 us | 20.9108 us | 19.5600 us |    3 |        - |     16 KB |
+
+### Kotlin
+
+
+
 
 ## 5. Code analysis
 
