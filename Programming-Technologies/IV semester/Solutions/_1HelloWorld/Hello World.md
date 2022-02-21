@@ -263,8 +263,8 @@ NuGet.Config.xml
     <packageSources>
         <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
 
-        - Link to my local directory with packages
-        <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" /> /
+        <!-- Link to my local directory with packages -->
+        <add key="Documents" value="/Users/artyomfadeyev/Documents/packages" />
     </packageSources>
 </configuration>
 ```
