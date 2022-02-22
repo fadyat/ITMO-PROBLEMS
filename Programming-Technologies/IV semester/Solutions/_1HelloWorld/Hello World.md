@@ -280,11 +280,11 @@ Sorts.cs
 ```C#
 namespace Example;
 
-public class Sorts
+public static class Sorts
 {
-    public static void bubbleSort(int[] lst)
+    public static void bubbleSort(List<int> lst)
     {
-        var n = lst.Length;
+        var n = lst.Count;
         for (var i = 0; i < n - 1; i++)
         {
             for (var j = 0; j < n - i - 1; j++)
@@ -297,60 +297,36 @@ public class Sorts
         }
     }
 
-    private static void merge(int[] lst, int l, int m, int r)
+    public static void mergeSort(List<int> lst, int l, int r)
     {
-        var left = new int[m - l + 1];
-        var right = new int[r - m];
-        
-        Array.Copy(lst, l, left, 0, m - l + 1);
-        Array.Copy(lst, m + 1, right, 0, r - m);
+        if (l == r)
+            return;
 
-        var i = 0;
-        var j = 0;
-        for (var k = l; k < r + 1; k++)
-        {
-            if (i == left.Length)
-            {
-                lst[k] = right[j++];
-            }
-            else if (j == right.Length)
-            {
-                lst[k] = left[i++];
-            }
-            else if (left[i] <= right[j])
-            {
-                lst[k] = left[i++];
-            }
-            else
-            {
-                lst[k] = right[j++];
-            }
-        }
-    }
-
-    public static void mergeSort(int[] lst, int l = 0, int r = -1)
-    {
-        if (r == -1) r = lst.Length - 1;
-        if (l >= r) return;
         var m = (l + r) / 2;
 
         mergeSort(lst, l, m);
         mergeSort(lst, m + 1, r);
-        merge(lst, l, m, r);
-    }
 
-    public static void standartSort(int[] lst)
-    {
-        Array.Sort(lst);
-    }
-
-    public static void print(IEnumerable<int> list)
-    {
-        foreach (var i in list)
+        var new_lst = new List<int>();
+        for (int i = l, j = m + 1; i <= m || j <= r;)
         {
-            Console.Write($"{i} ");
+            if (i > m)
+                new_lst.Add(lst[j++]);
+            else if (j > r)
+                new_lst.Add(lst[i++]);
+            else if (lst[i] <= lst[j])
+                new_lst.Add(lst[i++]);
+            else
+                new_lst.Add(lst[j++]);
         }
-        Console.WriteLine();
+
+        for (var i = 0; i < new_lst.Count; i++)
+            lst[l + i] = new_lst[i];
+    }
+
+    public static void standardSort(List<int> lst)
+    {
+        lst.Sort();
     }
 }
 ```
@@ -367,42 +343,39 @@ namespace Example;
 [RankColumn]
 public class SortsBenchmark
 {
-    private readonly int[] _list;
+    private readonly List<int> _lst;
 
     public SortsBenchmark()
     {
-        var rnd = new Random();
-        var n = rnd.Next(0, Convert.ToInt32(1e4));
-
-        _list = new int[n];
+        var random = new Random();
+        // var n = rnd.Next(0, Convert.ToInt32(1e4));
+        const int n = 10000;
+        _lst = new List<int>();
         for (var i = 0; i < n; i++)
         {
-            _list[i] = rnd.Next(0, int.MaxValue);
+            _lst.Add(random.Next());
         }
     }
 
     [Benchmark]
     public void mergeSort()
     {
-        var lst = new int[_list.Length];
-        _list.CopyTo(lst, 0);
-        Sorts.mergeSort(_list);
+        var lst = new List<int>(_lst);
+        Sorts.mergeSort(lst, 0, lst.Count - 1);
     }
-    
+
     [Benchmark]
-    public void standartSort()
+    public void standardSort()
     {
-        var lst = new int[_list.Length];
-        _list.CopyTo(lst, 0);
-        Sorts.standartSort(_list);
+        var lst = new List<int>(_lst);
+        Sorts.standardSort(lst);
     }
-    
+
     [Benchmark]
     public void bubbleSort()
     {
-        var lst = new int[_list.Length];
-        _list.CopyTo(lst, 0);
-        Sorts.bubbleSort(_list);
+        var lst = new List<int>(_lst);
+        Sorts.bubbleSort(lst);
     }
 }
 ```
@@ -419,16 +392,159 @@ BenchmarkRunner.Run<SortsBenchmark>();
 - Build project `dotnet build -c Release`
 - Run benchmarking `dotnet /Users/artyomfadeyev/RiderProjects/Benchmarking/Example/bin/Release/net6.0/Example.dll`
 
-|       Method |         Mean |      Error |     StdDev | Rank |    Gen 0 | Allocated |
-|------------- |-------------:|-----------:|-----------:|-----:|---------:|----------:|
-| standartSort |     3.818 us |  0.0172 us |  0.0161 us |    1 |   1.9836 |      4 KB |
-|    mergeSort |   178.300 us |  0.3572 us |  0.3166 us |    2 | 224.6094 |    459 KB |
-|   bubbleSort | 7,599.588 us | 20.9108 us | 19.5600 us |    3 |        - |     16 KB |
-
-### Kotlin
+|       Method |         Mean |     Error |    StdDev | Rank |     Gen 0 | Allocated |
+|------------- |-------------:|----------:|----------:|-----:|----------:|----------:|
+| standardSort |     362.1 us |   3.00 us |   2.51 us |    1 |   18.5547 |     39 KB |
+|    mergeSort |   1,358.0 us |  13.38 us |  11.86 us |    2 | 1138.6719 |  2,329 KB |
+|   bubbleSort | 133,028.1 us | 931.28 us | 871.12 us |    3 |         - |     39 KB |
 
 
+### Java
 
+- Create Java project with Maven
+- Update `pom.xml`:
+```xml
+...
+
+<properties>
+    <jmh.version>1.21</jmh.version>
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${jmh.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${jmh.version}</version>
+    </dependency>
+</dependencies>
+```
+
+- Install JMH plugin
+
+Sorts.java
+```Java
+package com.artyomfadeyev;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Sorts {
+    public static void bubbleSort(ArrayList<Integer> lst) {
+        int n = lst.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (lst.get(j) > lst.get(j + 1)) {
+                    int temp = lst.get(j);
+                    lst.set(j, lst.get(j + 1));
+                    lst.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    static void mergeSort(ArrayList<Integer> vec, int l, int r) {
+        if (l == r)
+            return;
+
+        int m = (l + r) / 2;
+
+        mergeSort(vec, l, m);
+        mergeSort(vec, m + 1, r);
+
+        ArrayList<Integer> new_vec = new ArrayList<>();
+        for (int i = l, j = m + 1; i <= m || j <= r; ) {
+            if (i > m) {
+                new_vec.add(vec.get(j++));
+            } else if (j > r) {
+                new_vec.add(vec.get(i++));
+            } else if (vec.get(i) <= vec.get(j)) {
+                new_vec.add(vec.get(i++));
+            } else {
+                new_vec.add(vec.get(j++));
+            }
+        }
+
+        for (int i = 0; i < new_vec.size(); i++)
+            vec.set(l + i, new_vec.get(i));
+    }
+
+
+    public static void standardSort(ArrayList<Integer> lst) {
+        Collections.sort(lst);
+    }
+}
+
+```
+
+SortsBenchmark.java
+```Java
+package com.artyomfadeyev;
+
+import org.openjdk.jmh.annotations.*;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+@State(Scope.Benchmark)
+@Fork(value = 1)
+@Warmup(iterations = 2)
+@Measurement(iterations = 2)
+public class SortsBenchmark {
+    private ArrayList<Integer> arr;
+
+    @Setup
+    public void setUp() {
+        Random random = new Random();
+//        var n = random.nextInt(10000);
+        var n = 10000;
+        arr = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            arr.add(random.nextInt());
+        }
+    }
+
+    @Benchmark
+    public void mergeSort() {
+        var lst = new ArrayList<>(arr);
+        Sorts.mergeSort(lst, 0, lst.size() - 1);
+    }
+
+    @Benchmark
+    public void standardSort() {
+        var lst = new ArrayList<>(arr);
+        Sorts.standardSort(lst);
+    }
+
+    @Benchmark
+    public void bubbleSort() {
+        var lst = new ArrayList<>(arr);
+        Sorts.bubbleSort(lst);
+    }
+}
+
+```
+
+Main.java
+```Java
+package com.artyomfadeyev;
+
+public class Main {
+    public static void main(String[] args) {
+
+    }
+}
+```
+
+|Benchmark                   |  Mode  | Cnt  |   Score|   Error|  Units|
+| --- | --- | --- | --- | --- | --- |
+| SortsBenchmark.bubbleSort  |  thrpt  |  2 |    3.100    | |      ops/s|
+| SortsBenchmark.mergeSort    | thrpt |   2  | 538.312      | |   ops/s|
+| SortsBenchmark.standardSort  |thrpt|    2  |1161.172       | |   ops/s|
 
 ## 5. Code analysis
 
