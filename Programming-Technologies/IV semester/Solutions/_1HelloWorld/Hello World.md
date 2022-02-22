@@ -73,7 +73,57 @@ public class Main {
 
 > Написать немного кода на Scala **и** F# с использованием уникальных возможностей языка - Pipe operator, Discriminated Union, Computation expressions и т.д. . Вызвать написанный код из обычных соответствующих ООП языков (Java **и** С#) и посмотреть во что превращается написанный раннее код после декомпиляции в них.
 
-...
+### F#
+
+```F#
+open System
+open Microsoft.FSharp.Collections
+open Microsoft.FSharp.Core
+
+let pipeline_operator list =
+    list
+    |> Seq.filter (fun x -> x > 0)
+    |> Seq.map (fun x -> Convert.ToInt32(Math.Floor(Math.Sqrt(x))) + x)
+    |> Seq.filter (fun x -> x % 2 = 0)
+    |> Seq.isEmpty
+
+//let result = pipeline_operator [1; 4; 5; 6]
+//printf $"%b{result}"
+
+type Composition = string
+type Amount = double
+
+type Raisins(have: bool) =
+    member this.have = have
+
+    override this.ToString() =
+        if this.have = true then
+            "with raisins"
+        else
+            "without raisins"
+
+type WrapperType =
+    | Paper
+    | Foil
+    | Empty of Nullable
+
+type Yummy =
+    | Sweet of (Composition * Amount * WrapperType)
+    | Cookie of Composition
+    | Muffin of (Composition * Raisins)
+    | Empty of Nullable
+
+
+let pick yummy =
+    match yummy with
+    | Yummy.Sweet (composition, amount, wrapperType) -> printfn $"{amount} sweets with {composition} in {wrapperType}"
+    | Yummy.Cookie composition -> printfn $"Delicious {composition} cookie"
+    | Yummy.Muffin (composition, raisins) -> printfn $"{composition} muffin {raisins}"
+    | _ -> failwith "todo"
+
+//do pick (Yummy.Muffin("Chocolate", Raisins(true)))
+```
+
 
 ## 3. Packages
 
