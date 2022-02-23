@@ -223,6 +223,7 @@ import java.util.Random;
 @Fork(value = 1)
 @Warmup(iterations = 2)
 @Measurement(iterations = 2)
+@BenchmarkMode(Mode.All)
 public class SortsBenchmark {
     private ArrayList<Integer> arr;
 
@@ -269,8 +270,40 @@ public class Main {
 }
 ```
 
-|Benchmark                   |  Mode  | Cnt  |   Score|   Error|  Units|
-| --- | --- | --- | --- | --- | --- |
-| SortsBenchmark.bubbleSort  |  thrpt  |  2 |    3.100    | |      ops/s|
-| SortsBenchmark.mergeSort    | thrpt |   2  | 538.312      | |   ops/s|
-| SortsBenchmark.standardSort  |thrpt|    2  |1161.172       | |   ops/s|
+| Benchmark                                        |    Mode |   Cnt |    Score |   Error | Units |
+| ---                                              |  ---    | ---   |  ---     |     --- | ---   |
+| SortsBenchmark.mergeSort                         |   thrpt |     2 |  547.473 |         | ops/s |
+| SortsBenchmark.bubbleSort                        |    avgt |     2 |    0.297 |         |  s/op |
+| SortsBenchmark.standardSort                      |   thrpt |     2 | 1175.338 |         | ops/s |
+| SortsBenchmark.mergeSort                         |    avgt |     2 |    0.002 |         |  s/op |
+| SortsBenchmark.bubbleSort                        |  sample |    69 |    0.295 |±  0.002 |  s/op |
+| SortsBenchmark.standardSort                      |    avgt |     2 |    0.001 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.00       |  sample |       |    0.284 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.90       |  sample |       |    0.305 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.50       |  sample |       |    0.295 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.95       |  sample |       |    0.307 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.999      |  sample |       |    0.312 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.99       |  sample |       |    0.312 |         |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p0.9999     |  sample |       |    0.312 |         |  s/op |
+| SortsBenchmark.mergeSort                         |  sample | 10947 |    0.002 |±  0.001 |  s/op |
+| SortsBenchmark.bubbleSort:bubbleSort·p1.00       |  sample |       |    0.312 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.00         |  sample |       |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.90         |  sample |       |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.50         |  sample |       |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.95         |  sample |       |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.999        |  sample |       |    0.003 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.99         |  sample |       |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p0.9999       |  sample |       |    0.003 |         |  s/op |
+| SortsBenchmark.standardSort                      |  sample | 22326 |    0.001 |±  0.001 |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.00   |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.50   |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.90   |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.95   |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.99   |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.999  |  sample |       |    0.001 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p0.9999 |  sample |       |    0.005 |         |  s/op |
+| SortsBenchmark.standardSort:standardSort·p1.00   |  sample |       |    0.009 |         |  s/op |
+| SortsBenchmark.bubbleSort                        |      ss |     2 |    0.311 |         |  s/op |
+| SortsBenchmark.mergeSort                         |      ss |     2 |    0.006 |         |  s/op |
+| SortsBenchmark.standardSort                      |      ss |     2 |    0.002 |         |  s/op |
+| SortsBenchmark.mergeSort:mergeSort·p1.00         |  sample |       |    0.004 |         |  s/op |
