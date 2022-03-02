@@ -31,3 +31,28 @@ Be + Verb + ed = 3 form
 
 ---
 
+## 28.02.2022
+### Phrasal verb + out
+
+figure out
+find out
+take out
+go out
+move out
+
+burn out
+pass out 
+work out
+fall out
+run out
+stand out
+turn out
+chill out
+
+too : before adj 
+enough : after adj 
+
+so -> adj
+such -> noun
+
+---
