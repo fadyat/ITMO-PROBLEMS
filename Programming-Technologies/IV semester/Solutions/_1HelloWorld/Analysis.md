@@ -59,10 +59,11 @@ namespace BackupsExtra
 - Install dotMemory for console
 - Write command: `~/Downloads/dotMemory/dotMemory start-net-core --trigger-timer=30s BackupsExtra-Dotmemory.dll`
 - Open getted `*.dmw` file at dotMemory Windows Application
-- Abstract file system
+- [Abstract file system](https://i.ibb.co/yYr0csD/2.png)
 
 ![](https://i.ibb.co/yYr0csD/2.png)
 
-- Local file system
+- [Local file system](https://i.ibb.co/Kwjvv5x/1.png)
 
 ![](https://i.ibb.co/Kwjvv5x/1.png)
+
