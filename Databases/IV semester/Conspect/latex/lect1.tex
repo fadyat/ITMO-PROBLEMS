@@ -1,0 +1,277 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Лекция 1}
+\chead{Базы данных}
+\rhead{\thepage}
+\lfoot{by fadyat}
+\cfoot{}
+\rfoot{7 февраля 2022 г.}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+
+\begin{document}
+\section{Информация}
+Информация как:
+\begin{itemize}
+    \item сигнал (не надо знать что именно)
+    \item данные (формализованная информация)
+    \item знания (применение, создание)
+\end{itemize}
+
+\section{Данные}
+\emph{Данные} -- поддающиеся многократной интерпретации представления информации в формализованном виде,  пригодные для передачи, интерпретации или обработки.
+
+Данные позволяют строить интерпретации
+
+\subsection{Модель 1}
+\begin{center}
+    \begin{tabular}{| c | c | c | c |}
+        \hline
+        Student & Group & Discipline & Teacher \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item Много строчек = $Student \cdot Group \cdot Discipline \cdot Teacher$
+    \item Трудно обеспечимая целостность данных
+    \item Медленный поиск
+    \item Данные неуникальны
+\end{itemize}
+
+\subsection{Модель 2}
+\begin{center}
+	\begin{tabular}{| c | c | c | c |}
+    	\hline
+        Student & Group & Teacher discipline 1 & Teacher discipline 2 \\
+        \hline
+    \end {tabular}
+\end{center}
+
+\begin{itemize}
+    \item Количество памяти меньше прошлой, хотя хранят одинаковую информацию
+    \item Число строк = Student
+    \item Student - уникален, остальные данные неуникальны
+    \item Ускорение поиска
+    \item Трудно масштабируемая - необходимо менять структуру
+\end{itemize}
+
+
+\subsection{Модель 3}
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Student & Id & Group\_id\\
+        \hline
+    \end{tabular}   
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Group & Id & Student\_id \\
+        \hline
+    \end{tabular}    
+\end{center}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Teacher & Id & Lesson\_id \\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline
+            Group\_id & Lesson\_id\\
+         \hline
+    \end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item Уменьшение памяти
+    \item Улучшение ситуации с целостностью данных
+    \item Масштабируемая
+    \item В момент запроса необходима память для поиска - использование join
+\end{itemize}
+
+\section{Проблема баз данных}
+
+Базы данных так же как и ОС чем-то жертвуют для оптимизации какого-то другого свойства
+
+\begin{itemize}
+    \item Надежность
+    \item Масштабируемость
+    \item Безопасность
+    \item Производительность
+\end{itemize}
+
+Файловая система как способ хранения данных - неудачный выбор. Основное противоречие - чтение и запись.
+
+\emph{Многозвенная архитектура} -- это архитектура, подразумевающая разделение компонентов на функциональные группы
+
+Появляется идея сделать прослойку, которая бы разделяла бизнес-логику и данные.
+
+\emph{СУБД} -- абстрагирование данных, контроль над целостностью и надежностью.
+
+БД != СУБД
+
+\end{document}\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Лекция 1}
+\chead{Базы данных}
+\rhead{\thepage}
+\lfoot{by fadyat}
+\cfoot{}
+\rfoot{7 февраля 2022 г.}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+
+\begin{document}
+\section{Информация}
+Информация как:
+\begin{itemize}
+    \item сигнал (не надо знать что именно)
+    \item данные (формализованная информация)
+    \item знания (применение, создание)
+\end{itemize}
+
+\section{Данные}
+\emph{Данные} -- поддающиеся многократной интерпретации представления информации в формализованном виде,  пригодные для передачи, интерпретации или обработки.
+
+Данные позволяют строить интерпретации
+
+\subsection{Модель 1}
+\begin{center}
+    \begin{tabular}{| c | c | c | c |}
+        \hline
+        Student & Group & Discipline & Teacher \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item Много строчек = $Student \cdot Group \cdot Discipline \cdot Teacher$
+    \item Трудно обеспечимая целостность данных
+    \item Медленный поиск
+    \item Данные неуникальны
+\end{itemize}
+
+\subsection{Модель 2}
+\begin{center}
+	\begin{tabular}{| c | c | c | c |}
+    	\hline
+        Student & Group & Teacher discipline 1 & Teacher discipline 2 \\
+        \hline
+    \end {tabular}
+\end{center}
+
+\begin{itemize}
+    \item Количество памяти меньше прошлой, хотя хранят одинаковую информацию
+    \item Число строк = Student
+    \item Student - уникален, остальные данные неуникальны
+    \item Ускорение поиска
+    \item Трудно масштабируемая - необходимо менять структуру
+\end{itemize}
+
+
+\subsection{Модель 3}
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Student & ID & Group\_id\\
+        \hline
+    \end{tabular}   
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Group & ID & Student\_Id \\
+        \hline
+    \end{tabular}    
+\end{center}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+         Teacher & ID & Lesson\_Id \\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline
+            Group\_Id & Lesson\_Id\\
+         \hline
+    \end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item Уменьшение памяти
+    \item Улучшение ситуации с целостностью данных
+    \item Масштабируемая
+    \item В момент запроса необходима память для поиска - использование join
+\end{itemize}
+
+\section{Проблема баз данных}
+
+Базы данных так же как и ОС чем-то жертвуют для оптимизации какого-то другого свойства
+
+\begin{itemize}
+    \item Надежность
+    \item Масштабируемость
+    \item Безопасность
+    \item Производительность
+\end{itemize}
+
+Файловая система как способ хранения данных - неудачный выбор. Основное противоречие - чтение и запись.
+
+\emph{Многозвенная архитектура} -- это архитектура, подразумевающая разделение компонентов на функциональные группы
+
+Появляется идея сделать прослойку, которая бы разделяла бизнес-логику и данные.
+
+\emph{СУБД} -- абстрагирование данных, контроль над целостностью и надежностью.
+
+БД != СУБД
+
+\end{document}
