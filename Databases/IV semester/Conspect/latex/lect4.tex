@@ -1,0 +1,178 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Лекция 4}
+\chead{Базы данных}
+\rhead{\thepage}
+\lfoot{by fadyat}
+\cfoot{}
+\rfoot{28 февраля 2022 г.}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+
+\begin{document}
+
+\section{Определения понятия 'База данных'}
+
+\subsection{По \emph{Конноли и Беггу}}
+
+\emph{База данных} -- это совместно используемый набор логически связанных данных и описание этих данных, предназначенные для удовлетворения информационных потребностей организации
+
+\subsection{По \emph{Дейту}} 
+\emph{База данных} -- набор постояннохранимых данных, используемых прикладными системами какого-либо предприятия
+
+\subsection{По \emph{Хомоненко}}
+
+\emph{База данных} -- совокупность специальным образом организованных данных, хранимых в памяти вычислительной системы и отображающих состояния объектов и их взаимосвязей в рассматриваемой предметной области
+
+\section{Определение понятия 'СУБД'}
+
+\subsection{По \emph{Конноли и Беггу}}
+
+\emph{СУБД} -- ПО c помощью которого пользователи могут определять, создавать и поддерживать БД, а также осуществлять к ней контролируемый доступ
+
+\subsection{По \emph{Дейту}} 
+
+\emph{СУБД} -- комплекс языковых и програмных средств, предзназначенные для создания, ведения и совместного использования БД многими пользователями
+
+\newpage
+
+\section{Реляционная БД}
+
+\begin{itemize}
+    \item Основа РМД - отношение relation
+    \item Схема отношения - совокупность заголовков столбцов
+    \item Кортеж - отдельная строка в таблице
+    \item Атрибут - отдельный столбец таблицы
+    \item Сущность - отношение в таблице
+    \item Поле - пересечение кортежа и атрибута
+    \item Домен - множество допустимых значений атрибута
+    \item Степень отношения - количество атрибутов
+    \item Кардинальность отношения - количество кортежей
+\end{itemize}
+
+\section{Свойства кортежей}
+
+\begin{itemize}
+\item уникальность имени отношения в реляционной схеме (каждая таблица имеет определенное имя)
+\item каждая ячейка содержит только одно неделимое значение (одно из самых тяжелых с точки зрения баталий и принятия решений)
+\item уникальность имени атрибута в пределах отношений
+\item значение любого атрибута берутся из одного и того же домена (домен определяет значения атрибута в столбце)
+\item каждый кортеж уникален
+\item порядок следования атрибутов и порядок следования кортежей не имеют значения (важное расхождение с формулировкой Кодда)\footnote{
+Все хорошо пока не начинаешь сортировать (выполнять другие операции) данные. \\ Триггеры - поверх БД весится проверка при добавлении / изменении новых данных, ускорение при чтении данных \\}
+
+\end{itemize}
+
+\newpage
+
+\section{Ключи}
+Хранение связей осуществляется при помощи ключей.
+
+В реляционных моделях хранятся только отношения все обьекты однотипны.
+
+\begin{itemize}
+    \item \emph{Супер-ключ} -- атрибут, или множество атрибутов единственным образом идентифицирующий кортеж (вся схема отношения, совокупность всех атрибутов)
+
+    \item \emph{Потенциальный ключ} -- супер-ключ, который не содержит подмножества, также являющегося супер-ключем, составной потенциальный ключ содержит более одного атрибута
+
+    \item \emph{Первичный ключ} -- один из потенциальных ключей, который выбран для уникальной идентификации кортежей данного отношения
+
+    \item \emph{Внешний ключ} -- атрибут или множество атрибутов, которые соответствуют потенциальному ключу некоторого может быть того же самого отношения
+\end{itemize}
+
+\section{Типы связей}
+
+\begin{itemize}
+    \item \emph{Один к одному} - первичный ключ к одному из отношений является одновременно и внешним ключём
+    
+    \begin{center}
+        \begin{tabular}{|c|}
+             \hline Employee \\
+             \hline id\_exp(PK) \\
+             \hline
+        \end{tabular}
+        \begin{tabular}{|c|}
+             \hline SalesPerson \\
+             \hline id\_sp(PK, FK) \\
+             \hline
+        \end{tabular}
+    \end{center}
+    
+    \item \emph{Один ко многим} - значение в некотором неключевом поле берутся из значений потенциального ключа другого отношения
+    
+    \begin{center}
+        \begin{tabular}{|c|c|}
+             \hline \multicolumn{2}{|c|}{Employee} \\
+             \hline id\_exp(PK) & id\_boss(FK)\\
+             \hline
+        \end{tabular}
+        \begin{tabular}{|c|}
+             \hline SalesPerson \\
+             \hline id\_sp(PK, FK) \\
+             \hline
+        \end{tabular}
+    \end{center}
+    
+    \item \emph{Многие ко многим} - может быть реализованно только с помощью доп таблицы-связки, в которой содержатся как минимум пары из ключей потенциальных таблиц
+    
+    \begin{center}
+        \begin{tabular}{|c|c|}
+             \hline \multicolumn{2}{|c|}{Employee} \\
+             \hline id\_exp(PK) & id\_boss(FK)\\
+             \hline
+        \end{tabular}
+        \begin{tabular}{|c|}
+             \hline SalesPerson \\
+             \hline id\_sp(PK, FK) \\
+             \hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+             \hline \multicolumn{3}{|c|}{SalesPerson\_Product} \\
+             \hline id\_pr & id\_sp & id\_reg \\
+             \hline
+        \end{tabular}
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|}
+             \hline Product \\
+             \hline id\_pr \\
+             \hline
+        \end{tabular}
+        \begin{tabular}{|c|}
+             \hline Region \\
+             \hline id\_reg \\
+             \hline
+        \end{tabular}
+    \end{center}
+\end{itemize}
+
+\section{Целостность}
+\begin{itemize}
+\item \emph{Сущностная целостность} -- ни один атрибут первичного ключа не может содержать Null значений
+\item \emph{Ссылочная целостность} -- если в отношении существует внешний ключ, то его значение должно соответствовать существующему значению потенциального ключа к другом отношении
+\end{itemize}
+\end{document}
