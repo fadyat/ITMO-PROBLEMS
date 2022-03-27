@@ -1,3 +1,4 @@
+\documentclass[12pt, a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -22,12 +23,12 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Лекция 2}
+\lhead{Лекция 3}
 \chead{Базы данных}
 \rhead{\thepage}
 \lfoot{by fadyat}
 \cfoot{}
-\rfoot{21 февраля 2022 г.}
+\rfoot{22 февраля 2022 г.}
 \renewcommand\headrulewidth{0.4pt}
 \renewcommand\footrulewidth{0.4pt}
 
@@ -142,6 +143,22 @@
 \begin{itemize}
     \item Многомерное хранение неудобно с точки зрения модификации структуры
     \item OLAP кубы
+\end{itemize}
+
+\section{Объектно-ориентированная модель данных}
+
+\subsection{Особенности}
+\begin{itemize}
+    \item Экземлпяр класса пытаемся сохранить в базе
+    \item Улучшается производительность в ООП приложениях
+    \item Удобно с точки зрения распределенности систем
+\end{itemize}
+
+\subsection{Проблемы}
+
+\begin{itemize}
+    \item Замыкаемся на ОО подходе
+    \item Целостность данных - обязанность кодовой базы
 \end{itemize}
 
 \end{document}
