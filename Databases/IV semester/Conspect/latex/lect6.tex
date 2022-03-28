@@ -1,0 +1,225 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Лекция 5}
+\chead{Базы данных}
+\rhead{\thepage}
+\lfoot{by fadyat}
+\cfoot{}
+\rfoot{22 марта 2022 г.}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\begin{document}
+\section{Как происходит join?}
+
+
+\includegraphics{Screenshot 2022-03-27 at 19.04.11.png}
+
+Необходимо понимать, что соедининение таблиц - дорогая операция
+
+\section{Нормализация и избыточность}
+
+\emph{Нормализация} -- преобразование отношений к виду, отвечающему нормальной форме
+
+\emph{Денормализация} -- искуственная композиция между отношениями для уменьшения операция соединения при запросах
+
+Нормальная форма - характеристика отношения
+
+Пример избыточности:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+         \hline
+         \multicolumn{5}{|c|}{Студент} \\
+         \hline ФИО & Группа & ОП & Факультет & Форма обучения \\
+         \hline
+    \end{tabular}
+\end{center}
+
+Группа - избыточное дублирование
+
+Программа - избыточное дублирование (узнаваема из номера группы)
+
+$\rightarrow$ траты памяти
+
+\section{Аномалии}
+
+\begin{itemize}
+    \item \emph{аномалия-модификация} - изменение значения одной записи повлечет за собой просмотр всей таблицы и изменение некоторых других записей
+    \item \emph{аномалия-удаления} - при удалении записи может пропасть и другая информация
+    \item \emph{аномалия-добавления} - информацию в таблицу нельзя поместить пока она неполная или требуется дополнительный просмотр таблицы
+\end{itemize}
+
+Аномалии приводят к нарушению целостности данных
+
+\section{Функциональные зависимости между атрибутами}
+
+\textbf{Функциональная зависимость}
+
+$X \rightarrow Y$ - в отношении $R$ атрибут $Y$ функционально зависит от атрибута $X$ тогда и только тогда, когда каждому значению атрибута $X$ соответствует в точности одно значение атрибута $Y$
+
+\subsection{Частичная функциональная зависимость}
+
+\emph{Частичная функциональная зависимость} -- зависимость неключевого атрибута от части составного потенциального ключа
+
+{ФИО + Группа} $\rightarrow$ ОП
+
+\subsection{Полная функциональная зависимость}
+
+\emph{Полная функциональная зависимость} -- неключевой атрибут зависит от всего составного ключа
+
+{ФИО + Группа} $\rightarrow$ Форма обучения
+
+\subsection{Транзитивная функциональная зависимость}
+
+\emph{Транзитивная функциональная зависимость} -- существует функциональная зависимость из X в Z, если существует такое множетсво атрибутов Y такое, что есть ФЗ из X в Y и Y в Z
+
+$X \rightarrow Z, \exists Y: X \rightarrow Y, Y \rightarrow Z$
+
+\newpage
+
+\section{Нормальные формы}
+
+\subsection{Первая НФ}
+
+\emph{Первая нормальная форма} - отношение находится в ПНФ, если всего его атрибуты являются простыми
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+         \hline \multicolumn{7}{|c|}{Студент}\\
+         \hline Ф & И & О & Группа & ОП & Факультет & Форма обучения\\
+         \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Вторая НФ}
+
+\emph{Вторая нормальная форма} -- отношение находится во ВНФ, если оно находится в ПНФ и каждый неключевой атрибут функционально-полно зависит от первичного ключа
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+         \hline \multicolumn{5}{|c|}{Студент}\\
+         \hline Ф & И & О & Группа & Форма обучения\\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+         \hline \multicolumn{3}{|c|}{Группа} \\
+         \hline Группа & ОП & Факультет \\
+         \hline
+    \end{tabular}
+\end{center}
+
+Группа - внешний ключ
+
+\subsection{Третья НФ}
+
+\emph{Третья нормальная форма} -- отношение находится в ТНФ, если оно находится во ВНФ и все неключевые атрибуты взаимнонезависимы и полностью зависят от первичного ключа
+
+\emph{ТНФ} -- отношение находится в ТНФ, если оно находится во ВНФ и ни один неключевой атрибут не находится в транзитивной функциональной зависимости от первичного ключа
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+         \hline \multicolumn{5}{|c|}{Студент}\\
+         \hline Ф & И & О & Группа & Форма обучения\\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline \multicolumn{2}{|c|}{Группа} \\
+         \hline Группа & ОП \\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline \multicolumn{2}{|c|}{ОП} \\
+         \hline Факультет & ОП \\
+         \hline
+    \end{tabular}
+\end{center}
+
+ОП - внешний ключ
+
+\subsection{Нормальная форма Бойса-Кодда}
+
+\emph{Нормальная форма Бойса-Кодда} - отношение находится в НФ Бойса-Кодда, если детерминанты(зависимые части) всех зависимостей являются потенциальными ключами.
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+         \hline \multicolumn{4}{|c|}{Проекты} \\
+         \hline Номер студента & ФИО & Номер проекта & Роль \\
+         \hline
+    \end{tabular}
+\end{center}
+
+Считаем ФИО неделимым и уникальным \\
+Возникает вопрос что использовать в качестве потенциального ключа? \\
+Номер студента + номер проекта // ФИО + номер проекта \\
+Соответствует ТНФ\\
+Не соответствует НФБК \\
+
+Приведенная к НФБК:
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline \multicolumn{2}{|c|}{Студент} \\
+         \hline Номер студента & ФИО \\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+         \hline \multicolumn{3}{|c|}{Проекты} \\
+         \hline Номер студента & Номер проекта & Роль \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Четвертая НФ}
+
+\emph{Четвертая нормальная форма} -- отношение находится в ЧНФ, если оно находится в НФБК и не содержит многозначных зависимостей
+
+
+    \begin{tabular}{|c|c|c|}
+         \hline \multicolumn{3}{|c|}{Дисциплина}\\
+         \hline Дисциплина & Лектор & Практик \\
+         \hline
+    \end{tabular}
+    $\rightarrow$
+    \begin{tabular}{|c|c|}
+         \hline \multicolumn{2}{|c|}{Лекторы}\\
+         \hline Дисциплина & Лектор \\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline \multicolumn{2}{|c|}{Практики}\\
+         \hline Дисциплина & Практик \\
+         \hline
+    \end{tabular}
+
+Вопрос приведения к ЧНФ - дискуссионный
+
+\subsection{НФ больших порядков}
+
+Экзотика
+
+\end{document}
