@@ -1,0 +1,145 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Лекция 7}
+\chead{Базы данных}
+\rhead{\thepage}
+\lfoot{by fadyat}
+\cfoot{}
+\rfoot{5 апреля 2022.}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\begin{document}
+\section{Производительность}
+Когда и в какой ситуации что выбирать?
+
+Случаи в которых возникают проблемы с производительностью:
+\begin{itemize}
+    \item Соединение таблиц
+    \item Поиск данных, операции со строками
+\end{itemize}
+
+\subsection{Механизм индексов}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+         \hline ISU & ФИО & Группа \\
+         \hline 
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline Группа & ОП \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\emph{Индекс} -- метод, который позволяет получить структуру данных, предназначенную для оптимизации поиска
+
+Существует вне хранимого отношения, как отдельная структура данных
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline key & value - address of tuple \\
+         \hline
+    \end{tabular}
+\end{center}
+
+
+\subsubsection{Виды индексов}
+\begin{itemize}
+    \item \emph{Первичный индекс} -- файл упорядочен по первичному ключу и по нему же построен индекс, так что гарантируется уникальность каждого кортежа
+    
+    map<int> $\rightarrow$ T
+    
+    \item \emph{Кластерный индекс} -- файл упорядочен по ключевому или по неключевому атрибуту, по которому постороен индекс, при этом несколько кортежей(кластер) соответствуют одному значению индекса
+    
+    map<int> $\rightarrow$ vector<T>
+    
+    \item \emph{Вторичный индекс} -- построен по атрибуту отличного от того, по которому осуществлено упорядочивание 
+\end{itemize}
+Может быть любое число вторичных индексов, но только один первичный и кластерный
+
+\subsubsection{Проблемы индексов}
+\begin{itemize}
+    \item Перестройка индексов
+    \item Рост индексов
+\end{itemize}
+
+\subsubsection{Виды индексов}
+\begin{itemize}
+    \item \emph{Плотный индекс} -- индекс, охватывающий все записи
+    \item \emph{Разреженный индекс} -- индекс, охватывающий только определенные блоки
+\end{itemize}
+
+\subsection{Механизм представлений}
+\emph{Представление} -- динамически сформированный результат одной или нескольких реляционных операций, выполненных над отношениями с целью получения нового отношения
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+         \hline ISU & ФИО & Группа & Паспорт \\
+         \hline 
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline Группа & ОП \\
+         \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+         \hline ОП & Факультет \\
+         \hline
+    \end{tabular}
+    
+    $\big\Downarrow$
+    
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline ISU & ФИО & Группа & ОП & Факультет \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsubsection{Виды представлений}
+
+\begin{itemize}
+    \item \emph{Материализованное представление} -- непосредственно в памяти храним дубликаты данных, полученные в результате выполнения некоторого запроса, его актуально поддерживается за счет специальной процедуры
+    \item \emph{Представление замены} -- храним структуру подзапроса
+\end{itemize}
+Представление замены решает больше задачу безопасносности нежели производительности
+
+\subsubsection{Цели построения представлений}
+\begin{itemize}
+    \item Независимость от данных - внешние приложения буду удачно работать при редактировании мной исходной базы данных
+    \item Повышение защищенности данных
+    \item Снижение сложности запросов
+\end{itemize}
+
+\subsubsection{Недостатки построения представлений}
+\begin{itemize}
+    \item Ограниченные возможности обновлений
+    
+    \emph{Обновляемое представление} -- могу внести изменение в само представление и существует надежный способ, позволяющий отобразить эти изменения на таблице
+    \item Структурные ограничения - если я что-то меняю в моих таблицах нужно не забыть внести изменения в представления - проблемы с целостностью данных
+    \item Снижение производительности 
+\end{itemize}
+\end{document}
