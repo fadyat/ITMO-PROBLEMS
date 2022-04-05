@@ -2,9 +2,9 @@ package ru.artyomfadeyev.JavaServer.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.artyomfadeyev.JavaServer.Socials.Socials;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/student")
@@ -17,16 +17,20 @@ public class StudentController {
     }
 
     @GetMapping
-    @ResponseBody
-    public List<Student> getStudents(@RequestParam(value = "id", required = false) List<Integer> ids) {
-        if (ids == null) {
-            return studentService.getStudents();
-        }
-
-        return ids.stream()
+    public List<Student> getStudents(@RequestParam(value = "id", required = false) List<Integer> ids,
+                                     @RequestParam(value = "socials", required = false) Socials socials) {
+        List<Student> finalStudents = ids != null
+                ? ids.stream()
                 .map(studentService::getStudentById)
-                .filter(Objects::nonNull)
-                .toList();
+                .toList()
+                : studentService.getStudents();
+
+        return finalStudents;
+    }
+
+    @GetMapping("{id}")
+    public Student getStudent(@PathVariable Integer id) {
+        return studentService.getStudentById(id);
     }
 
     @PostMapping

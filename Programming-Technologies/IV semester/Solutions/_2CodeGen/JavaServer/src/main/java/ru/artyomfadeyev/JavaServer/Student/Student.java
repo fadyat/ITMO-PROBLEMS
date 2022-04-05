@@ -1,5 +1,7 @@
 package ru.artyomfadeyev.JavaServer.Student;
 
+import ru.artyomfadeyev.JavaServer.Socials.Socials;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,17 +12,19 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
     private Integer id;
     private String name;
-    private String tg;
 
-    public Student(String name, String tg) {
+    @Embedded
+    private Socials socials;
+
+    public Student(String name, Socials socials) {
         this.name = name;
-        this.tg = tg;
+        this.socials = socials;
     }
 
-    public Student(Integer id, String name, String tg) {
+    public Student(Integer id, String name, Socials socials) {
         this.id = id;
         this.name = name;
-        this.tg = tg;
+        this.socials = socials;
     }
 
     public Student() {
@@ -34,28 +38,7 @@ public class Student {
         return id;
     }
 
-    public String getTg() {
-        return tg;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setTg(String tg) {
-        this.tg = tg;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", tg='" + tg + '\'' +
-                '}';
+    public Socials getSocials() {
+        return socials;
     }
 }
