@@ -1,14 +1,13 @@
 package ru.artyomfadeyev.JavaServer.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("api/v1/students")
+@RequestMapping("api/student")
 public class StudentController {
     private final StudentService studentService;
 
@@ -18,7 +17,20 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getStudents() {
-        return studentService.getStudents();
+    @ResponseBody
+    public List<Student> getStudents(@RequestParam(value = "id", required = false) List<Integer> ids) {
+        if (ids == null) {
+            return studentService.getStudents();
+        }
+
+        return ids.stream()
+                .map(studentService::getStudentById)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @PostMapping
+    public void registerNewStudent(@RequestBody Student student) {
+        this.studentService.addNewStudent(student);
     }
 }

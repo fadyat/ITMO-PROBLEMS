@@ -1,14 +1,29 @@
 package ru.artyomfadeyev.JavaServer.Student;
 
-public class Student {
-    private final String name;
-    private final Integer id;
-    private final String tg;
+import javax.persistence.*;
 
-    public Student(Integer id, String name, String telegramLink) {
+@Entity
+@Table
+public class Student {
+    @Id
+    @SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
+    private Integer id;
+    private String name;
+    private String tg;
+
+    public Student(String name, String tg) {
+        this.name = name;
+        this.tg = tg;
+    }
+
+    public Student(Integer id, String name, String tg) {
         this.id = id;
         this.name = name;
-        this.tg = telegramLink;
+        this.tg = tg;
+    }
+
+    public Student() {
     }
 
     public String getName() {
@@ -21,5 +36,26 @@ public class Student {
 
     public String getTg() {
         return tg;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setTg(String tg) {
+        this.tg = tg;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", tg='" + tg + '\'' +
+                '}';
     }
 }
