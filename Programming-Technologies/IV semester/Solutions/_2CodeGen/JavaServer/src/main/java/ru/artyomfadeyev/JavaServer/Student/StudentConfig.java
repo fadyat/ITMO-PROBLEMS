@@ -14,7 +14,8 @@ public class StudentConfig {
         return args -> {
             Student a = new Student("Artyom", new Socials("@not_fadyat", "@itsfadyat", "@mrfadeyev"));
             Student s = new Student("Sergo", new Socials("@Dokep", null, null));
-            repository.saveAll(List.of(a, s));
+            Student l = new Student("Alyona", new Socials("@alyona.f", "@lol", "@me"));
+            repository.saveAll(List.of(a, s, l));
         };
     }
 }

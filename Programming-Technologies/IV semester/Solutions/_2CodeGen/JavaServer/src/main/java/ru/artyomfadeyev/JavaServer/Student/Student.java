@@ -1,6 +1,5 @@
 package ru.artyomfadeyev.JavaServer.Student;
 
-import com.sun.istack.NotNull;
 import ru.artyomfadeyev.JavaServer.Socials.Socials;
 
 import javax.persistence.*;
@@ -12,6 +11,7 @@ public class Student {
     @SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
     private Integer id;
+
     private String name;
 
     @Embedded
@@ -22,13 +22,19 @@ public class Student {
         this.socials = socials;
     }
 
-    public Student(Integer id, String name, Socials socials) {
-        this.id = id;
-        this.name = name;
-        this.socials = socials;
+    public Student() {
     }
 
-    public Student() {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSocials(Socials socials) {
+        this.socials = socials;
     }
 
     public String getName() {
