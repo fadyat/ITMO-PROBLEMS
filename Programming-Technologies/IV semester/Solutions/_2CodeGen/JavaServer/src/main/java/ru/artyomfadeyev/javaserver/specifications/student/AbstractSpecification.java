@@ -1,4 +1,4 @@
-package ru.artyomfadeyev.javaserver.specifications.studentspecifications;
+package ru.artyomfadeyev.javaserver.specifications.student;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;

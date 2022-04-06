@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import ru.artyomfadeyev.javaserver.classes.Socials;
 import ru.artyomfadeyev.javaserver.classes.Student;
 import ru.artyomfadeyev.javaserver.repositories.StudentRepository;
-import ru.artyomfadeyev.javaserver.specifications.studentspecifications.ExistsSpecification;
-import ru.artyomfadeyev.javaserver.specifications.studentspecifications.SocialsSpecification;
-import ru.artyomfadeyev.javaserver.specifications.studentspecifications.StudentSpecificationsBuilder;
-import ru.artyomfadeyev.javaserver.specifications.studentspecifications.TgSpecification;
+import ru.artyomfadeyev.javaserver.specifications.student.ExistsSpecification;
+import ru.artyomfadeyev.javaserver.specifications.student.SocialsSpecification;
+import ru.artyomfadeyev.javaserver.specifications.student.StudentSpecificationsBuilder;
+import ru.artyomfadeyev.javaserver.specifications.student.TgSpecification;
 
 import java.util.List;
 
