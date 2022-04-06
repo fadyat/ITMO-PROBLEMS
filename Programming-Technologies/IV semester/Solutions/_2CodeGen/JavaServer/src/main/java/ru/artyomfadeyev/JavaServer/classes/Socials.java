@@ -1,4 +1,4 @@
-package ru.artyomfadeyev.JavaServer.Classes.Socials;
+package ru.artyomfadeyev.JavaServer.classes;
 
 import javax.persistence.Embeddable;
 
