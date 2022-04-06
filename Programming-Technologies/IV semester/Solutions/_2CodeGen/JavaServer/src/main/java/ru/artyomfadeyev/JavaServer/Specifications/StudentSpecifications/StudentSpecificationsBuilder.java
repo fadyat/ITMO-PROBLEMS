@@ -1,7 +1,7 @@
 package ru.artyomfadeyev.JavaServer.Specifications.StudentSpecifications;
 
 import org.springframework.data.jpa.domain.Specification;
-import ru.artyomfadeyev.JavaServer.Student.Student;
+import ru.artyomfadeyev.JavaServer.Classes.Student.Student;
 
 public class StudentSpecificationsBuilder {
 

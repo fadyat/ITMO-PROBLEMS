@@ -1,9 +1,8 @@
-package ru.artyomfadeyev.JavaServer.Student;
+package ru.artyomfadeyev.JavaServer.Classes.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
-import ru.artyomfadeyev.JavaServer.Socials.Socials;
+import ru.artyomfadeyev.JavaServer.Classes.Socials.Socials;
 import ru.artyomfadeyev.JavaServer.Specifications.StudentSpecifications.ExistsSpecification;
 import ru.artyomfadeyev.JavaServer.Specifications.StudentSpecifications.SocialsSpecification;
 import ru.artyomfadeyev.JavaServer.Specifications.StudentSpecifications.StudentSpecificationsBuilder;

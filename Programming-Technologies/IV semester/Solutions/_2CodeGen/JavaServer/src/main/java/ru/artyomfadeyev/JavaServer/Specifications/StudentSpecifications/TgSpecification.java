@@ -1,7 +1,7 @@
 package ru.artyomfadeyev.JavaServer.Specifications.StudentSpecifications;
 
 import org.springframework.lang.NonNull;
-import ru.artyomfadeyev.JavaServer.Student.Student;
+import ru.artyomfadeyev.JavaServer.Classes.Student.Student;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

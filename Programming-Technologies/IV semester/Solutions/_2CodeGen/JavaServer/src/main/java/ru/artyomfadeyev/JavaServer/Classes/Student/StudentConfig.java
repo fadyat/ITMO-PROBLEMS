@@ -1,9 +1,9 @@
-package ru.artyomfadeyev.JavaServer.Student;
+package ru.artyomfadeyev.JavaServer.Classes.Student;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.artyomfadeyev.JavaServer.Socials.Socials;
+import ru.artyomfadeyev.JavaServer.Classes.Socials.Socials;
 
 import java.util.List;
 

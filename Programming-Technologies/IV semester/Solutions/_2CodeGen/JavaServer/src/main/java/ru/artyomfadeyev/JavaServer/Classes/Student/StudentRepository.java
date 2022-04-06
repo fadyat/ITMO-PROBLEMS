@@ -1,4 +1,4 @@
-package ru.artyomfadeyev.JavaServer.Student;
+package ru.artyomfadeyev.JavaServer.Classes.Student;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -1,6 +1,6 @@
-package ru.artyomfadeyev.JavaServer.Student;
+package ru.artyomfadeyev.JavaServer.Classes.Student;
 
-import ru.artyomfadeyev.JavaServer.Socials.Socials;
+import ru.artyomfadeyev.JavaServer.Classes.Socials.Socials;
 
 import javax.persistence.*;
 
