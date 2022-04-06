@@ -1,5 +1,6 @@
 package ru.artyomfadeyev.JavaServer.Student;
 
+import com.sun.istack.NotNull;
 import ru.artyomfadeyev.JavaServer.Socials.Socials;
 
 import javax.persistence.*;

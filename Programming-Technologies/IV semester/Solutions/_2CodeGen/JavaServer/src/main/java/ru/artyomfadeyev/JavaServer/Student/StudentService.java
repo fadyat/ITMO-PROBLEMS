@@ -2,6 +2,7 @@ package ru.artyomfadeyev.JavaServer.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.artyomfadeyev.JavaServer.Specifications.StudentSpecification;
 
 import java.lang.module.FindException;
 import java.util.List;
@@ -27,11 +28,6 @@ public record StudentService(StudentRepository studentRepository) {
     }
 
     public Student getStudentById(Integer id) {
-        Student student = studentRepository.getStudentById(id);
-        if (student == null) {
-            throw new FindException("No such student!");
-        }
-
-        return studentRepository.getStudentById(id);
+        return studentRepository.findAll(StudentSpecification.getById(id)).get(0);
     }
 }

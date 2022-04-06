@@ -1,11 +1,9 @@
 package ru.artyomfadeyev.JavaServer.Socials;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.Embeddable;
 
 @Embeddable
-public final class Socials {
+public class Socials {
     private String tg;
     private String ig;
     private String vk;
@@ -24,7 +22,7 @@ public final class Socials {
         return tg;
     }
 
-    public void setTg(@Nullable String tg) {
+    public void setTg(String tg) {
         this.tg = tg;
     }
 
@@ -32,7 +30,7 @@ public final class Socials {
         return ig;
     }
 
-    public void setIg(@Nullable String ig) {
+    public void setIg(String ig) {
         this.ig = ig;
     }
 
@@ -40,7 +38,7 @@ public final class Socials {
         return vk;
     }
 
-    public void setVk(@Nullable String vk) {
+    public void setVk(String vk) {
         this.vk = vk;
     }
 }
