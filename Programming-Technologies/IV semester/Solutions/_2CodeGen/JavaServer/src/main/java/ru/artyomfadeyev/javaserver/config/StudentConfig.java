@@ -1,11 +1,11 @@
-package ru.artyomfadeyev.JavaServer.config;
+package ru.artyomfadeyev.javaserver.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.artyomfadeyev.JavaServer.classes.Socials;
-import ru.artyomfadeyev.JavaServer.classes.Student;
-import ru.artyomfadeyev.JavaServer.repositories.StudentRepository;
+import ru.artyomfadeyev.javaserver.classes.Socials;
+import ru.artyomfadeyev.javaserver.classes.Student;
+import ru.artyomfadeyev.javaserver.repositories.StudentRepository;
 
 import java.util.List;
 

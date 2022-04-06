@@ -1,8 +1,8 @@
-package ru.artyomfadeyev.JavaServer.specifications.studentSpecifications;
+package ru.artyomfadeyev.javaserver.specifications.studentspecifications;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
-import ru.artyomfadeyev.JavaServer.classes.Student;
+import ru.artyomfadeyev.javaserver.classes.Student;
 
 import javax.persistence.criteria.*;
 

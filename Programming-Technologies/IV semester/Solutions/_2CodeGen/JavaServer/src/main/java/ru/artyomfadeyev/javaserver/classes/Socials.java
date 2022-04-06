@@ -1,4 +1,4 @@
-package ru.artyomfadeyev.JavaServer.classes;
+package ru.artyomfadeyev.javaserver.classes;
 
 import javax.persistence.Embeddable;
 

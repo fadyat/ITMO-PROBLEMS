@@ -1,26 +1,25 @@
-package ru.artyomfadeyev.JavaServer.specifications.studentSpecifications;
+package ru.artyomfadeyev.javaserver.specifications.studentspecifications;
 
 import org.springframework.lang.NonNull;
-import ru.artyomfadeyev.JavaServer.classes.Student;
+import ru.artyomfadeyev.javaserver.classes.Student;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class TgSpecification extends AbstractSpecification {
-    private final String studentTg;
+public class ExistsSpecification extends AbstractSpecification {
+    private final Integer studentId;
 
-    public TgSpecification(String studentTg) {
-        this.studentTg = studentTg;
+    public ExistsSpecification(Integer studentId) {
+        this.studentId = studentId;
     }
 
     @Override
     public Predicate toPredicate(@NonNull Root<Student> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
         return cb.equal(
-                root.get("socials")
-                        .get("tg"),
-                studentTg
+                root.get("id"),
+                studentId
         );
     }
 }

@@ -1,10 +1,10 @@
-package ru.artyomfadeyev.JavaServer.controllers;
+package ru.artyomfadeyev.javaserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.artyomfadeyev.JavaServer.classes.Socials;
-import ru.artyomfadeyev.JavaServer.classes.Student;
-import ru.artyomfadeyev.JavaServer.services.StudentService;
+import ru.artyomfadeyev.javaserver.classes.Socials;
+import ru.artyomfadeyev.javaserver.classes.Student;
+import ru.artyomfadeyev.javaserver.services.StudentService;
 
 import java.util.List;
 

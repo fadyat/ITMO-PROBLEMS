@@ -1,8 +1,8 @@
-package ru.artyomfadeyev.JavaServer.specifications.studentSpecifications;
+package ru.artyomfadeyev.javaserver.specifications.studentspecifications;
 
 import org.springframework.lang.NonNull;
-import ru.artyomfadeyev.JavaServer.classes.Socials;
-import ru.artyomfadeyev.JavaServer.classes.Student;
+import ru.artyomfadeyev.javaserver.classes.Socials;
+import ru.artyomfadeyev.javaserver.classes.Student;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

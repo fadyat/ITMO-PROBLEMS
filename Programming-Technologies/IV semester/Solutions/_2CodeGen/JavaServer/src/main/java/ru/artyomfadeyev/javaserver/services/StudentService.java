@@ -1,14 +1,14 @@
-package ru.artyomfadeyev.JavaServer.services;
+package ru.artyomfadeyev.javaserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.artyomfadeyev.JavaServer.classes.Socials;
-import ru.artyomfadeyev.JavaServer.classes.Student;
-import ru.artyomfadeyev.JavaServer.repositories.StudentRepository;
-import ru.artyomfadeyev.JavaServer.specifications.studentSpecifications.ExistsSpecification;
-import ru.artyomfadeyev.JavaServer.specifications.studentSpecifications.SocialsSpecification;
-import ru.artyomfadeyev.JavaServer.specifications.studentSpecifications.StudentSpecificationsBuilder;
-import ru.artyomfadeyev.JavaServer.specifications.studentSpecifications.TgSpecification;
+import ru.artyomfadeyev.javaserver.classes.Socials;
+import ru.artyomfadeyev.javaserver.classes.Student;
+import ru.artyomfadeyev.javaserver.repositories.StudentRepository;
+import ru.artyomfadeyev.javaserver.specifications.studentspecifications.ExistsSpecification;
+import ru.artyomfadeyev.javaserver.specifications.studentspecifications.SocialsSpecification;
+import ru.artyomfadeyev.javaserver.specifications.studentspecifications.StudentSpecificationsBuilder;
+import ru.artyomfadeyev.javaserver.specifications.studentspecifications.TgSpecification;
 
 import java.util.List;
 
