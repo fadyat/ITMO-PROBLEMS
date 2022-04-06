@@ -28,27 +28,4 @@ public class StudentSpecificationsBuilder {
     public Specification<Student> build() {
         return params;
     }
-
-
-//    public Specification<Student> build() {
-//        if (params.size() == 0) {
-//            return null;
-//        }
-//
-//        List<StudentSpecification> specs = params.stream()
-//                .map(StudentSpecification::new)
-//                .toList();
-//
-//        Specification<Student> result = specs.get(0);
-//
-//        for (int i = 1; i < params.size(); i++) {
-//            result = params.get(i)
-//                    .isOrPredicate()
-//                    ? Specification.where(result)
-//                    .or(specs.get(i))
-//                    : Specification.where(result)
-//                    .and(specs.get(i));
-//        }
-//        return result;
-//    }
 }
