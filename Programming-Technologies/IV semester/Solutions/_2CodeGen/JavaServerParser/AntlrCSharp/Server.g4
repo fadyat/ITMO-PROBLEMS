@@ -18,8 +18,10 @@ VARIABLE_NAME       :       (LETTER | '_') (LETTER | DIGIT | '_')*;
 VARIABLE_TYPE       :       (LETTER | '<' | '>' | DIGIT | '_')+;
 INCLUDE_PATH        :       ((WORD '.'?)* '*') | ((WORD '.'?)+ '*'?);
 
-KEY_VALUE           :       VARIABLE_NAME ' '? '=' ' '? ANY+;
+KEY_VALUE           :       VARIABLE_NAME ' '? '=' ' '? VALUE;
+VALUE               :       (STRING | VARIABLE_TYPE);
 ANY                 :       ~([\n;])+?;
+STRING              :       '"' ANY+ '"';
 
 package_name        :       PACKAGE;
 path                :       (INCLUDE_PATH | VARIABLE_NAME);
@@ -31,7 +33,7 @@ ANNOTATION_HEADER   :       '@' VARIABLE_NAME;
 annotation_header   :       ANNOTATION_HEADER;
 arguments           :       ANNOTATION_ARGS;
 annotation          :       annotation_header arguments?;
-ANNOTATION_ARG      :       (KEY_VALUE | ANY);
+ANNOTATION_ARG      :       (KEY_VALUE | VALUE);
 ANNOTATION_ARGS     :       '(' (ANNOTATION_ARG ','? ' '?)* ')';
 
 modifier            :       ((ACCESS_MODIFIER NON_ACCESS_MODIFIER?) | (NON_ACCESS_MODIFIER? ACCESS_MODIFIER)); 
@@ -46,7 +48,9 @@ class_              :       class_header '{' class_attribute* function_* '}';
 
 return_type         :       (VARIABLE_TYPE | VARIABLE_NAME);
 method_name         :       VARIABLE_NAME;
-function_header     :       annotation? modifier return_type method_name? arguments?;
+function_arg        :       (annotation? return_type variable ','?);
+function_args       :       '(' function_arg* ')' | ANNOTATION_ARGS;
+function_header     :       annotation? modifier return_type method_name? function_args*;
 function_           :       function_header '{' function_body '}';
 function_body       :       ~('}')*;
 
@@ -54,5 +58,7 @@ root                :       (import_
                     |       package
                     |       class_
                     )+      EOF;
+
+
 
 

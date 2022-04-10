@@ -32,15 +32,147 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.package_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPackage_name([NotNull] ServerParser.Package_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.path"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPath([NotNull] ServerParser.PathContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.import_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitImport_name([NotNull] ServerParser.Import_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.package"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPackage([NotNull] ServerParser.PackageContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.import_"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitImport_([NotNull] ServerParser.Import_Context context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.annotation_header"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotation_header([NotNull] ServerParser.Annotation_headerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.arguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArguments([NotNull] ServerParser.ArgumentsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.annotation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAnnotation([NotNull] ServerParser.AnnotationContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.modifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModifier([NotNull] ServerParser.ModifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.model"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModel([NotNull] ServerParser.ModelContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.model_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModel_name([NotNull] ServerParser.Model_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.parents"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParents([NotNull] ServerParser.ParentsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.class_header"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClass_header([NotNull] ServerParser.Class_headerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.variable_type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariable_type([NotNull] ServerParser.Variable_typeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.variable"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVariable([NotNull] ServerParser.VariableContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.class_attribute"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClass_attribute([NotNull] ServerParser.Class_attributeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.class_"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClass_([NotNull] ServerParser.Class_Context context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReturn_type([NotNull] ServerParser.Return_typeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.method_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMethod_name([NotNull] ServerParser.Method_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.function_args"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_args([NotNull] ServerParser.Function_argsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.function_header"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_header([NotNull] ServerParser.Function_headerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.function_"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_([NotNull] ServerParser.Function_Context context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.function_body"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_body([NotNull] ServerParser.Function_bodyContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.root"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRoot([NotNull] ServerParser.RootContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.line"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLine([NotNull] ServerParser.LineContext context);
 }
