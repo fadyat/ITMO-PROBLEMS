@@ -1,11 +1,11 @@
 grammar Server;
 
-PACKAGE             :       'package';
-IMPORT              :       'import';
-MODEL               :       ('class' | 'interface');
-ACCESS_MODIFIER     :       ('public' | 'private' | 'protected');
-NON_ACCESS_MODIFIER :       ('static' | 'abstract' | 'final');
-INHERITANCE_TYPE    :       ('extends' | 'implements');
+PACKAGE                     :       'package';
+IMPORT                      :       'import';
+MODEL                       :       'class' | 'interface';
+ACCESS_MODIFIER             :       'public' | 'private' | 'protected';
+NON_ACCESS_MODIFIER         :       'static' | 'abstract' | 'final';
+INHERITANCE_TYPE            :       'extends' | 'implements';
 
 WS                  :       [ ;\n\t] -> skip;
 
@@ -19,7 +19,7 @@ VARIABLE_TYPE       :       (LETTER | '<' | '>' | DIGIT | '_')+;
 INCLUDE_PATH        :       ((WORD '.'?)* '*') | ((WORD '.'?)+ '*'?);
 
 KEY_VALUE           :       VARIABLE_NAME ' '? '=' ' '? VALUE;
-VALUE               :       (STRING | VARIABLE_TYPE);
+fragment VALUE      :       (STRING | VARIABLE_TYPE | ANY ' '?)+;
 ANY                 :       ~([\n;])+?;
 STRING              :       '"' ANY+ '"';
 
@@ -33,7 +33,7 @@ ANNOTATION_HEADER   :       '@' VARIABLE_NAME;
 annotation_header   :       ANNOTATION_HEADER;
 arguments           :       ANNOTATION_ARGS;
 annotation          :       annotation_header arguments?;
-ANNOTATION_ARG      :       (KEY_VALUE | VALUE);
+fragment ANNOTATION_ARG      :       (KEY_VALUE | VALUE);
 ANNOTATION_ARGS     :       '(' (ANNOTATION_ARG ','? ' '?)* ')';
 
 modifier            :       ((ACCESS_MODIFIER NON_ACCESS_MODIFIER?) | (NON_ACCESS_MODIFIER? ACCESS_MODIFIER)); 
@@ -58,7 +58,4 @@ root                :       (import_
                     |       package
                     |       class_
                     )+      EOF;
-
-
-
 
