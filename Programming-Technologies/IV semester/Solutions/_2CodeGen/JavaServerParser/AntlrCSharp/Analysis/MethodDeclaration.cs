@@ -1,12 +1,20 @@
+using System.Collections.Immutable;
+using static System.String;
+
 namespace AntlrCSharp.Analysis;
 
 public class MethodDeclaration
 {
-    private readonly string? _methodDeclaration;
-    private readonly string? _returnType;
     private readonly List<ArgumentDeclaration>? _arguments;
-    private readonly string? _url;
-    private readonly string? _httpMethodName;
+    public string? MethodDeclaration1 { get; }
+
+    public string? ReturnType { get; }
+
+    public ImmutableList<ArgumentDeclaration>? Arguments => _arguments?.ToImmutableList();
+
+    public string? Url { get; }
+
+    public string? HttpMethodName { get; }
 
     private MethodDeclaration(string? methodDeclaration,
         string? returnType,
@@ -14,21 +22,30 @@ public class MethodDeclaration
         string? url,
         string? httpMethodName)
     {
-        _methodDeclaration = methodDeclaration;
-        _returnType = returnType;
+        MethodDeclaration1 = methodDeclaration;
+        ReturnType = returnType;
         _arguments = arguments;
-        _url = url;
-        _httpMethodName = httpMethodName;
+        Url = url;
+        HttpMethodName = httpMethodName;
     }
 
     public MethodDeclarationBuilder ToBuilder()
     {
         return new MethodDeclarationBuilder()
-            .WithMethodDeclaration(_methodDeclaration)
-            .WithReturnType(_returnType)
+            .WithMethodDeclaration(MethodDeclaration1)
+            .WithReturnType(ReturnType)
             .WithArguments(_arguments)
-            .WithUrl(_url)
-            .WithHttpMethodName(_httpMethodName);
+            .WithUrl(Url)
+            .WithHttpMethodName(HttpMethodName);
+    }
+
+    public override string ToString()
+    {
+        return " | \t" + MethodDeclaration1 + " | \t"
+               + ReturnType + " | \t"
+               + Arguments + " | \t"
+               + Url + " | \t"
+               + HttpMethodName + " | \t";
     }
 
     public class MethodDeclarationBuilder
@@ -77,5 +94,15 @@ public class MethodDeclaration
                 _url,
                 _httpMethodName);
         }
+    }
+
+    public bool NullOrEmpty()
+    {
+        return GetType()
+                   .GetProperties()
+                   .Where(f => f.PropertyType == typeof(string))
+                   .Select(s => (string) s.GetValue(this)!)
+                   .Any(IsNullOrEmpty) &&
+               _arguments?.Any() == false;
     }
 }
