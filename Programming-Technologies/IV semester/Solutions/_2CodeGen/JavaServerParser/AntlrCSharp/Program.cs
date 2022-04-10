@@ -1,4 +1,6 @@
-﻿namespace AntlrCSharp;
+﻿using AntlrCSharp.Analysis;
+
+namespace AntlrCSharp;
 
 public static class Program
 {
@@ -6,7 +8,8 @@ public static class Program
     {
         const string controllerPath =
             "../../../../../JavaServer/src/main/java/ru/artyomfadeyev/javaserver/controllers/StudentController.java";
-        var studentController = File.ReadAllText(controllerPath);
-        Console.WriteLine(studentController);
+
+        var parsingSetup = new ParsingSetup(controllerPath);
+        parsingSetup.Run();
     }
 }

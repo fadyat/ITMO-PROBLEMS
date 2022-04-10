@@ -38,17 +38,17 @@ public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPackage_name([NotNull] ServerParser.Package_nameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.path"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPath([NotNull] ServerParser.PathContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.import_name"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitImport_name([NotNull] ServerParser.Import_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.path"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPath([NotNull] ServerParser.PathContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.package"/>.
 	/// </summary>
@@ -68,11 +68,11 @@ public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAnnotation_header([NotNull] ServerParser.Annotation_headerContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.arguments"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.annotation_arguments"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitArguments([NotNull] ServerParser.ArgumentsContext context);
+	Result VisitAnnotation_arguments([NotNull] ServerParser.Annotation_argumentsContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.annotation"/>.
 	/// </summary>
@@ -86,11 +86,29 @@ public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitModifier([NotNull] ServerParser.ModifierContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.model"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.var_type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitModel([NotNull] ServerParser.ModelContext context);
+	Result VisitVar_type([NotNull] ServerParser.Var_typeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.var"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVar([NotNull] ServerParser.VarContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReturn_type([NotNull] ServerParser.Return_typeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.model_type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModel_type([NotNull] ServerParser.Model_typeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.model_name"/>.
 	/// </summary>
@@ -104,47 +122,41 @@ public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitParents([NotNull] ServerParser.ParentsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.class_header"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.model_header"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClass_header([NotNull] ServerParser.Class_headerContext context);
+	Result VisitModel_header([NotNull] ServerParser.Model_headerContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.variable_type"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.model_attribute"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariable_type([NotNull] ServerParser.Variable_typeContext context);
+	Result VisitModel_attribute([NotNull] ServerParser.Model_attributeContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.model_annotation"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariable([NotNull] ServerParser.VariableContext context);
+	Result VisitModel_annotation([NotNull] ServerParser.Model_annotationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.class_attribute"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.model"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClass_attribute([NotNull] ServerParser.Class_attributeContext context);
+	Result VisitModel([NotNull] ServerParser.ModelContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.class_"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.function_name"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClass_([NotNull] ServerParser.Class_Context context);
+	Result VisitFunction_name([NotNull] ServerParser.Function_nameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.function_arg"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitReturn_type([NotNull] ServerParser.Return_typeContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.method_name"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMethod_name([NotNull] ServerParser.Method_nameContext context);
+	Result VisitFunction_arg([NotNull] ServerParser.Function_argContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.function_args"/>.
 	/// </summary>
@@ -158,11 +170,17 @@ public interface IServerVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFunction_header([NotNull] ServerParser.Function_headerContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ServerParser.function_"/>.
+	/// Visit a parse tree produced by <see cref="ServerParser.function_annotation"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunction_([NotNull] ServerParser.Function_Context context);
+	Result VisitFunction_annotation([NotNull] ServerParser.Function_annotationContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ServerParser.function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction([NotNull] ServerParser.FunctionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ServerParser.function_body"/>.
 	/// </summary>

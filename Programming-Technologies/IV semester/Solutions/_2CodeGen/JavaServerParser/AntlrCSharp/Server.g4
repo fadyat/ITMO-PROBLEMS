@@ -62,17 +62,17 @@ model_name                  :       NAME;
 parents                     :       INHERITANCE_TYPE (NAME ','?)+;
 model_header                :       modifier model_type model_name parents?;
 model_attribute             :       modifier var_type var;
-model                       :       annotation* model_header '{' model_attribute* function* '}';
+model_annotation            :       annotation;
+model                       :       model_annotation* model_header '{' model_attribute* function* '}';
         
 /* function */
 function_name               :       NAME;
-function_arg                :       annotation? return_type var;
+function_arg                :       annotation? var_type var;
 function_args               :       '(' (function_arg ','?)* ')' | ANNOTATION_ARGS;
 function_header             :       modifier return_type function_name? function_args*;
-function                    :       annotation* function_header '{' function_body '}';
+function_annotation         :       annotation;
+function                    :       function_annotation* function_header '{' function_body '}';
 function_body               :       ~('}')*;
-        
-root                        :       (import_
-                            |       package
-                            |       model
-                            )+      EOF;
+
+/* root | start point */
+root                        :       (import_ | package | model)* EOF;

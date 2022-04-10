@@ -48,18 +48,6 @@ public partial class ServerBaseListener : IServerListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPackage_name([NotNull] ServerParser.Package_nameContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.path"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPath([NotNull] ServerParser.PathContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.path"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPath([NotNull] ServerParser.PathContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.import_name"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -71,6 +59,18 @@ public partial class ServerBaseListener : IServerListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitImport_name([NotNull] ServerParser.Import_nameContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ServerParser.path"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPath([NotNull] ServerParser.PathContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ServerParser.path"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPath([NotNull] ServerParser.PathContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.package"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -108,17 +108,17 @@ public partial class ServerBaseListener : IServerListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAnnotation_header([NotNull] ServerParser.Annotation_headerContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.arguments"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.annotation_arguments"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArguments([NotNull] ServerParser.ArgumentsContext context) { }
+	public virtual void EnterAnnotation_arguments([NotNull] ServerParser.Annotation_argumentsContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.arguments"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.annotation_arguments"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArguments([NotNull] ServerParser.ArgumentsContext context) { }
+	public virtual void ExitAnnotation_arguments([NotNull] ServerParser.Annotation_argumentsContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.annotation"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -144,17 +144,53 @@ public partial class ServerBaseListener : IServerListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitModifier([NotNull] ServerParser.ModifierContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.model"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.var_type"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterModel([NotNull] ServerParser.ModelContext context) { }
+	public virtual void EnterVar_type([NotNull] ServerParser.Var_typeContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.model"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.var_type"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitModel([NotNull] ServerParser.ModelContext context) { }
+	public virtual void ExitVar_type([NotNull] ServerParser.Var_typeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ServerParser.var"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVar([NotNull] ServerParser.VarContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ServerParser.var"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVar([NotNull] ServerParser.VarContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterReturn_type([NotNull] ServerParser.Return_typeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitReturn_type([NotNull] ServerParser.Return_typeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ServerParser.model_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterModel_type([NotNull] ServerParser.Model_typeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ServerParser.model_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitModel_type([NotNull] ServerParser.Model_typeContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.model_name"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -180,89 +216,77 @@ public partial class ServerBaseListener : IServerListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParents([NotNull] ServerParser.ParentsContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.class_header"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.model_header"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterClass_header([NotNull] ServerParser.Class_headerContext context) { }
+	public virtual void EnterModel_header([NotNull] ServerParser.Model_headerContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.class_header"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.model_header"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitClass_header([NotNull] ServerParser.Class_headerContext context) { }
+	public virtual void ExitModel_header([NotNull] ServerParser.Model_headerContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.variable_type"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.model_attribute"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVariable_type([NotNull] ServerParser.Variable_typeContext context) { }
+	public virtual void EnterModel_attribute([NotNull] ServerParser.Model_attributeContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.variable_type"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.model_attribute"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVariable_type([NotNull] ServerParser.Variable_typeContext context) { }
+	public virtual void ExitModel_attribute([NotNull] ServerParser.Model_attributeContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.variable"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.model_annotation"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVariable([NotNull] ServerParser.VariableContext context) { }
+	public virtual void EnterModel_annotation([NotNull] ServerParser.Model_annotationContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.variable"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.model_annotation"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVariable([NotNull] ServerParser.VariableContext context) { }
+	public virtual void ExitModel_annotation([NotNull] ServerParser.Model_annotationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.class_attribute"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.model"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterClass_attribute([NotNull] ServerParser.Class_attributeContext context) { }
+	public virtual void EnterModel([NotNull] ServerParser.ModelContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.class_attribute"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.model"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitClass_attribute([NotNull] ServerParser.Class_attributeContext context) { }
+	public virtual void ExitModel([NotNull] ServerParser.ModelContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.class_"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.function_name"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterClass_([NotNull] ServerParser.Class_Context context) { }
+	public virtual void EnterFunction_name([NotNull] ServerParser.Function_nameContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.class_"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.function_name"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitClass_([NotNull] ServerParser.Class_Context context) { }
+	public virtual void ExitFunction_name([NotNull] ServerParser.Function_nameContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.function_arg"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterReturn_type([NotNull] ServerParser.Return_typeContext context) { }
+	public virtual void EnterFunction_arg([NotNull] ServerParser.Function_argContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.return_type"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.function_arg"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitReturn_type([NotNull] ServerParser.Return_typeContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.method_name"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMethod_name([NotNull] ServerParser.Method_nameContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.method_name"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMethod_name([NotNull] ServerParser.Method_nameContext context) { }
+	public virtual void ExitFunction_arg([NotNull] ServerParser.Function_argContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.function_args"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -288,17 +312,29 @@ public partial class ServerBaseListener : IServerListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFunction_header([NotNull] ServerParser.Function_headerContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ServerParser.function_"/>.
+	/// Enter a parse tree produced by <see cref="ServerParser.function_annotation"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFunction_([NotNull] ServerParser.Function_Context context) { }
+	public virtual void EnterFunction_annotation([NotNull] ServerParser.Function_annotationContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ServerParser.function_"/>.
+	/// Exit a parse tree produced by <see cref="ServerParser.function_annotation"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFunction_([NotNull] ServerParser.Function_Context context) { }
+	public virtual void ExitFunction_annotation([NotNull] ServerParser.Function_annotationContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ServerParser.function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunction([NotNull] ServerParser.FunctionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ServerParser.function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunction([NotNull] ServerParser.FunctionContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ServerParser.function_body"/>.
 	/// <para>The default implementation does nothing.</para>
