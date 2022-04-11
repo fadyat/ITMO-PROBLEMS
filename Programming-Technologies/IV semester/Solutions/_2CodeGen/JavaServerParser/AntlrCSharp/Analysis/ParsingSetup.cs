@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Antlr4.Runtime;
 
 namespace AntlrCSharp.Analysis;
@@ -6,7 +7,7 @@ public class ParsingSetup
 {
     private readonly ServerVisitor _visitor;
     private readonly ServerParser _parser;
-    
+
     public ParsingSetup(string controllerPath)
     {
         var stream = CharStreams
@@ -17,8 +18,9 @@ public class ParsingSetup
         _visitor = new ServerVisitor();
     }
 
-    public void Run()
+    public ImmutableList<MethodDeclaration> Run()
     {
         _visitor.Visit(_parser.root());
+        return _visitor.PreviousMethodDeclarations;
     }
 }

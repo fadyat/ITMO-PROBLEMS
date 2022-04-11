@@ -10,6 +10,7 @@ public static class Program
             "../../../../../JavaServer/src/main/java/ru/artyomfadeyev/javaserver/controllers/StudentController.java";
 
         var parsingSetup = new ParsingSetup(controllerPath);
-        parsingSetup.Run();
+        var result = parsingSetup.Run();
+        Console.WriteLine(string.Join("\n", result));
     }
 }

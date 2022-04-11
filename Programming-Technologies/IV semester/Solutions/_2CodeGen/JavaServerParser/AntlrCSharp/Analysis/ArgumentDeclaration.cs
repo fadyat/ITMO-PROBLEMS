@@ -2,12 +2,13 @@ namespace AntlrCSharp.Analysis;
 
 public class ArgumentDeclaration
 {
-    private string _argumentType;
-    private string _argumentName;
+    public string ArgumentType { get; }
+
+    public string ArgumentName { get; }
 
     public ArgumentDeclaration(string argumentType, string argumentName)
     {
-        _argumentType = argumentType;
-        _argumentName = argumentName;
+        ArgumentType = argumentType;
+        ArgumentName = argumentName;
     }
 }

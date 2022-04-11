@@ -1,4 +1,6 @@
 using System.Collections.Immutable;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using static System.String;
 
 namespace AntlrCSharp.Analysis;
@@ -6,7 +8,7 @@ namespace AntlrCSharp.Analysis;
 public class MethodDeclaration
 {
     private readonly List<ArgumentDeclaration>? _arguments;
-    public string? MethodDeclaration1 { get; }
+    public string? MethodName { get; }
 
     public string? ReturnType { get; }
 
@@ -22,7 +24,7 @@ public class MethodDeclaration
         string? url,
         string? httpMethodName)
     {
-        MethodDeclaration1 = methodDeclaration;
+        MethodName = methodDeclaration;
         ReturnType = returnType;
         _arguments = arguments;
         Url = url;
@@ -32,7 +34,7 @@ public class MethodDeclaration
     public MethodDeclarationBuilder ToBuilder()
     {
         return new MethodDeclarationBuilder()
-            .WithMethodDeclaration(MethodDeclaration1)
+            .WithMethodName(MethodName)
             .WithReturnType(ReturnType)
             .WithArguments(_arguments)
             .WithUrl(Url)
@@ -41,11 +43,10 @@ public class MethodDeclaration
 
     public override string ToString()
     {
-        return " | \t" + MethodDeclaration1 + " | \t"
-               + ReturnType + " | \t"
-               + Arguments + " | \t"
-               + Url + " | \t"
-               + HttpMethodName + " | \t";
+        return JsonConvert.SerializeObject(
+            this,
+            Formatting.Indented,
+            new StringEnumConverter());
     }
 
     public class MethodDeclarationBuilder
@@ -56,7 +57,7 @@ public class MethodDeclaration
         private string? _url;
         private string? _httpMethodName;
 
-        public MethodDeclarationBuilder WithMethodDeclaration(string? methodDeclaration)
+        public MethodDeclarationBuilder WithMethodName(string? methodDeclaration)
         {
             _methodDeclaration = methodDeclaration;
             return this;
