@@ -7,22 +7,22 @@ namespace AntlrParser.Analysis;
 
 public class MethodDeclaration
 {
-    private readonly List<ArgumentDeclaration>? _arguments;
-    public string? MethodName { get; }
+    private readonly List<ArgumentDeclaration> _arguments;
+    public string MethodName { get; }
 
-    public string? ReturnType { get; }
+    public string ReturnType { get; }
 
-    public ImmutableList<ArgumentDeclaration>? Arguments => _arguments?.ToImmutableList();
+    public ImmutableList<ArgumentDeclaration> Arguments => _arguments.ToImmutableList();
 
-    public string? Url { get; }
+    public string Url { get; }
 
-    public string? HttpMethodName { get; }
+    public string HttpMethodName { get; }
 
-    private MethodDeclaration(string? methodDeclaration,
-        string? returnType,
-        List<ArgumentDeclaration>? arguments,
-        string? url,
-        string? httpMethodName)
+    private MethodDeclaration(string methodDeclaration,
+        string returnType,
+        List<ArgumentDeclaration> arguments,
+        string url,
+        string httpMethodName)
     {
         MethodName = methodDeclaration;
         ReturnType = returnType;
@@ -51,37 +51,46 @@ public class MethodDeclaration
 
     public class MethodDeclarationBuilder
     {
-        private string? _methodDeclaration;
-        private string? _returnType;
-        private List<ArgumentDeclaration>? _arguments;
-        private string? _url;
-        private string? _httpMethodName;
+        private string _methodDeclaration;
+        private string _returnType;
+        private List<ArgumentDeclaration> _arguments;
+        private string _url;
+        private string _httpMethodName;
 
-        public MethodDeclarationBuilder WithMethodName(string? methodDeclaration)
+        public MethodDeclarationBuilder()
+        {
+            _methodDeclaration = Empty;
+            _returnType = Empty;
+            _arguments = new List<ArgumentDeclaration>();
+            _url = Empty;
+            _httpMethodName = Empty;
+        }
+
+        public MethodDeclarationBuilder WithMethodName(string methodDeclaration)
         {
             _methodDeclaration = methodDeclaration;
             return this;
         }
 
-        public MethodDeclarationBuilder WithReturnType(string? returnType)
+        public MethodDeclarationBuilder WithReturnType(string returnType)
         {
             _returnType = returnType;
             return this;
         }
 
-        public MethodDeclarationBuilder WithArguments(List<ArgumentDeclaration>? arguments)
+        public MethodDeclarationBuilder WithArguments(List<ArgumentDeclaration> arguments)
         {
             _arguments = arguments;
             return this;
         }
 
-        public MethodDeclarationBuilder WithUrl(string? url)
+        public MethodDeclarationBuilder WithUrl(string url)
         {
             _url = url;
             return this;
         }
 
-        public MethodDeclarationBuilder WithHttpMethodName(string? httpMethodName)
+        public MethodDeclarationBuilder WithHttpMethodName(string httpMethodName)
         {
             _httpMethodName = httpMethodName;
             return this;
@@ -104,6 +113,6 @@ public class MethodDeclaration
                    .Where(f => f.PropertyType == typeof(string))
                    .Select(s => (string) s.GetValue(this)!)
                    .Any(IsNullOrEmpty) &&
-               _arguments?.Any() == false;
+               _arguments.Any() == false;
     }
 }

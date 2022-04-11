@@ -1,9 +1,10 @@
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
+using AntlrParser.Analysis;
 
-namespace AntlrParser.Analysis;
+namespace AntlrParser.Visitors;
 
-public class ServerVisitor : ServerBaseVisitor<object>
+public class ServerMethodVisitor : ServerBaseVisitor<object>
 {
     private static readonly List<string> HttpMethods = new()
         {"GET", "POST", "PUT", "HEAD", "DELETE", "PATCH", "OPTIONS", "CONNECT", "TRACE"};
@@ -16,7 +17,7 @@ public class ServerVisitor : ServerBaseVisitor<object>
 
     private string? _absolutePath;
 
-    public ServerVisitor()
+    public ServerMethodVisitor()
     {
         _currentMethodDeclaration = new MethodDeclaration
                 .MethodDeclarationBuilder()
@@ -79,7 +80,7 @@ public class ServerVisitor : ServerBaseVisitor<object>
                       url;
         _currentMethodDeclaration = _currentMethodDeclaration
             .ToBuilder()
-            .WithHttpMethodName(httpMethodName)
+            .WithHttpMethodName(httpMethodName!)
             .WithUrl(fullUrl)
             .Build();
 

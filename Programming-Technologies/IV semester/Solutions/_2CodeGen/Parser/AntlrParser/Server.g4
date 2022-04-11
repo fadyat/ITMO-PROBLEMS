@@ -19,7 +19,7 @@ fragment NUMBER             :       DIGIT+ ('.,' DIGIT+)?;
 
 /* main regex */
 NAME                        :       (LETTER | '_') (LETTER | DIGIT | '_')*;
-TYPE                        :       (LETTER | '<' | '>' | DIGIT | '_')+;
+TYPE                        :       (LETTER | '<' | '>' | '.'| DIGIT | '_')+;
 PATH                        :       ((WORD '.'?)* '*') | ((WORD '.'?)+ '*'?);
 
 /* key-value */        
@@ -40,7 +40,7 @@ ANY                         :       ~([\n;])+?;
 /* package & import */
 package_name                :       PACKAGE;
 import_name                 :       IMPORT;
-path                        :       (PATH | NAME);
+path                        :       (PATH | NAME | TYPE);
 package                     :       package_name path;
 import_                     :       import_name path;
 
@@ -61,7 +61,7 @@ model_type                  :       MODEL_TYPE;
 model_name                  :       NAME;
 parents                     :       INHERITANCE_TYPE (NAME ','?)+;
 model_header                :       modifier model_type model_name parents?;
-model_attribute             :       modifier var_type var;
+model_attribute             :       annotation* modifier var_type var;
 model_annotation            :       annotation;
 model                       :       model_annotation* model_header '{' model_attribute* function* '}';
         
