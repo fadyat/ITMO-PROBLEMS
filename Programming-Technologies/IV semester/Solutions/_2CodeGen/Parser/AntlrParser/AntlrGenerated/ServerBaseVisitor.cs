@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /Users/artyomfadeyev/GitHub/ITMO-PROBLEMS/Programming-Technologies/IV semester/Solutions/_2CodeGen/JavaServerParser/AntlrCSharp/Server.g4 by ANTLR 4.9.2
+// Generated from /Users/artyomfadeyev/GitHub/ITMO-PROBLEMS/Programming-Technologies/IV semester/Solutions/_2CodeGen/Parser/AntlrParser/Server.g4 by ANTLR 4.9.2
 
 // Unreachable code detected
 #pragma warning disable 0162

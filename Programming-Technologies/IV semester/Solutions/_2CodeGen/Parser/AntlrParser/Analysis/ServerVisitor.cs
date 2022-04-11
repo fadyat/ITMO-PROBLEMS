@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 
-namespace AntlrCSharp.Analysis;
+namespace AntlrParser.Analysis;
 
 public class ServerVisitor : ServerBaseVisitor<object>
 {
@@ -75,7 +75,7 @@ public class ServerVisitor : ServerBaseVisitor<object>
             : string.Empty;
 
         var fullUrl = _absolutePath +
-                      (!_absolutePath!.EndsWith("/") && !url.StartsWith("/") ? "/" : string.Empty) +
+                      (!_absolutePath!.EndsWith("/") && !url.StartsWith("/") && url.Any() ? "/" : string.Empty) +
                       url;
         _currentMethodDeclaration = _currentMethodDeclaration
             .ToBuilder()

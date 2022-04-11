@@ -1,6 +1,6 @@
-﻿using AntlrCSharp.Analysis;
+﻿using AntlrParser.Analysis;
 
-namespace AntlrCSharp;
+namespace AntlrParser;
 
 public static class Program
 {

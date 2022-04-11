@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using Antlr4.Runtime;
 
-namespace AntlrCSharp.Analysis;
+namespace AntlrParser.Analysis;
 
 public class ParsingSetup
 {

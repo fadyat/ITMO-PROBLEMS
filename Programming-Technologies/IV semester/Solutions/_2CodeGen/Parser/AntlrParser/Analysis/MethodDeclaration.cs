@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using static System.String;
 
-namespace AntlrCSharp.Analysis;
+namespace AntlrParser.Analysis;
 
 public class MethodDeclaration
 {

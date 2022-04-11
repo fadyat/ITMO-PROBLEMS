@@ -1,4 +1,4 @@
-namespace AntlrCSharp.Analysis;
+namespace AntlrParser.Analysis;
 
 public class ArgumentDeclaration
 {
