@@ -1,36 +1,33 @@
-## Java server
+## Java Server
 
-> Spring Boot + PostgreSQL
+Spring Boot
 
-
-### DB creation:
-```
-https://www.postgresql.org/download/
-```
-
-```bash
-psql postgres
-```
-
-
-```SQL
-CREATE DATABASE student;
-
-GRANT ALL PRIVILEGES ON DATABASE student TO artyomfadeyev;
-```
-
-
-```
-\l              : all ur db
-\du             : users
-\c student      : connect to student db
-\d              : check relations
-```
+> ### PostgreSQL:
+> https://www.postgresql.org/download/
+>
+>
+> ```bash
+> psql postgres
+> ```
+>
+>
+> ```SQL
+> CREATE DATABASE student;
+>  
+> GRANT ALL PRIVILEGES ON DATABASE student TO artyomfadeyev;
+> ```
+>
+>
+> ```
+> \l              : all ur db
+> \du             : users
+> \c student      : connect to student db
+> \d              : check relations
+> ```
 
 ### Request examples:
-```HTTP
-###
-POST http://localhost:8080/api/student
+```http
+POST "http://localhost:8080/api/student"
 Content-Type: application/json
 
 {
@@ -41,22 +38,45 @@ Content-Type: application/json
     "ig": "@notme"
   }
 }
+```
 
-###
-GET http://localhost:8080/api/student
+```http
+GET "http://localhost:8080/api/student"
+```
+```http
+GET "http://localhost:8080/api/student?id=1"
+```
+```http
+GET "http://localhost:8080/api/student?id=1,3"
+```
+```http
+GET "http://localhost:8080/api/student/2"
+```
+```http
+GET "http://localhost:8080/api/student?tg=@not_fadyat&ig=@itsfadyat&vk=@mrfadeyev"
+```
+```http
+GET "http://localhost:8080/api/student?tg=@not_fadyat&ig=@itsfadyat&vk=@mrfadeyev&id=1"
+```
 
-###
-GET http://localhost:8080/api/student?id=1
+## Java Server Parser
 
-###
-GET http://localhost:8080/api/student?id=1,3
+### ANTLR
+https://www.antlr.org/
+https://tomassetti.me/getting-started-with-antlr-in-csharp/
 
-###
-GET http://localhost:8080/api/student/2
-
-###
-GET http://localhost:8080/api/student?tg=@not_fadyat&ig=@itsfadyat&vk=@mrfadeyev
-
-###
-GET http://localhost:8080/api/student?tg=@not_fadyat&ig=@itsfadyat&vk=@mrfadeyev&id=1
+### Result example:
+```JSON
+{
+  "MethodName": "getStudent",
+  "ReturnType": "List<Student>",
+  "Arguments": [
+    {
+      "ArgumentType": "id",
+      "ArgumentName": "Integer"
+    }
+  ],
+  "Url": "/api/student/{id}",
+  "HttpMethodName": "GET"
+}
 ```
