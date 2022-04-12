@@ -31,8 +31,8 @@ WHERE UnitPrice * OrderQty = (
 
 > idk how to do it w/o joins 😞
 ```SQL
-SELECT ProductID
-FROM AdventureWorks2017.Sales.SalesOrderDetail
+SELECT Product.Name
+FROM AdventureWorks2017.Production.Product
 WHERE ProductID IN (
     SELECT ProductID
     FROM AdventureWorks2017.Sales.SalesOrderDetail
@@ -58,6 +58,41 @@ WHERE Product.StandardCost > (
 - Найти такие товары, которые были куплены более чем одним покупателем, при этом все покупатели этих товаров покупали товары только одного цвета и товары не входят в список покупок покупателей, купивших товары только двух цветов.
 
 ```SQL
+SELECT ProductID
+FROM AdventureWorks2017.Sales.SalesOrderDetail
+         JOIN AdventureWorks2017.Sales.SalesOrderHeader
+              ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+WHERE CustomerID IN
+      (
+          SELECT CustomerID
+          FROM AdventureWorks2017.Sales.SalesOrderDetail
+                   JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                        ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                   JOIN AdventureWorks2017.Production.Product
+                        ON Product.ProductID = SalesOrderDetail.ProductID
+          GROUP BY CustomerID
+          HAVING COUNT(DISTINCT Color) = 1
+      )
+  AND ProductID NOT IN
+      (
+          SELECT ProductID
+          FROM AdventureWorks2017.Sales.SalesOrderDetail
+                   JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                        ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+          WHERE CustomerID IN
+                (
+                    SELECT CustomerID
+                    FROM AdventureWorks2017.Sales.SalesOrderDetail
+                             JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                                  ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                             JOIN AdventureWorks2017.Production.Product
+                                  ON Product.ProductID = SalesOrderDetail.ProductID
+                    GROUP BY CustomerID
+                    HAVING COUNT(DISTINCT Color) = 2
+                )
+      )
+GROUP BY ProductID
+HAVING COUNT(DISTINCT CustomerID) > 1
 ```
 
 - Найти такие товары, которые были куплены такими покупателями, у которых они присутствовали в каждой их покупке.
@@ -72,7 +107,19 @@ WHERE Product.StandardCost > (
 ```
 - Найти такой товар или товары, которые были куплены не более чем тремя различными покупателями.
 ```SQL
-
+SELECT DISTINCT ProductID
+FROM AdventureWorks2017.Sales.SalesOrderDetail
+WHERE ProductID IN
+      (
+          SELECT Product.ProductID
+          FROM AdventureWorks2017.Sales.SalesOrderDetail
+                   JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                        ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                   JOIN AdventureWorks2017.Production.Product
+                        ON Product.ProductID = SalesOrderDetail.ProductID
+          GROUP BY Product.ProductID
+          HAVING COUNT(DISTINCT CustomerID) <= 3
+      )
 ```
 - Найти все товары, такие что их покупали всегда с товаром, цена которого максимальна в своей категории.
 ```SQL
