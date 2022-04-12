@@ -98,38 +98,7 @@ HAVING COUNT(DISTINCT CustomerID) > 1
 - Найти такие товары, которые были куплены такими покупателями, у которых они присутствовали в каждой их покупке.
 
 ```SQL
-SELECT DISTINCT Product.Name
-FROM (
-         SELECT CustomerID,
-                COUNT(Product.ProductID) AS sum
-         FROM AdventureWorks2017.Sales.SalesOrderDetail
-                  JOIN AdventureWorks2017.Sales.SalesOrderHeader
-                       ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
-                  JOIN AdventureWorks2017.Production.Product
-                       ON Product.ProductID = SalesOrderDetail.ProductID
-         GROUP BY CustomerID
-     ) AS CustomerProductCnt,
 
-     (
-         SELECT CustomerID,
-                COUNT(SalesOrderDetail.SalesOrderID) AS sum
-         FROM AdventureWorks2017.Sales.SalesOrderDetail
-                  JOIN AdventureWorks2017.Sales.SalesOrderHeader
-                       ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
-                  JOIN AdventureWorks2017.Production.Product
-                       ON Product.ProductID = SalesOrderDetail.ProductID
-         GROUP BY CustomerID
-     ) AS CustomerOrderCnt,
-
-     AdventureWorks2017.Sales.SalesOrderDetail
-         JOIN AdventureWorks2017.Sales.SalesOrderHeader
-              ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
-         JOIN AdventureWorks2017.Production.Product
-              ON Product.ProductID = SalesOrderDetail.ProductID
-
-WHERE CustomerProductCnt.sum = CustomerOrderCnt.sum
-  AND CustomerOrderCnt.CustomerID = CustomerProductCnt.CustomerID
-  AND CustomerOrderCnt.CustomerID = SalesOrderHeader.CustomerID;
 ```
 - Найти все товары, такие что их покупали всегда с товаром, цена которого максимальна в своей категории.
 ```SQL
