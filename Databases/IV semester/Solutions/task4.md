@@ -100,6 +100,27 @@ HAVING COUNT(DISTINCT CustomerID) > 1
 ```SQL
 
 ```
+
+- Найти покупателей, у которых есть товар, присутствующий в каждой покупке/чеке.
+```SQL
+
+```
+- Найти такой товар или товары, которые были куплены не более чем тремя различными покупателями.
+```SQL
+SELECT DISTINCT ProductID
+FROM AdventureWorks2017.Sales.SalesOrderDetail
+WHERE ProductID IN
+      (
+          SELECT Product.ProductID
+          FROM AdventureWorks2017.Sales.SalesOrderDetail
+                   JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                        ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                   JOIN AdventureWorks2017.Production.Product
+                        ON Product.ProductID = SalesOrderDetail.ProductID
+          GROUP BY Product.ProductID
+          HAVING COUNT(DISTINCT CustomerID) <= 3
+      )
+```
 - Найти все товары, такие что их покупали всегда с товаром, цена которого максимальна в своей категории.
 ```SQL
 
