@@ -98,7 +98,45 @@ HAVING COUNT(DISTINCT CustomerID) > 1
 - Найти такие товары, которые были куплены такими покупателями, у которых они присутствовали в каждой их покупке.
 
 ```SQL
-
+SELECT DISTINCT Product.Name
+FROM (
+         SELECT CustomerProduct.CustomerID,
+                SUM(CustomerProduct.cnt) AS sum
+         FROM (
+                  SELECT CustomerID,
+                         COUNT(*) AS cnt
+                  FROM AdventureWorks2017.Sales.SalesOrderDetail
+                           JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                                ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                           JOIN AdventureWorks2017.Production.Product
+                                ON Product.ProductID = SalesOrderDetail.ProductID
+                  GROUP BY CustomerID, Product.ProductID
+              ) AS CustomerProduct
+         GROUP BY CustomerProduct.CustomerID
+     ) AS CustomerProductCnt,
+     (
+         SELECT CustomerOrder.CustomerID,
+                SUM(CustomerOrder.cnt) AS sum
+         FROM (
+                  SELECT CustomerID,
+                         COUNT(*) AS cnt
+                  FROM AdventureWorks2017.Sales.SalesOrderDetail
+                           JOIN AdventureWorks2017.Sales.SalesOrderHeader
+                                ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+                           JOIN AdventureWorks2017.Production.Product
+                                ON Product.ProductID = SalesOrderDetail.ProductID
+                  GROUP BY CustomerID, SalesOrderDetail.SalesOrderID
+              ) AS CustomerOrder
+         GROUP BY CustomerID
+     ) AS CustomerOrderCnt,
+     AdventureWorks2017.Sales.SalesOrderDetail
+         JOIN AdventureWorks2017.Sales.SalesOrderHeader
+              ON SalesOrderDetail.SalesOrderID = SalesOrderHeader.SalesOrderID
+         JOIN AdventureWorks2017.Production.Product
+              ON Product.ProductID = SalesOrderDetail.ProductID
+WHERE CustomerProductCnt.sum = CustomerOrderCnt.sum
+  AND CustomerOrderCnt.CustomerID = CustomerProductCnt.CustomerID
+  AND CustomerOrderCnt.CustomerID = SalesOrderHeader.CustomerID;
 ```
 
 - Найти покупателей, у которых есть товар, присутствующий в каждой покупке/чеке.
