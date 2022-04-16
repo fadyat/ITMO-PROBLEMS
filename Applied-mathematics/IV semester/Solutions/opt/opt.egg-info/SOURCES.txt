@@ -1,0 +1,8 @@
+setup.py
+opt.egg-info/PKG-INFO
+opt.egg-info/SOURCES.txt
+opt.egg-info/dependency_links.txt
+opt.egg-info/not-zip-safe
+opt.egg-info/top_level.txt
+src/__init__.py
+src/opt_1d.py
