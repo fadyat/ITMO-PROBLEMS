@@ -7,5 +7,5 @@ setup(name='opt',
       author='fadyat',
       author_email='fadyat@icloud.com',
       license='MIT',
-      packages=['src'],
+      packages=['opt_algo'],
       zip_safe=False)
