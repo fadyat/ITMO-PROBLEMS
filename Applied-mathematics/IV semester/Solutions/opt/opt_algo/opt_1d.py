@@ -8,6 +8,7 @@ def brents_method(f, l, r, eps, s=1):
     fm = fw = fv = s * f(m)
     d = e = 0
     u = float('+inf')
+    i = 0
     while r - l > eps:
         g, e = e, d
         if len({m, w, v}) == len({fm, fw, fv}) == 3:
@@ -18,7 +19,7 @@ def brents_method(f, l, r, eps, s=1):
         if l + eps <= u <= r - eps and 2 * abs(u - m) < g:
             d = abs(u - m)
         else:
-            if m < (r + l) * .5:
+            if 2 * m < (r + l):
                 d = r - m
                 u = m + gr * d
             else:
@@ -26,7 +27,7 @@ def brents_method(f, l, r, eps, s=1):
                 u = m - gr * d
 
         if abs(u - m) < eps:
-            u = m + np.sign(u - m) * eps * .5
+            return u
 
         fu = s * f(u)
 
@@ -50,7 +51,6 @@ def brents_method(f, l, r, eps, s=1):
             elif fu <= fv or v == m or v == w:
                 v = u
                 fv = fu
-
     return (l + r) * .5
 
 
@@ -94,6 +94,7 @@ def golden_section_search(f, l, r, eps, s=1):
     gr = (math.sqrt(5) - 1) * .5
     x1, x2 = r - d(), l + d()
     f1, f2 = s * f(x1), s * f(x2)
+    i = 0
     while r - l > eps:
         if f1 > f2:
             l, x1, f1 = x1, x2, f2
@@ -103,7 +104,6 @@ def golden_section_search(f, l, r, eps, s=1):
             r, x2, f2 = x2, x1, f1
             x1 = r - d()
             f1 = s * f(x1)
-
     return (l + r) * .5
 
 
