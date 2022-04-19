@@ -86,3 +86,57 @@ SELECT CustomerID,
 FROM customer_orders
 GROUP BY CustomerID
 ```
+
+- Найти номера покупателей, у которых не было ни одной пары чеков с одинаковым количеством наименований товаров
+
+```SQL
+WITH customer_order as
+         (
+             SELECT CustomerID,
+                    Detail.SalesOrderID,
+                    COUNT(DISTINCT ProductID) as cnt_products
+             FROM AdventureWorks2017.Sales.SalesOrderHeader as Header
+                      JOIN AdventureWorks2017.Sales.SalesOrderDetail as Detail
+                           ON Header.SalesOrderID = Detail.SalesOrderID
+             GROUP BY CustomerID, Detail.SalesOrderID
+         ),
+     customer_products_orders_cnt as
+         (
+             SELECT CustomerID,
+                    cnt_products,
+                    COUNT(*) as cnt_orders
+             FROM customer_order
+             GROUP BY CustomerID, cnt_products
+         )
+SELECT DISTINCT CustomerID
+FROM customer_products_orders_cnt
+WHERE CustomerID NOT IN
+      (
+          SELECT CustomerID
+          FROM customer_products_orders_cnt
+          WHERE cnt_orders = 2
+      )
+```
+
+- Найти номера покупателей, у которых все купленые ими товары были куплены как минимум дважды, т.е. на два разных чека
+
+```SQL
+WITH customer_product as
+         (
+             SELECT CustomerID,
+                    ProductID,
+                    COUNT(Detail.SalesOrderID) as product_cnt
+             FROM AdventureWorks2017.Sales.SalesOrderHeader as Header
+                      JOIN AdventureWorks2017.Sales.SalesOrderDetail as Detail
+                           ON Header.SalesOrderID = Detail.SalesOrderID
+             GROUP BY CustomerID, ProductID
+         )
+SELECT CustomerID
+FROM customer_product
+WHERE CustomerID NOT IN
+      (
+          SELECT CustomerID
+          FROM customer_product
+          WHERE product_cnt = 1
+      )
+```
