@@ -1,0 +1,140 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+
+\begin{document}
+
+\section{Построение гистограмм}
+
+Нормальное распределение $X \sim N(0, 3)$
+
+\includegraphics[scale=0.9]{n.png}
+
+Равномерное распределение $X \sim U(-3, 9)$
+
+\includegraphics[scale=0.9]{u.png}
+
+Графики гистограмм схожи с графиками соответствующих им плотностей распределения. С увеличением выборки это сходство будет увеличиваться
+
+\newpage
+
+\section{$\chi^2$-критерий Пирсона}
+
+
+Проверим гипотезу о нормальном и равномерном распределении генеральной совокупности:
+
+\subsection{Нормальное распределение}
+
+$\mu = 0 \qquad \sigma = 3 \qquad \Delta_1 = 0 \qquad \Delta_2 = 0$
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline $\gamma$ & Acceptence \\
+         \hline 0.9 & 1 \\
+         \hline 0.95 & 1 \\
+         \hline 0.99 & 1 \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Равномерное распределение}
+
+$a = -3 \qquad b = 9 \qquad \Delta_1 = 0 \qquad \Delta_2 = 0$
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline $\gamma$ & Acceptence \\
+         \hline 0.9 & 1 \\
+         \hline 0.95 & 1 \\
+         \hline 0.99 & 1 \\
+         \hline
+    \end{tabular}
+\end{center}
+
+Во всех случаях гипотеза подтверждается
+
+\section{Ошибка I рода}
+
+Число экспериментов = 100
+
+\subsection{Нормальное распределение}
+
+$\mu = 0 \qquad \sigma = 3 \qquad \Delta_1 = 0 \qquad \Delta_2 = 0$
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline $\gamma$ & error\_probability \\
+         \hline 0.9 & 0.11 \\
+         \hline 0.95 & 0.05 \\
+         \hline 0.99 & 0.02 \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Равномерное распределение}
+
+$a = -3 \qquad b = 9 \qquad \Delta_1 = 0 \qquad \Delta_2 = 0$
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+         \hline $\gamma$ & error\_probability \\
+         \hline 0.9 & 0.09 \\
+         \hline 0.95 & 0.06 \\
+         \hline 0.99 & 0.01 \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\section{Ошибка II рода}
+
+
+Число экспериментов = 100
+
+\subsection{Нормальное распределение}
+
+\begin{tabular}{|c|c|c|c|}
+     \hline $\gamma$ & error\_probability & \Delta_1 & \Delta_2 \\
+     \hline 0.9 & 0.44 & 0 & 0.01 \\
+     \hline 0.95 & 0 & 0 & 0.05 \\
+     \hline 0.99 & 0 & 0 & 0.1 \\
+     \hline
+\end{tabular}
+
+\subsection{Равномерное распределение}
+
+\begin{tabular}{|c|c|c|c|}
+     \hline $\gamma$ & error\_probability & \Delta_1 & \Delta_2 \\
+     \hline 0.9 & 0.65 & 0 & 0.01 \\
+     \hline 0.95 & 0 & 0 & 0.05 \\
+     \hline 0.99 & 0 & 0 & 0.1 \\
+     \hline
+\end{tabular}
+
+\section{Выводы}
+
+
+\begin{itemize}
+    \item Вероятность ошибки I рода стремится к $1 - \gamma$
+    \item При увеличении сдвига, вероятность ошибки II рода уменьшается
+\end{itemize}
+
+\end{document}
