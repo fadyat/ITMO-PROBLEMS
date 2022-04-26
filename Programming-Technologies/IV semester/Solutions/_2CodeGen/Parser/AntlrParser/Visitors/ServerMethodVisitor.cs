@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using AntlrParser.Analysis;
 
@@ -7,8 +8,10 @@ namespace AntlrParser.Visitors;
 public class ServerMethodVisitor : ServerBaseVisitor<object>
 {
     private static readonly List<string> HttpMethods = new()
-        {"GET", "POST", "PUT", "HEAD", "DELETE", "PATCH", "OPTIONS", "CONNECT", "TRACE"};
+        {"get", "post", "put", "head", "delete", "patch", "options", "connect", "trace"};
 
+
+    private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
     private MethodDeclaration _currentMethodDeclaration;
     private readonly List<MethodDeclaration> _previousMethodDeclarations;
 
@@ -65,9 +68,14 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
         var httpMethodName = HttpMethods
             .FirstOrDefault(httpMethod => context
                 .GetText()
-                .ToUpper()
+                .ToLower()
                 .Contains(httpMethod));
 
+        if (httpMethodName != null)
+        {
+            httpMethodName = _textInfo.ToTitleCase(httpMethodName);
+        }
+        
         var regex = new Regex("\"(.*?)\"");
         var match = regex.Match(context.GetText())
             .Value;
@@ -80,7 +88,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
                       url;
         _currentMethodDeclaration = _currentMethodDeclaration
             .ToBuilder()
-            .WithHttpMethodName(httpMethodName!)
+            .WithHttpMethodName(httpMethodName)
             .WithUrl(fullUrl)
             .Build();
 

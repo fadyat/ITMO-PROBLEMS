@@ -19,7 +19,7 @@ public class ParsingSetup
 
     public ParsingSetup Run()
     {
-        _visitor?.Visit(_parser.root());
+        _visitor.Visit(_parser.root());
         return this;
     }
 }

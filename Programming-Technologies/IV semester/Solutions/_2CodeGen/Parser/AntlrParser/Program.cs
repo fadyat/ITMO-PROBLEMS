@@ -27,7 +27,7 @@ public static class Program
 
         const string socialsPath =
             "../../../../../JavaServer/src/main/java/ru/artyomfadeyev/javaserver/classes/Socials.java";
-        
+
         var visitor3 = new ServerModelVisitor();
         new ParsingSetup(socialsPath, visitor3)
             .Run();
