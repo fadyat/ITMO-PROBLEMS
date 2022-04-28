@@ -1,0 +1,121 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+\everymath{\displaystyle}
+
+\begin{document}
+\section{Normal distribution(1, 2)}
+
+\begin{itemize}
+    \item $n = 100, m = 100$
+
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.200 & 0.251 & 0.589 \\
+        \hline $\sigma_p$ & 0.193 & 0.258 & 0.594 \\
+        \hline $\Delta$ & 0.007 & 0.007 & 0.004 \\
+        \hline
+    \end{tabular}
+    
+    \item $n = 10000, m = 100$
+    
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.020 & 0.025 & 0.417 \\
+        \hline $\sigma_p$ & 0.021 & 0.026 & 0.398 \\
+        \hline $\Delta$ & 0.001 & 0.001 & 0.019 \\
+        \hline
+    \end{tabular}
+    
+\end{itemize}
+
+\newpage
+\section{Uniform distribution(1, 5)}
+
+\begin{itemize}
+    \item $n = 100, m = 100$
+
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.115 & 0.200 & 0.028 \\
+        \hline $\sigma_p$ & 0.120 & 0.214 & 0.028 \\
+        \hline $\Delta$ & 0.005 & 0.014 & 0.000 \\
+        \hline
+    \end{tabular}
+    
+    \item $n = 10000, m = 100$
+    
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.012 & 0.020 & 0.000 \\
+        \hline $\sigma_p$ & 0.010 & 0.018 & 0.000 \\
+        \hline $\Delta$ & 0.001 & 0.002 & 0.000 \\
+        \hline
+    \end{tabular}
+    
+\end{itemize}
+
+\newpage
+\section{Laplace distribution(5, 6)}
+
+\begin{itemize}
+    \item $n = 100, m = 100$
+
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.849 & 0.600 & 5.692 \\
+        \hline $\sigma_p$ & 0.683 & 0.503 & 5.438 \\
+        \hline $\Delta$ & 0.166 & 0.097 & 0.255 \\
+        \hline
+    \end{tabular}
+    
+    \item $n = 10000, m = 100$
+    
+    \begin{tabular}{|c|c|c|c|}
+        \hline & $mean(x)$ & $median(x)$ & $\frac{x_1 + x_n}{2}$ \\
+        \hline $\sigma_t$ & 0.085 & 0.060 & 5.692 \\
+        \hline $\sigma_p$ & 0.085 & 0.062 & 4.947 \\
+        \hline $\Delta$ & 0.001 & 0.002 & 0.745 \\
+        \hline
+    \end{tabular}
+    
+\end{itemize}
+
+\newpage
+\section{Conclusions}
+
+\begin{itemize}
+    \item Практические значения близки к теоретическим.
+    
+    При увеличениии значения $n$ в 100 раз все оценки распределений уменьшаются, однако, оценка полусуммы минимума и максимума вариационного ряда распределения Лапласа не уменьшается, следовательно, для данного распределения эта оценка не является состоятельной.
+    
+    \item C точки зрения квадратичного риска лучшая оценка:
+    
+    для нормального распределения – выборочное среднее,
+
+    для равномерного распределения – полусумма минимума и максимума,
+
+    для распределения Лапласа – выборочная медиана.
+\end{itemize}
+
+\end{document}
