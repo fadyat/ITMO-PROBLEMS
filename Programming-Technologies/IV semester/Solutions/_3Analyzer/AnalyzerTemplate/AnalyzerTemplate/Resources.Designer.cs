@@ -61,7 +61,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analyzer description.
+        ///   Looks up a localized string similar to Бросание эксепшена, return выражение, ситуации, когда помимо return и бросания ещё выполняется какое-то действие.
         /// </summary>
         internal static string AnalyzerDescription {
             get {
@@ -70,7 +70,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analyzer message.
+        ///   Looks up a localized string similar to Инвертировать if, если в else бросание эксепшена или return.
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {
@@ -79,7 +79,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analyzer title.
+        ///   Looks up a localized string similar to If inversion.
         /// </summary>
         internal static string AnalyzerTitle {
             get {

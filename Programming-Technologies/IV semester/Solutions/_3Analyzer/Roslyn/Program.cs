@@ -1,4 +1,4 @@
-﻿namespace Roslyn;
+﻿namespace ProjectForAnalyzer;
 
 public class Program
 {
@@ -16,5 +16,6 @@ public class Program
         }
  
         var idiot = "me";
+        Console.WriteLine(idiot);
     }
 }

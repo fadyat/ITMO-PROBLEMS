@@ -7,13 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTemplate", "Analyze
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTemplate.CodeFixes", "AnalyzerTemplate\AnalyzerTemplate.CodeFixes\AnalyzerTemplate.CodeFixes.csproj", "{CE3AFBD9-4E58-4C08-9C15-327F63691319}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTemplate.Package", "AnalyzerTemplate\AnalyzerTemplate.Package\AnalyzerTemplate.Package.csproj", "{A4984373-2F31-4203-A095-A6DFE7B71FAE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTemplate.Test", "AnalyzerTemplate\AnalyzerTemplate.Test\AnalyzerTemplate.Test.csproj", "{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTemplate.Vsix", "AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{20877B67-5C15-4135-AE56-40FB80DFBB26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roslyn", "Roslyn\Roslyn.csproj", "{D3DACD5C-5067-4222-9E44-41E54D197723}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roslyn", "Roslyn\Roslyn.csproj", "{D3DACD5C-5067-4222-9E44-41E54D197723}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +25,6 @@ Global
 		{CE3AFBD9-4E58-4C08-9C15-327F63691319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE3AFBD9-4E58-4C08-9C15-327F63691319}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE3AFBD9-4E58-4C08-9C15-327F63691319}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4984373-2F31-4203-A095-A6DFE7B71FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4984373-2F31-4203-A095-A6DFE7B71FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4984373-2F31-4203-A095-A6DFE7B71FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4984373-2F31-4203-A095-A6DFE7B71FAE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Release|Any CPU.ActiveCfg = Release|Any CPU

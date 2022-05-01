@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading;
+﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,7 +9,7 @@ namespace AnalyzerTemplate
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "AnalyzerTemplate";
+        public const string DiagnosticId = "IfAnalyzer";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
