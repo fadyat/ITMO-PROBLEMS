@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>AnalyzerTemplate</RootNamespace>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

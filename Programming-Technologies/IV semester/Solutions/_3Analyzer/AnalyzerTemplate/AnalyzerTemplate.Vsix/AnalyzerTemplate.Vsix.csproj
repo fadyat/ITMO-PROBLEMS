@@ -6,6 +6,7 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>AnalyzerTemplate.Vsix</RootNamespace>
     <AssemblyName>AnalyzerTemplate.Vsix</AssemblyName>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
