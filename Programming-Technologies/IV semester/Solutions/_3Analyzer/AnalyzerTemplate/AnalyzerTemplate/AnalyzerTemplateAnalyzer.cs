@@ -18,7 +18,7 @@ namespace AnalyzerTemplate
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -27,18 +27,14 @@ namespace AnalyzerTemplate
             context.RegisterSyntaxNodeAction(AnalyzeIfInversion, SyntaxKind.IfStatement);
         }
 
-        private void AnalyzeIfInversion(SyntaxNodeAnalysisContext c)
+        private static void AnalyzeIfInversion(SyntaxNodeAnalysisContext c)
         {
             var ifStatement = c.Node as IfStatementSyntax;
-            var elseStatement = ifStatement.Else;
+            var elseStatement = ifStatement?.Else;
+            var elseBlock = elseStatement?.Statement as BlockSyntax;
+            var blockStatements = elseBlock?.Statements;
 
-            if (elseStatement == null) return;
-
-            var elseBlock = elseStatement.Statement as BlockSyntax;
-
-            if (elseBlock == null) return;
-
-            var blockStatements = elseBlock.Statements;
+            if (blockStatements == null) return;
 
             foreach (var blockStatement in blockStatements)
             {

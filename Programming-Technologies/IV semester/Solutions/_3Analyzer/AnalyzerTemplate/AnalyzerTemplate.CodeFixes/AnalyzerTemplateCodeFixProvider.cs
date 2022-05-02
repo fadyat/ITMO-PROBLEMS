@@ -14,10 +14,7 @@ namespace AnalyzerTemplate
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AnalyzerTemplateCodeFixProvider)), Shared]
     public class AnalyzerTemplateCodeFixProvider : CodeFixProvider
     {
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
-        {
-            get { return ImmutableArray.Create(AnalyzerTemplateAnalyzer.DiagnosticId); }
-        }
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AnalyzerTemplateAnalyzer.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider()
         {
@@ -39,7 +36,7 @@ namespace AnalyzerTemplate
                 diagnostic);
         }
 
-        public async Task<Document> FixIfInversion(Document document, IfStatementSyntax ifStatement, CancellationToken cancellationToken)
+        private static async Task<Document> FixIfInversion(Document document, IfStatementSyntax ifStatement, CancellationToken cancellationToken)
         {
             var ifBlock = ifStatement.Statement as BlockSyntax;
             var elseBlock = ifStatement.Else.Statement as BlockSyntax;  
@@ -47,8 +44,8 @@ namespace AnalyzerTemplate
             var invertedIfCondition = SyntaxFactory.ParseExpression("!(" + ifStatement.Condition.GetText() + ")");
             var invertedIfStatement = SyntaxFactory.IfStatement(invertedIfCondition, elseBlock);
 
-            var root = await document.GetSyntaxRootAsync();
-            var newRoot = root.InsertNodesAfter(ifStatement, ifBlock.Statements);
+            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var newRoot = root.InsertNodesAfter(ifStatement, ifBlock?.Statements);
             newRoot = newRoot.ReplaceNode(newRoot.FindNode(ifStatement.Span), invertedIfStatement).NormalizeWhitespace();
             var newDocument = document.WithSyntaxRoot(newRoot);
 
