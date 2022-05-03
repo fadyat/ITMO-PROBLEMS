@@ -2,15 +2,17 @@
 
 public class Program
 {
-    // if in all constructions 'case1 = case1Value' before usage of 'case1'
+    // Analyzer:
+    // 
+    // - if in all methods: 'case1 = case1Value' before usage of 'case1'
+    //                      'case1Value' is a parameter
     //
-    //                               or
+    // * find first expression 'case1 = case1Value' and first usage of 'case1'
     //
-    // if in all constructions 'case1Value', before 'case1 = case1Value'
     //
-    //                               do
+    // Codefixer:
     //
-    //  remove('case1 = case1Value') => remove(field 'case1') => replace('case1', 'case1Value') 
+    // - remove('case1 = case1Value') => remove(field 'case1') => replace('case1', 'case1Value') 
     // 
 
     private int _case1;
@@ -19,7 +21,7 @@ public class Program
     public void SetCase1(int case1Value)
     {
         _case1 = case1Value;
-        _case1 = case1Value + 10;
+        Console.WriteLine(_case1);
     }
 
     public void SetCase2(int case2Value)
@@ -29,6 +31,5 @@ public class Program
 
     public static void Main()
     {
-
     }
 }
