@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -33,8 +34,7 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
     public override void Initialize(AnalysisContext context)
     {
         context.EnableConcurrentExecution();
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze |
-                                               GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
     }
 
@@ -43,63 +43,59 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
         var classDeclaration = c.Node as ClassDeclarationSyntax;
         var fieldsDeclaration = classDeclaration?.DescendantNodes().OfType<FieldDeclarationSyntax>().ToImmutableList();
 
-        var privateFields = fieldsDeclaration?.Select(field =>
+        var privateFields = fieldsDeclaration?.Where(field =>
         {
-            var containsPrivateKeyword =
-                field.Modifiers.Any(modifierType => modifierType.IsKind(SyntaxKind.PrivateKeyword));
-            return containsPrivateKeyword ? field : null;
-        }).Where(x => x != null).ToImmutableList();
+            var containsPrivateKeyword = field.Modifiers.Any(modifierType => modifierType.IsKind(SyntaxKind.PrivateKeyword));
+            return containsPrivateKeyword;
+        }).ToImmutableList();
 
-        var methodsDeclaration =
-            classDeclaration?.DescendantNodes().OfType<MethodDeclarationSyntax>().ToImmutableList();
-
-
+        var methodsDeclaration = classDeclaration?.DescendantNodes().OfType<MethodDeclarationSyntax>().ToImmutableList();
+        
         // now I ignore situations where in method can be assigned many variables
         privateFields?.ForEach(field =>
         {
             var fieldName = field.Declaration.Variables.FirstOrDefault();
-            var canBeLocal = true;
+            var canBeLocal = 0;
+            var notUsed = 0;
 
             methodsDeclaration?.ForEach(method =>
             {
-                var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>().ToImmutableList();
-                var variablesAssignment =
-                    method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
+                var variablesAssignment = method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
                 var methodArgs = method.ParameterList.Parameters.ToImmutableList();
 
-                var firstFieldAssigment = variablesAssignment.Where(assigment =>
+                var firstFieldAssigment = variablesAssignment.FirstOrDefault(assigment =>
                 {
                     var leftAssignment = assigment.Left.ToString();
                     var potentialLeftAssignment = fieldName.Identifier.ToString();
                     var leftEquals = Equals(leftAssignment, potentialLeftAssignment);
-
                     var rights = assigment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().ToImmutableList();
-                    var rightEquals = false;
-                    methodArgs.ForEach(arg =>
+
+                    return methodArgs.Any(arg =>
                     {
                         var potentialRightAssignment = arg.Identifier.ToString();
-                        rights.ForEach(x =>
+                        return rights.Any(x =>
                         {
                             var rightAssignment = x.Identifier.ToString();
-                            rightEquals |= Equals(rightAssignment, potentialRightAssignment);
+                            return Equals(rightAssignment, potentialRightAssignment);
                         });
-                    });
+                    }) & leftEquals;
+                });
+                
+                var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>().ToImmutableList();
+                
+                var firstFieldUsage = methodTokens.FirstOrDefault(token =>
+                    {
+                        var isPrivateField = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
+                        return isPrivateField;
+                    }
+                );
 
-                    return leftEquals & rightEquals;
-                }).FirstOrDefault();
-
-                var firstFieldUsage = methodTokens.Where(token =>
-                {
-                    var containsField = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
-                    return containsField;
-                }).FirstOrDefault();
-
-                canBeLocal &= (firstFieldAssigment?.SpanStart <= firstFieldUsage?.SpanStart) |
-                              (Equals(firstFieldAssigment, null) & Equals(firstFieldUsage, null));
+                notUsed += Convert.ToInt32(Equals(firstFieldAssigment, null) & Equals(firstFieldUsage, null));
+                canBeLocal += Convert.ToInt32(firstFieldAssigment?.SpanStart <= firstFieldUsage?.SpanStart);
             });
 
-            if (canBeLocal) Report(c, field.GetLocation());
-        });
+            if (notUsed + canBeLocal == methodsDeclaration?.Count & canBeLocal > 0) Report(c, field.GetLocation());
+        }); 
     }
 
     private static void Report(SyntaxNodeAnalysisContext context, Location itemLocation)

@@ -17,7 +17,7 @@ public class Program
 
     private int _case1;
     private string _case2 = "123";
-
+    
     public void SetCase1(int case1Value)
     {
         _case1 = case1Value;
