@@ -53,33 +53,52 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
         var methodsDeclaration =
             classDeclaration?.DescendantNodes().OfType<MethodDeclarationSyntax>().ToImmutableList();
 
-        methodsDeclaration?.ForEach(method =>
+
+        // now I ignore situations where in method can be assigned many variables
+        privateFields?.ForEach(field =>
         {
-            var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>().ToImmutableList();
-            var variablesAssigment = method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
+            var fieldName = field.Declaration.Variables.FirstOrDefault();
+            var canBeLocal = true;
 
-            privateFields?.ForEach(field =>
+            methodsDeclaration?.ForEach(method =>
             {
-                var fieldName = field.Declaration.Variables.FirstOrDefault();
+                var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>().ToImmutableList();
+                var variablesAssignment =
+                    method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
+                var methodArgs = method.ParameterList.Parameters.ToImmutableList();
 
-                var firstFieldAssigment = variablesAssigment.Select(assigment =>
+                var firstFieldAssigment = variablesAssignment.Where(assigment =>
                 {
-                    var theyEquals = Equals(assigment.Left.ToString(), fieldName.Identifier.ToString());
-                    return theyEquals ? assigment : null;
-                }).FirstOrDefault(x => x != null);
+                    var leftAssignment = assigment.Left.ToString();
+                    var potentialLeftAssignment = fieldName.Identifier.ToString();
+                    var leftEquals = Equals(leftAssignment, potentialLeftAssignment);
 
-                var firstFieldUsage = methodTokens.Select(token =>
-                {
-                    var theyEquals = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
-                    return theyEquals ? token : null;
-                }).FirstOrDefault(x => x != null);
+                    var rights = assigment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().ToImmutableList();
+                    var rightEquals = false;
+                    methodArgs.ForEach(arg =>
+                    {
+                        var potentialRightAssignment = arg.Identifier.ToString();
+                        rights.ForEach(x =>
+                        {
+                            var rightAssignment = x.Identifier.ToString();
+                            rightEquals |= Equals(rightAssignment, potentialRightAssignment);
+                        });
+                    });
 
-                if (firstFieldAssigment?.SpanStart <= firstFieldUsage?.SpanStart)
+                    return leftEquals & rightEquals;
+                }).FirstOrDefault();
+
+                var firstFieldUsage = methodTokens.Where(token =>
                 {
-                    Report(c, firstFieldAssigment.GetLocation());
-                    Report(c, firstFieldUsage.GetLocation());
-                }
+                    var containsField = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
+                    return containsField;
+                }).FirstOrDefault();
+
+                canBeLocal &= (firstFieldAssigment?.SpanStart <= firstFieldUsage?.SpanStart) |
+                              (Equals(firstFieldAssigment, null) & Equals(firstFieldUsage, null));
             });
+
+            if (canBeLocal) Report(c, field.GetLocation());
         });
     }
 
