@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AnalyzerTemplate;
@@ -28,59 +27,70 @@ public class AnalyzerTemplateCodeFixProvider : CodeFixProvider
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
         var diagnostic = context.Diagnostics.First();
         var diagnosticSpan = diagnostic.Location.SourceSpan;
-        var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<FieldDeclarationSyntax>().First();
+        var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf()
+            .OfType<FieldDeclarationSyntax>().First();
 
         context.RegisterCodeFix(
-           CodeAction.Create(
-              title: CodeFixResources.CodeFixTitle,
-              createChangedDocument: c => ChangeOnLocalVariable(context.Document, declaration, c),
-              equivalenceKey: nameof(CodeFixResources.CodeFixTitle)),
-         diagnostic);
+            CodeAction.Create(
+                CodeFixResources.CodeFixTitle,
+                c => ChangeOnLocalVariable(context.Document, declaration, c),
+                nameof(CodeFixResources.CodeFixTitle)),
+            diagnostic);
     }
 
-    private static async Task<Document> ChangeOnLocalVariable(Document document, BaseFieldDeclarationSyntax fieldDeclaration,
+    private static async Task<Document> ChangeOnLocalVariable(Document document,
+        BaseFieldDeclarationSyntax fieldDeclaration,
         CancellationToken cancellationToken)
     {
-        var root = await document.GetSyntaxRootAsync(cancellationToken);
-        
-        var methodsDeclaration = fieldDeclaration.Parent.AncestorsAndSelf()
-            .OfType<MethodDeclarationSyntax>()
-            .ToImmutableList();
+        // var root = await document.GetSyntaxRootAsync(cancellationToken);
+        // root = root.RemoveNode(fieldDeclaration, SyntaxRemoveOptions.KeepExteriorTrivia)
+        //    .NormalizeWhitespace();
+
+        // document = document.WithSyntaxRoot(root);
 
         var fieldName = fieldDeclaration.Declaration.Variables.First();
 
-        root = root.RemoveNode(fieldDeclaration, SyntaxRemoveOptions.KeepExteriorTrivia).NormalizeWhitespace();
+        /*var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+        var typeSymbol = semanticModel.GetDeclaredSymbol(fieldName, cancellationToken);
+        
+        var newSolution = await Renamer.RenameSymbolAsync(
+                document.Project.Solution, typeSymbol, newName,
+                document.Project.Solution.Workspace.Options,
+                cancellationToken)
+            .ConfigureAwait(false);
 
-        /*var classDeclaration = fieldDeclaration.Parent.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();
-        int i = 0;
-        while (i++ < 10)
+        document = newSolution.GetDocument(document.Id);
+        
+        var root = await document!.GetSyntaxRootAsync(cancellationToken)!;
+        var fieldToRemove = root.FindNode(fieldDeclaration.Span);
+        root = root.RemoveNode(fieldToRemove, SyntaxRemoveOptions.KeepExteriorTrivia).NormalizeWhitespace();
+        document = document.WithSyntaxRoot(root);
+        newSolution = document.Project.Solution;*/
+
+
+        var root = await document.GetSyntaxRootAsync(cancellationToken);
+
+        var markedMethods = root.DescendantNodes()
+            .OfType<MethodDeclarationSyntax>()
+            .ToImmutableList();
+
+        markedMethods.ForEach(markedMethod =>
         {
-            var replaceThis = classDeclaration.DescendantNodes()
-                .OfType<IdentifierNameSyntax>()
-                .FirstOrDefault(x => Equals(x.Identifier.ToString(), fieldName.Identifier.ToString()));
-
-            if (replaceThis == null) break;
-
-            root = root.ReplaceNode(root.FindNode(replaceThis.Span), SyntaxFactory.IdentifierName("uwu"));
-        }
-        */
-
-        /*
-        methodsDeclaration.ForEach(method =>
-        {
-            var variablesAssignment = method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
-            var methodArgs = method.ParameterList.Parameters.ToImmutableList();
-
+            var variablesAssignment =
+                markedMethod.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
+            var methodArgs = markedMethod.ParameterList.Parameters.ToImmutableList();
             var potentialLeftAssignment = fieldName.Identifier.ToString();
-            var assignedArgument = methodArgs.FirstOrDefault(arg =>
+
+            var replaceOn = methodArgs.FirstOrDefault(arg =>
             {
                 return variablesAssignment.Any(assignment =>
                 {
                     var leftAssignment = assignment.Left.ToString();
                     var leftEquals = Equals(leftAssignment, potentialLeftAssignment);
                     var potentialRightAssignment = arg.Identifier.ToString();
-                    var rights = assignment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().ToImmutableList();
-                    
+                    var rights = assignment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()
+                        .ToImmutableList();
+
                     return rights.Any(x =>
                     {
                         var rightAssignment = x.Identifier.ToString();
@@ -90,22 +100,44 @@ public class AnalyzerTemplateCodeFixProvider : CodeFixProvider
                 });
             });
 
-            var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>()
-                .Where(token =>
-                {
-                    var isPrivateField = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
-                    return isPrivateField;
-                })
+            if (replaceOn == null) return;
+
+            var methodToUpdate = root.DescendantNodes().OfType<MethodDeclarationSyntax>()
+                .FirstOrDefault(x => Equals(x.Identifier.ToString(), markedMethod.Identifier.ToString()));
+
+            var replaceThis = methodToUpdate!.DescendantNodes().OfType<IdentifierNameSyntax>()
+                .Where(x => Equals(x.Identifier.ToString(), fieldName.Identifier.ToString()))
                 .ToImmutableList();
 
-            if (assignedArgument != null && methodTokens.Any())
+            var updatedMethod = methodToUpdate;
+            replaceThis.ForEach(x =>
             {
-                root = root.ReplaceNode(methodTokens.FirstOrDefault(), assignedArgument);
-            }
-        });*/
-        
-        var newDocument = document.WithSyntaxRoot(root); 
-        
-        return newDocument;
+                var xx = updatedMethod.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()
+                    .FirstOrDefault(y => Equals(x.Identifier.ToString(), y.Identifier.ToString()));
+
+                updatedMethod = updatedMethod.ReplaceToken(xx!.Identifier, replaceOn.Identifier);
+            });
+
+            var removeThis = updatedMethod.DescendantNodesAndSelf().OfType<AssignmentExpressionSyntax>()
+                .FirstOrDefault(x =>
+                    Equals(x.Left.ToString(), replaceOn.Identifier.ToString()) &&
+                    Equals(x.Right.ToString(), replaceOn.Identifier.ToString()))?
+                .AncestorsAndSelf()
+                .OfType<ExpressionStatementSyntax>().FirstOrDefault();
+
+            if (removeThis != null)
+                updatedMethod = updatedMethod.RemoveNode(removeThis, SyntaxRemoveOptions.KeepTrailingTrivia)
+                    .NormalizeWhitespace();
+            
+            root = root.ReplaceNode(methodToUpdate, updatedMethod).NormalizeWhitespace();
+        });
+
+        var removeThis = root.DescendantNodes().OfType<FieldDeclarationSyntax>().FirstOrDefault(x =>
+            Equals(x.Declaration.Variables.First().Identifier.ToString(), fieldName.Identifier.ToString()));
+
+
+        root = root.RemoveNode(removeThis, SyntaxRemoveOptions.KeepTrailingTrivia).NormalizeWhitespace();
+
+        return document.WithSyntaxRoot(root);
     }
 }

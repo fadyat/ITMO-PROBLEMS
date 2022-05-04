@@ -34,7 +34,8 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
     public override void Initialize(AnalysisContext context)
     {
         context.EnableConcurrentExecution();
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze |
+                                               GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
     }
 
@@ -45,12 +46,14 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
 
         var privateFields = fieldsDeclaration?.Where(field =>
         {
-            var containsPrivateKeyword = field.Modifiers.Any(modifierType => modifierType.IsKind(SyntaxKind.PrivateKeyword));
+            var containsPrivateKeyword =
+                field.Modifiers.Any(modifierType => modifierType.IsKind(SyntaxKind.PrivateKeyword));
             return containsPrivateKeyword;
         }).ToImmutableList();
 
-        var methodsDeclaration = classDeclaration?.DescendantNodes().OfType<MethodDeclarationSyntax>().ToImmutableList();
-        
+        var methodsDeclaration =
+            classDeclaration?.DescendantNodes().OfType<MethodDeclarationSyntax>().ToImmutableList();
+
         // now I ignore situations where in method can be assigned many variables
         privateFields?.ForEach(field =>
         {
@@ -60,7 +63,8 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
 
             methodsDeclaration?.ForEach(method =>
             {
-                var variablesAssignment = method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
+                var variablesAssignment =
+                    method.DescendantNodes().OfType<AssignmentExpressionSyntax>().ToImmutableList();
                 var methodArgs = method.ParameterList.Parameters.ToImmutableList();
 
                 var firstFieldAssigment = variablesAssignment.FirstOrDefault(assigment =>
@@ -68,7 +72,8 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
                     var leftAssignment = assigment.Left.ToString();
                     var potentialLeftAssignment = fieldName.Identifier.ToString();
                     var leftEquals = Equals(leftAssignment, potentialLeftAssignment);
-                    var rights = assigment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().ToImmutableList();
+                    var rights = assigment.Right.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()
+                        .ToImmutableList();
 
                     return methodArgs.Any(arg =>
                     {
@@ -80,9 +85,9 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
                         });
                     }) & leftEquals;
                 });
-                
+
                 var methodTokens = method.DescendantNodes().OfType<IdentifierNameSyntax>().ToImmutableList();
-                
+
                 var firstFieldUsage = methodTokens.FirstOrDefault(token =>
                     {
                         var isPrivateField = Equals(token.Identifier.ToString(), fieldName.Identifier.ToString());
@@ -94,8 +99,8 @@ public class AnalyzerTemplateAnalyzer : DiagnosticAnalyzer
                 canBeLocal += Convert.ToInt32(firstFieldAssigment?.SpanStart <= firstFieldUsage?.SpanStart);
             });
 
-            if (notUsed + canBeLocal == methodsDeclaration?.Count & canBeLocal > 0) Report(c, field.GetLocation());
-        }); 
+            if ((notUsed + canBeLocal == methodsDeclaration?.Count) & (canBeLocal > 0)) Report(c, field.GetLocation());
+        });
     }
 
     private static void Report(SyntaxNodeAnalysisContext context, Location itemLocation)
