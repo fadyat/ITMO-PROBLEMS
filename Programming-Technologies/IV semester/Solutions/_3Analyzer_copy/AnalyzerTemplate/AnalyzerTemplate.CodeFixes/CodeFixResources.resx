@@ -124,7 +124,7 @@
         </value>
     </resheader>
     <data name="CodeFixTitle" xml:space="preserve">
-    <value>Invert if</value>
+        <value>Remove field and replace on local variable</value>
         <comment>The title of the code fix.</comment>
-  </data>
+    </data>
 </root>

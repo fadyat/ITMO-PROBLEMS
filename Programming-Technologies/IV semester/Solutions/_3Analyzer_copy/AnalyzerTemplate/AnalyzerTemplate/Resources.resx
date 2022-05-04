@@ -124,15 +124,15 @@
         </value>
     </resheader>
     <data name="AnalyzerDescription" xml:space="preserve">
-    <value>Бросание эксепшена, return выражение, ситуации, когда помимо return и бросания ещё выполняется какое-то действие</value>
+        <value>Private field used as a local variable</value>
         <comment>An optional longer localizable description of the diagnostic.</comment>
-  </data>
+    </data>
     <data name="AnalyzerMessageFormat" xml:space="preserve">
     <value>Инвертировать if, если в else бросание эксепшена или return</value>
         <comment>The format-able message the diagnostic displays.</comment>
   </data>
     <data name="AnalyzerTitle" xml:space="preserve">
-    <value>If inversion</value>
+        <value>Private field can be converted to local</value>
         <comment>The title of the diagnostic.</comment>
-  </data>
+    </data>
 </root>

@@ -1,27 +1,5 @@
 ﻿namespace Roslyn;
 
-public class Program
-{
-    private int _case1;
-    private string _case2 = "123";
-
-    public void SetCase1(int case1Value)
-    {
-        _case1 = case1Value;
-        Console.WriteLine(_case1);
-    }
-
-    public void SetCase2(int case2Value)
-    {
-        _case2 = Convert.ToString(case2Value);
-    }
-
-    public static void Main()
-    {
-    }
-}
-
-
 // Analyzer:
 // 
 // - if in all methods: 'case1 = case1Value' before usage of 'case1'
@@ -34,3 +12,42 @@ public class Program
 //
 // - remove('case1 = case1Value') => remove(field 'case1') => replace('case1', 'case1Value') 
 // 
+
+public class Program
+{
+    private int _privateField1;
+    private int _privateField2;
+    private int _privateField3 = 322;
+    private int _privateField4 = 228;
+    
+    public void Method1(int value)
+    {
+        _privateField1 = value;
+        Console.WriteLine("Value: " + _privateField1);
+    }
+
+    public void Method2(int value)
+    {
+        _privateField1 = value % 10;
+        Console.WriteLine("Mod: " + _privateField1);
+        _privateField2 = value / 10;
+        Console.WriteLine("Div: " + _privateField2);
+    }
+
+    public void Method3(int value)
+    {
+        Console.WriteLine("Incorrect, used previous field value: " + _privateField3);
+        _privateField3 = value;
+    }
+
+    public void Method4(int value)
+    {
+        value *= 2;
+        _privateField4 = value; 
+        Console.WriteLine("Incorrect, parameter is changing: " + _privateField4);
+    }
+
+    public static void Main()
+    {
+    }
+}
