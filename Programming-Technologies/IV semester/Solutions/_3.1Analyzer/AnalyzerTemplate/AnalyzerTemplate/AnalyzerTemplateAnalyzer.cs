@@ -32,18 +32,15 @@ namespace AnalyzerTemplate
             var ifStatement = c.Node as IfStatementSyntax;
             var elseStatement = ifStatement?.Else;
             var elseBlock = elseStatement?.Statement as BlockSyntax;
-            var blockStatements = elseBlock?.Statements;
+            var blockStatements = elseBlock?.Statements.ToImmutableList();
 
-            if (blockStatements == null) return;
-
-            foreach (var blockStatement in blockStatements)
+            blockStatements?.ForEach(blockStatement =>
             {
-                if (blockStatement.IsKind(SyntaxKind.ReturnStatement) || blockStatement.IsKind(SyntaxKind.ThrowStatement))
-                {
-                    var diagnostics = Diagnostic.Create(Rule, ifStatement.GetLocation(), "Can invert if statement");
-                    c.ReportDiagnostic(diagnostics);
-                }
-            }
+                if (!blockStatement.IsKind(SyntaxKind.ReturnStatement) && !blockStatement.IsKind(SyntaxKind.ThrowStatement)) return;
+                
+                var diagnostics = Diagnostic.Create(Rule, ifStatement.GetLocation(), "Can invert if statement");
+                c.ReportDiagnostic(diagnostics);
+            });
         }
     }
 }

@@ -61,7 +61,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Бросание эксепшена, return выражение, ситуации, когда помимо return и бросания ещё выполняется какое-то действие.
+        ///   Looks up a localized string similar to Private field used as a local variable.
         /// </summary>
         internal static string AnalyzerDescription {
             get {
@@ -70,7 +70,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Инвертировать if, если в else бросание эксепшена или return.
+        ///   Looks up a localized string similar to In all class methods private field used like a local variable, can be removed and replaced with method argument.
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {
@@ -79,7 +79,7 @@ namespace AnalyzerTemplate {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If inversion.
+        ///   Looks up a localized string similar to Private field can be converted to local.
         /// </summary>
         internal static string AnalyzerTitle {
             get {

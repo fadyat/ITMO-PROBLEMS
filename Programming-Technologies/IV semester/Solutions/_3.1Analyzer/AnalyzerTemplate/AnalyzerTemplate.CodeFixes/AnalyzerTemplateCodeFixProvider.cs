@@ -11,7 +11,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AnalyzerTemplate
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AnalyzerTemplateCodeFixProvider)), Shared]
+    [Shared]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AnalyzerTemplateCodeFixProvider))]
     public class AnalyzerTemplateCodeFixProvider : CodeFixProvider
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(AnalyzerTemplateAnalyzer.DiagnosticId);
