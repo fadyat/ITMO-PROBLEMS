@@ -9,7 +9,7 @@ NON_ACCESS_MODIFIER         :       'static' | 'abstract' | 'final';
 INHERITANCE_TYPE            :       'extends' | 'implements';
 
 /* ignore */
-WS                          :       [ ;\n\t] -> skip;
+WS                          :       [ ;\n\t\r] -> skip;
 
 /* main fragments */
 fragment LETTER             :       [A-Za-z];  
