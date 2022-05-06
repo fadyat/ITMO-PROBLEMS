@@ -7,26 +7,25 @@ namespace AntlrParser.Analysis;
 
 public class MethodDeclaration
 {
-    private readonly List<ArgumentDeclaration> _arguments;
-    public string MethodName { get; }
+    public string? MethodName { get; }
 
-    public string ReturnType { get; }
+    public string? ReturnType { get; }
 
-    public ImmutableList<ArgumentDeclaration> Arguments => _arguments.ToImmutableList();
+    public ImmutableList<ArgumentDeclaration>? Arguments { get; }
 
-    public string Url { get; }
+    public string? Url { get; }
 
-    public string HttpMethodName { get; }
+    public string? HttpMethodName { get; }
 
-    private MethodDeclaration(string methodDeclaration,
-        string returnType,
-        List<ArgumentDeclaration> arguments,
-        string url,
-        string httpMethodName)
+    private MethodDeclaration(string? methodDeclaration,
+        string? returnType,
+        ImmutableList<ArgumentDeclaration>? arguments,
+        string? url,
+        string? httpMethodName)
     {
         MethodName = methodDeclaration;
         ReturnType = returnType;
-        _arguments = arguments;
+        Arguments = arguments;
         Url = url;
         HttpMethodName = httpMethodName;
     }
@@ -36,61 +35,58 @@ public class MethodDeclaration
         return new MethodDeclarationBuilder()
             .WithMethodName(MethodName)
             .WithReturnType(ReturnType)
-            .WithArguments(_arguments)
+            .WithArguments(Arguments)
             .WithUrl(Url)
             .WithHttpMethodName(HttpMethodName);
     }
 
     public override string ToString()
     {
-        return JsonConvert.SerializeObject(
-            this,
-            Formatting.Indented,
-            new StringEnumConverter());
+        return JsonConvert.SerializeObject(this, Formatting.Indented, new StringEnumConverter());
     }
 
     public class MethodDeclarationBuilder
     {
-        private string _methodDeclaration;
-        private string _returnType;
-        private List<ArgumentDeclaration> _arguments;
-        private string _url;
-        private string _httpMethodName;
+        private string? _methodDeclaration;
+        private string? _returnType;
+        private ImmutableList<ArgumentDeclaration>? _arguments;
+        private string? _url;
+        private string? _httpMethodName;
 
         public MethodDeclarationBuilder()
         {
             _methodDeclaration = Empty;
             _returnType = Empty;
-            _arguments = new List<ArgumentDeclaration>();
+            _arguments = null;
             _url = Empty;
             _httpMethodName = Empty;
         }
 
-        public MethodDeclarationBuilder WithMethodName(string methodDeclaration)
+        public MethodDeclarationBuilder WithMethodName(string? methodDeclaration)
         {
             _methodDeclaration = methodDeclaration;
             return this;
         }
 
-        public MethodDeclarationBuilder WithReturnType(string returnType)
+        public MethodDeclarationBuilder WithReturnType(string? returnType)
         {
             _returnType = returnType;
             return this;
         }
 
-        public MethodDeclarationBuilder WithArguments(List<ArgumentDeclaration> arguments)
+        public MethodDeclarationBuilder WithArguments(ImmutableList<ArgumentDeclaration>? arguments)
         {
             _arguments = arguments;
             return this;
         }
 
-        public MethodDeclarationBuilder WithUrl(string url)
+        public MethodDeclarationBuilder WithUrl(string? url)
         {
             _url = url;
             return this;
         }
 
-        public MethodDeclarationBuilder WithHttpMethodName(string httpMethodName)
+        public MethodDeclarationBuilder WithHttpMethodName(string? httpMethodName)
         {
             _httpMethodName = httpMethodName;
             return this;
@@ -108,11 +104,9 @@ public class MethodDeclaration
 
     public bool NullOrEmpty()
     {
-        return GetType()
-                   .GetProperties()
+        return GetType().GetProperties()
                    .Where(f => f.PropertyType == typeof(string))
                    .Select(s => (string) s.GetValue(this)!)
-                   .Any(IsNullOrEmpty) &&
-               _arguments.Any() == false;
+                   .Any(IsNullOrEmpty) && Arguments?.Any() == false;
     }
 }

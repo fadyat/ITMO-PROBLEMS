@@ -10,8 +10,12 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
     private static readonly List<string> HttpMethods = new()
         {"get", "post", "put", "head", "delete", "patch", "options", "connect", "trace"};
 
+    private static readonly Dictionary<string, string> PrimitiveTypesJavaToCSharp = new()
+    {
+        { "Integer", "int" }, { "String", "string" }, // ...
+    };
 
-    private TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
+    private readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
     private MethodDeclaration _currentMethodDeclaration;
     private readonly List<MethodDeclaration> _previousMethodDeclarations;
 
@@ -22,24 +26,20 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public ServerMethodVisitor()
     {
-        _currentMethodDeclaration = new MethodDeclaration
-                .MethodDeclarationBuilder()
-            .Build();
+        _currentMethodDeclaration = new MethodDeclaration.MethodDeclarationBuilder().Build();
         _absolutePath = string.Empty;
         _previousMethodDeclarations = new List<MethodDeclaration>();
     }
 
     public override object VisitModel_annotation(ServerParser.Model_annotationContext context)
     {
-        var requestHeader = context
-            .annotation()
+        var requestHeader = context.annotation()
             .annotation_header()
             .GetText()
             .Equals("@RequestMapping");
 
         _absolutePath = requestHeader
-            ? context
-                .annotation()
+            ? context.annotation()
                 .annotation_arguments()?
                 .GetText()
             : null;
@@ -55,8 +55,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitFunction_name(ServerParser.Function_nameContext context)
     {
-        _currentMethodDeclaration = _currentMethodDeclaration
-            .ToBuilder()
+        _currentMethodDeclaration = _currentMethodDeclaration.ToBuilder()
             .WithMethodName(context.GetText())
             .Build();
 
@@ -65,20 +64,13 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitFunction_annotation(ServerParser.Function_annotationContext context)
     {
-        var httpMethodName = HttpMethods
-            .FirstOrDefault(httpMethod => context
-                .GetText()
-                .ToLower()
-                .Contains(httpMethod));
+        var httpMethodName = HttpMethods.FirstOrDefault(httpMethod =>
+            context.GetText().ToLower().Contains(httpMethod));
 
-        if (httpMethodName != null)
-        {
-            httpMethodName = _textInfo.ToTitleCase(httpMethodName);
-        }
+        if (httpMethodName != null) httpMethodName = _textInfo.ToTitleCase(httpMethodName);
         
         var regex = new Regex("\"(.*?)\"");
-        var match = regex.Match(context.GetText())
-            .Value;
+        var match = regex.Match(context.GetText()).Value;
         var url = match != string.Empty
             ? match.Substring(1, match.Length - 2)
             : string.Empty;
@@ -86,8 +78,8 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
         var fullUrl = _absolutePath +
                       (!_absolutePath!.EndsWith("/") && !url.StartsWith("/") && url.Any() ? "/" : string.Empty) +
                       url;
-        _currentMethodDeclaration = _currentMethodDeclaration
-            .ToBuilder()
+        
+        _currentMethodDeclaration = _currentMethodDeclaration.ToBuilder()
             .WithHttpMethodName(httpMethodName)
             .WithUrl(fullUrl)
             .Build();
@@ -97,9 +89,15 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitReturn_type(ServerParser.Return_typeContext context)
     {
-        _currentMethodDeclaration = _currentMethodDeclaration
-            .ToBuilder()
-            .WithReturnType(context.GetText())
+        var returnType = context.GetText();
+        foreach (var keyValuePair in PrimitiveTypesJavaToCSharp.Where(x =>
+                     returnType.Contains(x.Key)))
+        {
+            returnType = returnType.Replace(keyValuePair.Key, keyValuePair.Value);
+        }
+        
+        _currentMethodDeclaration = _currentMethodDeclaration.ToBuilder()
+            .WithReturnType(returnType)
             .Build();
 
         return base.VisitReturn_type(context);
@@ -107,15 +105,22 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitFunction_args(ServerParser.Function_argsContext context)
     {
-        var args = context
-            .function_arg()
-            .Select(arg => new ArgumentDeclaration(
-                arg.var().GetText(),
-                arg.var_type().GetText()))
-            .ToList();
+        var args = context.function_arg()
+            .Select(arg =>
+            {
+                var argName = arg.var().GetText();
+                var argType = arg.var_type().GetText();
+                foreach (var keyValuePair in PrimitiveTypesJavaToCSharp.Where(x => 
+                             argType.Contains(x.Key)))
+                {
+                    argType = argType.Replace(keyValuePair.Key, keyValuePair.Value);
+                }
+                
+                return new ArgumentDeclaration(argName, argType);
+            })
+            .ToImmutableList();
 
-        _currentMethodDeclaration = _currentMethodDeclaration
-            .ToBuilder()
+        _currentMethodDeclaration = _currentMethodDeclaration.ToBuilder()
             .WithArguments(args)
             .Build();
 
@@ -129,8 +134,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
             _previousMethodDeclarations.Add(_currentMethodDeclaration);
         }
 
-        _currentMethodDeclaration = new MethodDeclaration
-                .MethodDeclarationBuilder()
+        _currentMethodDeclaration = new MethodDeclaration.MethodDeclarationBuilder()
             .Build();
 
         return base.VisitFunction_body(context);

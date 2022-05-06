@@ -11,17 +11,17 @@ public static class Program
 {
     private static void Main()
     {
-        const string controllerPath =
-            "../../../../../JavaServer/src/main/java/ru/artyomfadeyev/javaserver/controllers/StudentController.java";
+        //const string controllerPath =
+        //    "../../../../../JavaServer/src/main/java/ru/artyomfadeyev/javaserver/controllers/StudentController.java";
 
-        var visitor1 = new ServerMethodVisitor();
-        new ParsingSetup(controllerPath, visitor1)
-            .Run();
+        //var visitor1 = new ServerMethodVisitor();
+        //new ParsingSetup(controllerPath, visitor1)
+        //    .Run();
 
-        var result1 = visitor1.PreviousMethodDeclarations;
+        //var result1 = visitor1.PreviousMethodDeclarations;
         // Console.WriteLine(string.Join("\n", result1));
 
-        Console.WriteLine(ServiceGeneration.Generate(result1, "StudentService"));
+        //Console.WriteLine(ServiceGeneration.Generate(result1, "StudentService"));
 
 
         // const string studentPath =
@@ -43,5 +43,7 @@ public static class Program
         // Console.WriteLine(string.Join("\n", result3));
 
         // Console.WriteLine(ModelGeneration.Generate(result3));
+
+        Console.WriteLine(TestClass.StudentService.getStudent(1));
     }
 }

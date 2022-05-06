@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using AntlrParser.Analysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Roslyn.Generation;
 
@@ -21,18 +20,19 @@ public static class ServiceGeneration
                 SyntaxFactory.ArgumentList(),
                 null
             ));
-        
+
         var clientField = SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(
-            SyntaxFactory.ParseTypeName("HttpClient"),
-            SyntaxFactory.SeparatedList(new[]
-            {
-                SyntaxFactory.VariableDeclarator(
-                    SyntaxFactory.Identifier("client"), 
-                    null,
-                    clientValue
-                )
-            })))
-            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+                SyntaxFactory.ParseTypeName("HttpClient"),
+                SyntaxFactory.SeparatedList(new[]
+                {
+                    SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.Identifier("_client"),
+                        null,
+                        clientValue
+                    )
+                })))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
 
         var classDeclaration = SyntaxFactory.ClassDeclaration(serviceName)
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
@@ -42,14 +42,21 @@ public static class ServiceGeneration
         methodsDeclaration.ForEach(method =>
         {
             var methodBody = SyntaxFactory.ParseStatement(
-                $"return await client.{method.HttpMethodName}Async(\"{method.Url}\");"
+                $"return await _client.{method.HttpMethodName}Async($\"{method.Url}\");"
             );
 
+            
+            var parameterList = method.Arguments!.Aggregate(SyntaxFactory.ParameterList(), (current, arg) => 
+                current.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(arg.ArgumentType))
+                    .WithType(SyntaxFactory.ParseTypeName(arg.ArgumentName))));
+
+
             var methodDeclaration = SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.ParseTypeName(method.ReturnType), method.MethodName)
+                    SyntaxFactory.ParseTypeName(method.ReturnType!), method.MethodName!)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
                 .WithBody(SyntaxFactory.Block(methodBody))
-                .WithParameterList(SyntaxFactory.ParameterList())
+                .WithParameterList(parameterList)
                 .NormalizeWhitespace();
 
             classDeclaration = classDeclaration.AddMembers(methodDeclaration);
