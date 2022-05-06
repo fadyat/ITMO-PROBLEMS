@@ -2,6 +2,7 @@
 using AntlrParser.Analysis;
 using AntlrParser.Visitors;
 using Roslyn.Generation;
+using Roslyn.RoslynGenerated;
 
 namespace Roslyn;
 
@@ -15,19 +16,20 @@ public static class Program
         ParsingSetup.Run(controllerPath, serverMethodVisitor);
 
         var result1 = serverMethodVisitor.PreviousMethodDeclarations;
-        Console.WriteLine(ServiceGeneration.Generate(result1, "StudentService"));
-      
-        var getResponse = StudentService.getStudent(1);
+        
+        // generate client class
+        ServiceGeneration.Generate(result1, "StudentService");
+        
+        var getResponse = StudentServiceGenerated.getStudent(1);
         var getResponseBody = getResponse.Result.Content.ReadAsStringAsync().Result;
         
         Console.WriteLine(getResponseBody);
 
-        // var newObject = new StringContent(File.ReadAllText("../../../postThis.json"), Encoding.UTF8, "application/json");
-        // var postResponse = StudentService.saveStudent(newObject);
-        
-        // Console.WriteLine(postResponse.Result);
+        var newObject = new StringContent(File.ReadAllText("../../../postThis.json"), Encoding.UTF8, "application/json");
+        var postResponse = StudentServiceGenerated.saveStudent(newObject);
+        Console.WriteLine(postResponse.Result);
 
-        var getResponseOfStudents = StudentService.getStudents(new List<int> {1, 3});
+        var getResponseOfStudents = StudentServiceGenerated.getStudents(new List<int>());
         var getResponseOfStudentsBody = getResponseOfStudents.Result.Content.ReadAsStringAsync().Result;
         
         Console.WriteLine(getResponseOfStudentsBody);

@@ -15,4 +15,8 @@
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="RoslynGenerated" />
+    </ItemGroup>
+
 </Project>

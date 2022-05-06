@@ -11,9 +11,10 @@ public static class ServiceGeneration
     public static string Generate(ImmutableList<MethodDeclaration> methodsDeclaration, string serviceName)
     {
         var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(
-            SyntaxFactory.ParseName($"{serviceName}Generated")
+            SyntaxFactory.ParseName("Roslyn.RoslynGenerated")
         );
 
+        var className = $"{serviceName}Generated";
         var clientValue = SyntaxFactory.EqualsValueClause(
             SyntaxFactory.ObjectCreationExpression(
                 SyntaxFactory.Token(SyntaxKind.NewKeyword),
@@ -56,7 +57,7 @@ public static class ServiceGeneration
                 SyntaxFactory.Token(SyntaxKind.ConstKeyword));
 
 
-        var classDeclaration = SyntaxFactory.ClassDeclaration(serviceName)
+        var classDeclaration = SyntaxFactory.ClassDeclaration(className)
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                 SyntaxFactory.Token(SyntaxKind.StaticKeyword))
             .AddMembers(clientField, localHostField);
@@ -82,16 +83,52 @@ public static class ServiceGeneration
         });
 
         namespaceDeclaration = namespaceDeclaration.AddMembers(classDeclaration)
+            .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.QualifiedName(
+                SyntaxFactory.IdentifierName("System"),
+                SyntaxFactory.IdentifierName("Web")
+                )))
             .NormalizeWhitespace();
 
+        File.WriteAllText($"../../../RoslynGenerated/{className}.cs", namespaceDeclaration.ToFullString());
         return namespaceDeclaration.ToFullString();
     }
 
-    private static StatementSyntax MethodBody(MethodDeclaration method)
+    private static StatementSyntax[] MethodBody(MethodDeclaration method)
     {
-        var methodBody = SyntaxFactory.ParseStatement(Equals(method.HttpMethodName, "Post") ?
-            $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\", content);" :
-            $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\");");
+        StatementSyntax[] methodBody;
+        if (Equals(method.MethodName, "getStudent"))
+        {
+            methodBody = new[]
+            {
+                SyntaxFactory.ParseStatement(
+                    $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\");"),
+            };
+        }
+        else if (Equals(method.MethodName, "getStudents"))
+        {
+            
+            var returnUrlStatement = SyntaxFactory.ParseStatement("return await Client.GetAsync(url);");
+            methodBody = new []
+            {
+                SyntaxFactory.ParseStatement("var url = $\"{LocalHost}/api/student\";"),
+                SyntaxFactory.IfStatement(SyntaxFactory.ParseExpression("!ids.Any()"),
+                    SyntaxFactory.Block(returnUrlStatement)),
+                SyntaxFactory.ParseStatement("var uriBuilder = new UriBuilder(url);"),
+                SyntaxFactory.ParseStatement("var query = HttpUtility.ParseQueryString(uriBuilder.Query);"),
+                SyntaxFactory.ParseStatement("ids.ForEach(id => query.Add(\"id\",  $\"{id}\"));"),
+                SyntaxFactory.ParseStatement("uriBuilder.Query = query.ToString();"),
+                SyntaxFactory.ParseStatement("url = uriBuilder.Uri.ToString();"),
+                returnUrlStatement
+            };
+        }
+        else
+        {
+            methodBody = new[]
+            {
+                SyntaxFactory.ParseStatement(
+                    $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\", content);")
+            };
+        }
 
         return methodBody;
     }
@@ -111,7 +148,7 @@ public static class ServiceGeneration
                 current.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(arg.ArgumentType))
                     .WithType(SyntaxFactory.ParseTypeName(arg.ArgumentName))));
         }
-
+        
         return methodParameters;
     }
 }
