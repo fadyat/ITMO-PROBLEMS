@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using AntlrParser.Analysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Roslyn.Generation;
 
@@ -26,35 +27,57 @@ public static class ServiceGeneration
                 SyntaxFactory.SeparatedList(new[]
                 {
                     SyntaxFactory.VariableDeclarator(
-                        SyntaxFactory.Identifier("_client"),
+                        SyntaxFactory.Identifier("Client"),
                         null,
                         clientValue
                     )
                 })))
-            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword))
-            .AddModifiers(SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
+                SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
+
+
+        var localHostValue = SyntaxFactory.EqualsValueClause(
+            SyntaxFactory.ParseExpression("\"http://localhost:8080\"")
+        );
+
+
+        var localHostField = SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(
+                SyntaxFactory.ParseTypeName("string"),
+                SyntaxFactory.SeparatedList(new[]
+                {
+                    SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.Identifier("LocalHost"),
+                        null,
+                        localHostValue
+                    )
+                })))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
+                SyntaxFactory.Token(SyntaxKind.ConstKeyword));
+
 
         var classDeclaration = SyntaxFactory.ClassDeclaration(serviceName)
-            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-            .AddMembers(clientField);
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+            .AddMembers(clientField, localHostField);
 
 
         methodsDeclaration.ForEach(method =>
         {
             var methodBody = SyntaxFactory.ParseStatement(
-                $"return await _client.{method.HttpMethodName}Async($\"{method.Url}\");"
+                $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\");"
             );
-
             
-            var parameterList = method.Arguments!.Aggregate(SyntaxFactory.ParameterList(), (current, arg) => 
+            var parameterList = method.Arguments!.Aggregate(SyntaxFactory.ParameterList(), (current, arg) =>
                 current.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(arg.ArgumentType))
                     .WithType(SyntaxFactory.ParseTypeName(arg.ArgumentName))));
 
 
             var methodDeclaration = SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.ParseTypeName(method.ReturnType!), method.MethodName!)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
+                    SyntaxFactory.ParseTypeName("Task<HttpResponseMessage>"), method.MethodName!)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                    SyntaxFactory.Token(SyntaxKind.AsyncKeyword))
                 .WithBody(SyntaxFactory.Block(methodBody))
                 .WithParameterList(parameterList)
                 .NormalizeWhitespace();
