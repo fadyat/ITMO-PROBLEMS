@@ -16,7 +16,7 @@ public static class Program
 
         var result1 = serverMethodVisitor.PreviousMethodDeclarations;
         Console.WriteLine(ServiceGeneration.Generate(result1, "StudentService"));
-/*        
+      
         var getResponse = StudentService.getStudent(1);
         var getResponseBody = getResponse.Result.Content.ReadAsStringAsync().Result;
         
@@ -30,6 +30,6 @@ public static class Program
         var getResponseOfStudents = StudentService.getStudents(new List<int> {1, 3});
         var getResponseOfStudentsBody = getResponseOfStudents.Result.Content.ReadAsStringAsync().Result;
         
-        Console.WriteLine(getResponseOfStudentsBody);*/
+        Console.WriteLine(getResponseOfStudentsBody);
     }
 }

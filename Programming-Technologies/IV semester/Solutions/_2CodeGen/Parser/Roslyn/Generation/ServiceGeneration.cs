@@ -64,13 +64,9 @@ public static class ServiceGeneration
 
         methodsDeclaration.ForEach(method =>
         {
-            var methodBody = SyntaxFactory.ParseStatement(
-                $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\");"
-            );
-            
-            var parameterList = method.Arguments!.Aggregate(SyntaxFactory.ParameterList(), (current, arg) =>
-                current.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(arg.ArgumentType))
-                    .WithType(SyntaxFactory.ParseTypeName(arg.ArgumentName))));
+            var methodBody = MethodBody(method);
+
+            var parameterList = MethodParameters(method);
 
 
             var methodDeclaration = SyntaxFactory.MethodDeclaration(
@@ -90,4 +86,33 @@ public static class ServiceGeneration
 
         return namespaceDeclaration.ToFullString();
     }
+
+    private static StatementSyntax MethodBody(MethodDeclaration method)
+    {
+        var methodBody = SyntaxFactory.ParseStatement(Equals(method.HttpMethodName, "Post") ?
+            $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\", content);" :
+            $"return await Client.{method.HttpMethodName}Async($\"{{LocalHost}}{method.Url}\");");
+
+        return methodBody;
+    }
+
+    private static ParameterListSyntax MethodParameters(MethodDeclaration method)
+    {
+        ParameterListSyntax methodParameters;
+        if (Equals(method.HttpMethodName, "Post"))
+        {
+            methodParameters = SyntaxFactory.ParameterList()
+                .AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier("content"))
+                    .WithType(SyntaxFactory.ParseTypeName("StringContent")));
+        }
+        else
+        {
+            methodParameters = method.Arguments!.Aggregate(SyntaxFactory.ParameterList(), (current, arg) =>
+                current.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier(arg.ArgumentType))
+                    .WithType(SyntaxFactory.ParseTypeName(arg.ArgumentName))));
+        }
+
+        return methodParameters;
+    }
 }
+
