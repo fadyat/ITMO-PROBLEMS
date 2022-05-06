@@ -2,7 +2,6 @@ package ru.artyomfadeyev.javaserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.artyomfadeyev.javaserver.classes.Socials;
 import ru.artyomfadeyev.javaserver.classes.Student;
 import ru.artyomfadeyev.javaserver.services.StudentService;
 
@@ -19,13 +18,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getStudents(@RequestParam(value = "id", required = false) List<Integer> ids,
-                                     @ModelAttribute Socials socials) {
-        return studentService.findAll(ids, socials);
+    public List<Student> getStudents(@RequestParam(value = "id", required = false) List<Integer> ids) {
+        return studentService.findAll(ids);
     }
 
     @GetMapping("{id}")
-    public List<Student> getStudent(@PathVariable Integer id) {
+    public Student getStudent(@PathVariable Integer id) {
         return studentService.findById(id);
     }
 

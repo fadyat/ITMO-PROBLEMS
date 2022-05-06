@@ -41,8 +41,4 @@ public class Socials {
     public void setVk(String vk) {
         this.vk = vk;
     }
-
-    public boolean attributesAssigned() {
-        return tg != null && vk != null && ig != null;
-    }
 }

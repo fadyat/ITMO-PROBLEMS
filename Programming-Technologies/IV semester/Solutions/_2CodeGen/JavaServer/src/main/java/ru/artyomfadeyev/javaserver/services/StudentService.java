@@ -2,14 +2,10 @@ package ru.artyomfadeyev.javaserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.artyomfadeyev.javaserver.classes.Socials;
 import ru.artyomfadeyev.javaserver.classes.Student;
 import ru.artyomfadeyev.javaserver.repositories.StudentRepository;
-import ru.artyomfadeyev.javaserver.specifications.student.ExistsSpecification;
-import ru.artyomfadeyev.javaserver.specifications.student.SocialsSpecification;
-import ru.artyomfadeyev.javaserver.specifications.student.StudentSpecificationsBuilder;
-import ru.artyomfadeyev.javaserver.specifications.student.TgSpecification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,36 +14,26 @@ public record StudentService(StudentRepository studentRepository) {
     public StudentService {
     }
 
-    public List<Student> findAll(List<Integer> ids, Socials socials) {
-        StudentSpecificationsBuilder builder = new StudentSpecificationsBuilder();
-
-        if (ids != null) {
-            ids.stream()
-                    .map(ExistsSpecification::new)
-                    .forEach(builder::or);
+    public List<Student> findAll(List<Integer> ids) {
+        if (ids == null) {
+            return studentRepository.findAll();
         }
 
-        builder.and(new SocialsSpecification(socials));
+        List<Student> students = new ArrayList<>();
 
-        return studentRepository.findAll(builder.build());
+        ids.forEach(id -> {
+            var student = studentRepository.findStudentById(id);
+            students.add(student);
+        });
+
+        return students;
     }
 
     public void save(Student student) {
-        StudentSpecificationsBuilder builder = new StudentSpecificationsBuilder()
-                .and(new TgSpecification(student.getSocials().getTg()));
-
-        List<Student> foundStudent = studentRepository.findAll(builder.build());
-        if (foundStudent.isEmpty()) {
-            studentRepository.save(student);
-        } else {
-            throw new IllegalStateException("Student w/ tg exists!");
-        }
+        studentRepository.save(student);
     }
 
-    public List<Student> findById(Integer id) {
-        StudentSpecificationsBuilder builder = new StudentSpecificationsBuilder()
-                .and(new ExistsSpecification(id));
-
-        return studentRepository.findAll(builder.build());
+    public Student findById(Integer id) {
+        return studentRepository.findStudentById(id);
     }
 }

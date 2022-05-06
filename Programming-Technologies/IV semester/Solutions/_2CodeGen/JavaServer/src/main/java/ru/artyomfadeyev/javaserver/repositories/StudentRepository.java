@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.artyomfadeyev.javaserver.classes.Student;
 
 @Repository
-public interface StudentRepository
-        extends JpaRepository<Student, Integer>, JpaSpecificationExecutor<Student> {
+public interface StudentRepository extends JpaRepository<Student, Integer>, JpaSpecificationExecutor<Student> {
+    Student findStudentById(int id);
 }
