@@ -1,10 +1,11 @@
 ﻿using System.Text;
 using AntlrParser.Analysis;
 using AntlrParser.Visitors;
-using Roslyn.Generation;
-using Roslyn.RoslynGenerated;
+using RoslynGenerator.Generation;
+using RoslynGenerator.RoslynGenerated;
 
-namespace Roslyn;
+
+namespace RoslynGenerator;
 
 public static class Program
 {
@@ -19,7 +20,7 @@ public static class Program
         
         // generate client class
         ServiceGeneration.Generate(result1, "StudentService");
-        
+        /*
         var getResponse = StudentServiceGenerated.getStudent(1);
         var getResponseBody = getResponse.Result.Content.ReadAsStringAsync().Result;
         
@@ -32,6 +33,6 @@ public static class Program
         var getResponseOfStudents = StudentServiceGenerated.getStudents(new List<int>());
         var getResponseOfStudentsBody = getResponseOfStudents.Result.Content.ReadAsStringAsync().Result;
         
-        Console.WriteLine(getResponseOfStudentsBody);
+        Console.WriteLine(getResponseOfStudentsBody);*/
     }
 }

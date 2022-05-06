@@ -4,14 +4,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Roslyn.Generation;
+namespace RoslynGenerator.Generation;
 
 public static class ServiceGeneration
 {
     public static string Generate(ImmutableList<MethodDeclaration> methodsDeclaration, string serviceName)
     {
         var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(
-            SyntaxFactory.ParseName("Roslyn.RoslynGenerated")
+            SyntaxFactory.ParseName("RoslynGenerator.RoslynGenerated")
         );
 
         var className = $"{serviceName}Generated";
