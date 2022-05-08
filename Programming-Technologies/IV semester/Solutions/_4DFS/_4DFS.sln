@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpServerApp", "TcpServerApp\TcpServerApp.csproj", "{EC08F6E3-822C-4898-8831-13D77A5D1AD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpClientApp", "TcpClientApp\TcpClientApp.csproj", "{429E2504-A7EA-4FD6-B0FB-0A09ED29CF3D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC08F6E3-822C-4898-8831-13D77A5D1AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC08F6E3-822C-4898-8831-13D77A5D1AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC08F6E3-822C-4898-8831-13D77A5D1AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC08F6E3-822C-4898-8831-13D77A5D1AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{429E2504-A7EA-4FD6-B0FB-0A09ED29CF3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429E2504-A7EA-4FD6-B0FB-0A09ED29CF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429E2504-A7EA-4FD6-B0FB-0A09ED29CF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429E2504-A7EA-4FD6-B0FB-0A09ED29CF3D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
