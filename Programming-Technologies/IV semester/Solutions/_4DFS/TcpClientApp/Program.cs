@@ -25,7 +25,7 @@ internal static class Program
                 response.Append(Encoding.UTF8.GetString(data, 0, bytes));
             } while (stream.DataAvailable);
 
-            Console.WriteLine(response.ToString());
+            Console.WriteLine($"Message received: {response.ToString()}");
 
             stream.Close();
             server.Close();

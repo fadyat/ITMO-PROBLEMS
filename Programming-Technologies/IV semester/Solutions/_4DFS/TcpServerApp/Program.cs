@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Net.Sockets;
-using System.Text;
 
 namespace TcpServerApp;
 
@@ -8,30 +6,17 @@ public static class Program
 {
     private static void Main()
     {
-        TcpListener? server = null;
+        var serverIp = IPAddress.Parse("127.0.0.1");
         const int port = 8888;
+        var server = new Server(serverIp, port);
+
+        server.StartServer();
         try
         {
-            var serverIp = IPAddress.Parse("127.0.0.1");
-            server = new TcpListener(serverIp, port);
-            server.Start();
-
             while (true)
             {
-                Console.WriteLine("Waiting for connections... ");
-                
-                var client = server.AcceptTcpClient();
-                Console.WriteLine("Client connected. Completing a request...");
-
-                var stream = client.GetStream();
-                const string response = "Hello world!";
-                var data = Encoding.UTF8.GetBytes(response);
-
-                stream.Write(data, 0, data.Length);
-                Console.WriteLine($"Message sent: {response}\n");
-                
-                stream.Close();
-                client.Close();
+                var stopServer = server.AnalyzeRequests();
+                if (stopServer) break;
             }
         }
         catch (Exception e)
@@ -40,7 +25,7 @@ public static class Program
         }
         finally
         {
-            server?.Stop();
+            server.StopServer();
         }
     }
 }

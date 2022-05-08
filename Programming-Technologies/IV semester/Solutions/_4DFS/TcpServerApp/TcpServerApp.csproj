@@ -8,4 +8,8 @@
         <RootNamespace>TcpServerApp</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TcpClientApp\TcpClientApp.csproj" />
+    </ItemGroup>
+
 </Project>
