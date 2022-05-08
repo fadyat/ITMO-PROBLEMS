@@ -6,17 +6,13 @@ public static class Program
 {
     private static void Main()
     {
-        var serverIp = IPAddress.Parse("127.0.0.1");
-        const int port = 8888;
-        var server = new Server(serverIp, port);
-
+        var server = new Server(IPAddress.Parse("127.0.0.1"), 8888);
         server.StartServer();
         try
         {
-            while (true)
+            while (server.Active)
             {
-                var stopServer = server.AnalyzeRequests();
-                if (stopServer) break;
+                server.AnalyzeRequests();
             }
         }
         catch (Exception e)

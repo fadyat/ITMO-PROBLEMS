@@ -14,19 +14,22 @@ public class Server
         {"/add-file", 2},           // <file-path> <partial-path>
         {"/remove-file", 1},        // <file-path>
         {"/exec", 1},               // <file-path>
-        {"/clean-node", 1},         // <name>
-        {"/stop-node", 1},          // <name>
+        {"/clean-node", 1},         // <node-name>
+        {"/stop-node", 1},          // <node-name>
         {"/balance-node", 0},
         {"/nodes-list", 0},
         {"/stop-server", 0}
     };
 
-    private Dictionary<string, Node> _nodes;
+    private readonly Dictionary<string, Node> _nodes;
+
+    public bool Active { get; private set; }
 
     public Server(IPAddress ipAddress, int port)
     {
         _server = new TcpListener(ipAddress, port);
         _nodes = new Dictionary<string, Node>();
+        Active = true;
     }
 
     public void StartServer()
@@ -39,54 +42,102 @@ public class Server
         _server.Stop();
     }
 
-    public bool AnalyzeRequests()
+    public void AnalyzeRequests()
     {
-        // Console.WriteLine("Waiting for connections... ");
-        //
-        // var client = _server.AcceptTcpClient();
-        // Console.WriteLine("Client connected. Completing a request...");
-        //
-        // var stream = client.GetStream();
-        // const string response = "Hello world!";
-        // var data = Encoding.UTF8.GetBytes(response);
-        //
-        // stream.Write(data, 0, data.Length);
-        // Console.WriteLine($"Message sent: {response}\n");
-        //         
-        // stream.Close();
-        // client.Close();
-        
         Console.WriteLine("Enter command for server: ");
+        var parsedCommand = ParseInputCommand();
+        var mainCommand = parsedCommand[0];
+        
+        if (Equals(mainCommand, "/add-node"))
+        {
+            AddNode(parsedCommand[1..]);
+        }
+        else if (Equals(mainCommand, "/add-file"))
+        {
+            // ...
+        }
+        else if (Equals(mainCommand, "/remove-file"))
+        {
+            // ...
+        }
+        else if (Equals(mainCommand, "/exec"))
+        {
+            // ...
+        }
+        else if (Equals(mainCommand, "/clean-node"))
+        {
+            // ...
+        }
+        else if (Equals(mainCommand, "/stop-node"))
+        {
+            StopNode(parsedCommand[1]);
+        }
+        else if (Equals(mainCommand, "/balance-node"))
+        {
+            // ...
+        }
+        else if (Equals(mainCommand, "/nodes-list"))
+        {
+            NodesList();
+        }
+        else if (Equals(mainCommand, "/stop-server"))
+        {
+            Active = false;
+        }
+    }
+
+    private static string[] ParseInputCommand()
+    {
         var parsedCommand = Array.Empty<string>();
-        while (!parsedCommand.Any() || !ServerOptions.ContainsKey(parsedCommand[0]) || 
-               !Equals(ServerOptions[parsedCommand[0]], parsedCommand.Length - 1))
+        while (!IsCorrectCommand(parsedCommand))
         { 
             var command = Console.ReadLine();
             if (string.IsNullOrEmpty(command)) continue;
             parsedCommand = command.Split(' ');
+            if (!IsCorrectCommand(parsedCommand))
+            {
+                Console.WriteLine("Command '{0}' was incorrect!", command);
+            }
         }
 
-        var mainCommand = parsedCommand[0];
-        var args = parsedCommand[1..];
-        var nodeName = args[1];
+        return parsedCommand;
+    }
 
-        if (Equals(mainCommand, "/stop-server")) return true;
-
-        if (Equals(mainCommand, "/add-node"))
+    private static bool IsCorrectCommand(IReadOnlyList<string> parsedCommand)
+    {
+        return parsedCommand.Any() && ServerOptions.ContainsKey(parsedCommand[0]) && 
+               Equals(ServerOptions[parsedCommand[0]], parsedCommand.Count - 1);
+    }
+    
+    private void AddNode(IReadOnlyList<string> args)
+    {
+        try
         {
             var newNode = new Node(args);
-            _nodes.Add(nodeName, newNode);
+            _nodes.Add(args[1], newNode);
             newNode.StartNode();
         }
-        else if (Equals(mainCommand, "/nodes-list"))
+        catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
-            _nodes.Values.ToImmutableList().ForEach(Console.WriteLine);
+            Console.WriteLine(e.Message);
         }
-        else if (Equals(mainCommand, "/stop-node"))
+    }
+
+    private void NodesList()
+    {
+        Console.WriteLine("All nodes: ");
+        _nodes.Values.ToImmutableList().ForEach(Console.WriteLine);
+    }
+
+    private void StopNode(string nodeName)
+    {
+        try
         {
             _nodes[nodeName].StopNode();
         }
-        
-        return false;
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }

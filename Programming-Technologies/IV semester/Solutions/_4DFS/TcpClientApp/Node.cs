@@ -7,13 +7,13 @@ public class Node
 {
     private string _basePath;
     private readonly string _name;
-    private int _size;
+    private readonly int _size;
     private readonly TcpListener _nodeTcpClient;
-    private int _reserved;
+    private readonly int _reserved;
 
-    private Node(string basePath, string name, string ipAddress, string size, string port)
+    private Node(string basePath, string name, string ipAddress, string port, string size)
     {
-        if (Directory.Exists(basePath))
+        if (!Directory.Exists(basePath))
         {
             throw new FileNotFoundException($"Directory '{basePath}' for node doesn't exists!");
         }
@@ -43,6 +43,6 @@ public class Node
 
     public override string ToString()
     {
-        return $"{_name}: {_reserved}";
+        return $"{_name}: {_reserved}/{_size}";
     }
 }
