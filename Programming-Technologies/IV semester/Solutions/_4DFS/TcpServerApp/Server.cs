@@ -1,52 +1,39 @@
-﻿using System.Collections.Immutable;
-using System.Net;
-using System.Net.Sockets;
-using TcpClientApp;
+﻿using System.Net.Sockets;
+using Analyzer;
 
 namespace TcpServerApp;
 
-public class Server
+public class Server : RequestAnalyzer
 {
-    private readonly TcpListener _server;
-    private static readonly Dictionary<string, int> ServerOptions = new ()
+    private new static readonly Dictionary<string, int> Requests = new ()
     {
-        {"/add-node", 5},           // <base-path> <name> <ip> <port> <size>
+        {"/add-node", 4},           // <name> <ip> <port> <size>
         {"/add-file", 2},           // <file-path> <partial-path>
         {"/remove-file", 1},        // <file-path>
         {"/exec", 1},               // <file-path>
         {"/clean-node", 1},         // <node-name>
-        {"/stop-node", 1},          // <node-name>
         {"/balance-node", 0},
-        {"/nodes-list", 0},
-        {"/stop-server", 0}
+        {"/stop", 0}
     };
 
-    private readonly Dictionary<string, Node> _nodes;
+    private readonly Dictionary<string, NodeData> _nodes;
 
-    public bool Active { get; private set; }
-
-    public Server(IPAddress ipAddress, int port)
+    public Server()
     {
-        _server = new TcpListener(ipAddress, port);
-        _nodes = new Dictionary<string, Node>();
-        Active = true;
+        Active = false;
+        _nodes = new Dictionary<string, NodeData>();
     }
 
-    public void StartServer()
-    {
-        _server.Start();
-    }
-
-    public void StopServer()
-    {
-        _server.Stop();
-    }
-
-    public void AnalyzeRequests()
+    public override void AnalyzeRequests()
     {
         Console.WriteLine("Enter command for server: ");
-        var parsedCommand = ParseInputCommand();
-        var mainCommand = parsedCommand[0];
+        string[]? parsedCommand = null;
+        while (!IsCorrectCommand(parsedCommand))
+        {
+            parsedCommand = ParseInputCommand();
+        }
+        
+        var mainCommand = parsedCommand![0];
         
         if (Equals(mainCommand, "/add-node"))
         {
@@ -68,74 +55,31 @@ public class Server
         {
             // ...
         }
-        else if (Equals(mainCommand, "/stop-node"))
-        {
-            StopNode(parsedCommand[1]);
-        }
         else if (Equals(mainCommand, "/balance-node"))
         {
             // ...
         }
-        else if (Equals(mainCommand, "/nodes-list"))
+        else if (Equals(mainCommand, "/stop"))
         {
-            NodesList();
-        }
-        else if (Equals(mainCommand, "/stop-server"))
-        {
-            Active = false;
+            Stop();
         }
     }
 
-    private static string[] ParseInputCommand()
+    protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
     {
-        var parsedCommand = Array.Empty<string>();
-        while (!IsCorrectCommand(parsedCommand))
-        { 
-            var command = Console.ReadLine();
-            if (string.IsNullOrEmpty(command)) continue;
-            parsedCommand = command.Split(' ');
-            if (!IsCorrectCommand(parsedCommand))
-            {
-                Console.WriteLine("Command '{0}' was incorrect!", command);
-            }
-        }
-
-        return parsedCommand;
-    }
-
-    private static bool IsCorrectCommand(IReadOnlyList<string> parsedCommand)
-    {
-        return parsedCommand.Any() && ServerOptions.ContainsKey(parsedCommand[0]) && 
-               Equals(ServerOptions[parsedCommand[0]], parsedCommand.Count - 1);
+        return !Equals(parsedCommand, null) && parsedCommand.Any() && Requests.ContainsKey(parsedCommand[0]) && 
+               Equals(Requests[parsedCommand[0]], parsedCommand.Count - 1);
     }
     
-    private void AddNode(IReadOnlyList<string> args)
+    private void AddNode(string[] args)
     {
         try
         {
-            var newNode = new Node(args);
-            _nodes.Add(args[1], newNode);
-            newNode.StartNode();
+            var nodeName = args[0];
+            var nodeData = new NodeData(args[1..]);
+            _nodes.Add(nodeName, nodeData);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
-        {
-            Console.WriteLine(e.Message);
-        }
-    }
-
-    private void NodesList()
-    {
-        Console.WriteLine("All nodes: ");
-        _nodes.Values.ToImmutableList().ForEach(Console.WriteLine);
-    }
-
-    private void StopNode(string nodeName)
-    {
-        try
-        {
-            _nodes[nodeName].StopNode();
-        }
-        catch (KeyNotFoundException e)
         {
             Console.WriteLine(e.Message);
         }

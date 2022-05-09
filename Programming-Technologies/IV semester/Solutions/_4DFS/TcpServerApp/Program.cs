@@ -1,27 +1,14 @@
-﻿using System.Net;
-
-namespace TcpServerApp;
+﻿namespace TcpServerApp;
 
 public static class Program
 {
     private static void Main()
     {
-        var server = new Server(IPAddress.Parse("127.0.0.1"), 8888);
-        server.StartServer();
-        try
+        var server = new Server();
+        server.Start();
+        while (server.Active)
         {
-            while (server.Active)
-            {
-                server.AnalyzeRequests();
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        finally
-        {
-            server.StopServer();
+            server.AnalyzeRequests();
         }
     }
 }

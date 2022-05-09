@@ -1,11 +1,21 @@
-﻿using System.Net.Sockets;
-using System.Text;
+﻿namespace TcpClientApp;
 
-namespace TcpClientApp;
-
-internal static class Program
+public static class Program
 {
     private static void Main()
     {
+        try
+        {
+            var service = new NodeService();
+            service.Start();
+            while (service.Active)
+            {
+                service.AnalyzeRequests();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }

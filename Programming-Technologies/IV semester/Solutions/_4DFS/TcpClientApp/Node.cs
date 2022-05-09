@@ -5,13 +5,12 @@ namespace TcpClientApp;
 
 public class Node
 {
-    private string _basePath;
-    private readonly string _name;
-    private readonly int _size;
+    private readonly string _basePath;
     private readonly TcpListener _nodeTcpClient;
-    private readonly int _reserved;
+    private readonly IPAddress _ipAddress;
+    private readonly int _port;
 
-    private Node(string basePath, string name, string ipAddress, string port, string size)
+    private Node(string basePath, string ipAddress, string port)
     {
         if (!Directory.Exists(basePath))
         {
@@ -19,14 +18,13 @@ public class Node
         }
 
         _basePath = basePath;
-        _name = name;
-        _size = Convert.ToInt32(size);
-        _nodeTcpClient = new TcpListener(IPAddress.Parse(ipAddress), Convert.ToInt32(port));
-        _reserved = 0;
+        _ipAddress = IPAddress.Parse(ipAddress);
+        _port = Convert.ToInt32(port);
+        _nodeTcpClient = new TcpListener(_ipAddress, _port);
     }
 
     public Node(IReadOnlyList<string> args)
-        : this(args[0], args[1], args[2], args[3], args[4])
+        : this(args[0], args[1], args[2])
     {
         
     }
@@ -43,6 +41,11 @@ public class Node
 
     public override string ToString()
     {
-        return $"{_name}: {_reserved}/{_size}";
+        return $"{_ipAddress}:{_port} | {_basePath}";
+    }
+
+    public bool ExistsDirectory(string? directoryPath)
+    {
+        return Equals(directoryPath, null) || Directory.Exists(Path.Combine(_basePath, directoryPath));
     }
 }
