@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Collections.Immutable;
+using System.Net.Sockets;
 using Analyzer;
 
 namespace TcpServerApp;
@@ -28,9 +29,19 @@ public class Server : RequestAnalyzer
     {
         Console.WriteLine("Enter command for server: ");
         string[]? parsedCommand = null;
-        while (!IsCorrectCommand(parsedCommand))
+        var correct = false;
+        while (!correct)
         {
-            parsedCommand = ParseInputCommand();
+            try
+            {
+                parsedCommand = ParseInputCommand();
+                correct = IsCorrectCommand(parsedCommand);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                correct = false;
+            }
         }
         
         var mainCommand = parsedCommand![0];
@@ -41,7 +52,7 @@ public class Server : RequestAnalyzer
         }
         else if (Equals(mainCommand, "/add-file"))
         {
-            // ...
+            AddFile(parsedCommand[1..]);
         }
         else if (Equals(mainCommand, "/remove-file"))
         {
@@ -67,8 +78,13 @@ public class Server : RequestAnalyzer
 
     protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
     {
-        return !Equals(parsedCommand, null) && parsedCommand.Any() && Requests.ContainsKey(parsedCommand[0]) && 
-               Equals(Requests[parsedCommand[0]], parsedCommand.Count - 1);
+        var correctMainCommand = !Equals(parsedCommand, null) && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
+        if (!correctMainCommand) throw new FormatException("Unknown command!");
+        
+        var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
+        if (!correctArgs) throw new FormatException($"Expected {Requests[parsedCommand[0]]} args, was {parsedCommand.Count - 1}");
+
+        return correctMainCommand & correctArgs;
     }
     
     private void AddNode(string[] args)
@@ -78,10 +94,39 @@ public class Server : RequestAnalyzer
             var nodeName = args[0];
             var nodeData = new NodeData(args[1..]);
             _nodes.Add(nodeName, nodeData);
+            Console.WriteLine("'{0}' with '{1}' successfully added to connected list!", nodeName, nodeData);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
             Console.WriteLine(e.Message);
         }
+    }
+
+    private void AddFile(IReadOnlyList<string> args)
+    {
+        var fsPath = args[0];
+        var partialPath = args[1];
+        
+        // check that node have directory for partialPath
+        // find one node, don't do for all nodes
+        // try to do: async and await ?
+        // how to send new file location ?
+        _nodes.Values.ToImmutableList().ForEach(node =>
+        {
+            try
+            {
+                var client = new TcpClient();
+                client.Connect(node.IpAddress, node.Port);
+                var stream = client.GetStream();
+                var data = File.ReadAllBytes(fsPath);
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+                client.Close();
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        });
     }
 }

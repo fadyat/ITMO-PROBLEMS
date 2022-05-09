@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace TcpClientApp;
 
@@ -29,14 +30,40 @@ public class Node
         
     }
 
-    public void StartNode()
+    public void Start()
     {
         _nodeTcpClient.Start();
     }
 
-    public void StopNode()
+    public void Stop()
     {
+        Console.WriteLine("Node '{0}' stopped!", ToString());
         _nodeTcpClient.Stop();
+    }
+
+    // need to get file location
+    public void Listen()
+    {
+        try
+        {
+            var client = _nodeTcpClient.AcceptTcpClient();
+            var stream = client.GetStream();
+            var data = new byte[256];
+            var response = new StringBuilder();
+            do
+            {
+                var bytes = stream.Read(data, 0, data.Length);
+                response.Append(Encoding.UTF8.GetString(data, 0, bytes));
+            } while (stream.DataAvailable);
+
+            Console.WriteLine("Accept file from server: \n {0}", response);
+            stream.Close();
+            client.Close();
+        }
+        catch (SocketException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     public override string ToString()

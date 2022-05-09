@@ -15,12 +15,12 @@ public abstract class RequestAnalyzer
         return parsedCommand;
     }
 
-    public void Start()
+    public virtual void Start()
     {
         Active = true;
     }
 
-    public void Stop()
+    public virtual void Stop()
     {
         Active = false;
     }

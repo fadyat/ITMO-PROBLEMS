@@ -34,4 +34,9 @@ public class NodeData
             throw new FormatException($"Node with TcpListener '{IpAddress}:{Port}' doesn't exist!");
         }
     }
+
+    public override string ToString()
+    {
+        return $"{IpAddress}:{Port}";
+    }
 }
