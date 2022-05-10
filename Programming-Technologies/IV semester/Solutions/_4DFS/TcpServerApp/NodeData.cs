@@ -7,14 +7,19 @@ namespace TcpServerApp;
 public class NodeData
 {
     public IPAddress IpAddress { get; }
+    
     public int Port { get; }
-    public int Size { get; }
+    
+    private int Size { get; }
+    
+    private int Reserved { get; set; }
 
     private NodeData(string ip, string port, string size)
     {
         IpAddress = IPAddress.Parse(ip);
         Port = Convert.ToInt32(port);
         Size = Convert.ToInt32(size);
+        Reserved = 0;
         CheckTcpConnection();
     }
 
@@ -35,6 +40,21 @@ public class NodeData
         }
     }
 
+    public void IncreaseReserved()
+    {
+        Reserved++;
+    }
+
+    public void DecreaseReserved()
+    {
+        Reserved--;
+    }
+
+    public bool Filled()
+    {
+        return Equals(Reserved, Size);
+    }
+    
     public override string ToString()
     {
         return $"{IpAddress}:{Port}";

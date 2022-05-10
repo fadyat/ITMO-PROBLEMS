@@ -3,7 +3,7 @@ using Analyzer;
 
 namespace TcpClientApp;
 
-// You need to run this project in parallel run
+// You need to run this project in parallel run, if want many clients
 public class NodeService : RequestAnalyzer
 {
     private new static readonly Dictionary<string, int> Requests = new()
@@ -48,9 +48,9 @@ public class NodeService : RequestAnalyzer
         }
         else if (Equals("/listen", mainCommand))
         {
-            Console.WriteLine("Enter listen mode!");
+            Console.WriteLine("Listen mode ON");
             Listen();
-            Console.WriteLine("Out of listen mode!");
+            Console.WriteLine("Listen mode OFF");
         }
         else if (Equals("/stop", mainCommand))
         {
@@ -84,15 +84,25 @@ public class NodeService : RequestAnalyzer
             Console.WriteLine(e.Message);
         }
     }
-
+    
     private void Listen()
     {
-        _currentNode?.Listen();
+        var fileLocation = _currentNode?.Listen();
+        var fileData = _currentNode?.Listen();
+        if (!Equals(fileData, null) && !Equals(fileLocation, null))
+        {
+            Save(fileLocation, fileData);
+        }
     }
 
     public override void Stop()
     {
         base.Stop();
         _currentNode?.Stop();
+    }
+
+    private void Save(string fsPath, string data)
+    {
+        _currentNode?.Save(fsPath, data);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Net.Sockets;
+using System.Text;
 using Analyzer;
 
 namespace TcpServerApp;
@@ -107,26 +108,31 @@ public class Server : RequestAnalyzer
         var fsPath = args[0];
         var partialPath = args[1];
         
-        // check that node have directory for partialPath
-        // find one node, don't do for all nodes
-        // try to do: async and await ?
-        // how to send new file location ?
         _nodes.Values.ToImmutableList().ForEach(node =>
         {
+            if (node.Filled()) return;
             try
             {
-                var client = new TcpClient();
-                client.Connect(node.IpAddress, node.Port);
-                var stream = client.GetStream();
-                var data = File.ReadAllBytes(fsPath);
-                stream.Write(data, 0, data.Length);
-                stream.Close();
-                client.Close();
+                var fileLocation = Encoding.ASCII.GetBytes(partialPath);
+                var fileData = File.ReadAllBytes(fsPath);
+                SendData(node, fileLocation);
+                SendData(node, fileData);
+                node.IncreaseReserved();
             }
             catch (SocketException e)
             {
                 Console.WriteLine(e.Message);
             }
         });
+    }
+
+    private static void SendData(NodeData node, byte[] data)
+    {
+        var client = new TcpClient();
+        client.Connect(node.IpAddress, node.Port);
+        var stream = client.GetStream();
+        stream.Write(data, 0, data.Length);
+        stream.Close();
+        client.Close();
     }
 }

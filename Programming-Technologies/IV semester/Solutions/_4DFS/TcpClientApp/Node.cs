@@ -40,9 +40,8 @@ public class Node
         Console.WriteLine("Node '{0}' stopped!", ToString());
         _nodeTcpClient.Stop();
     }
-
-    // need to get file location
-    public void Listen()
+    
+    public string? Listen()
     {
         try
         {
@@ -56,23 +55,30 @@ public class Node
                 response.Append(Encoding.UTF8.GetString(data, 0, bytes));
             } while (stream.DataAvailable);
 
-            Console.WriteLine("Accept file from server: \n {0}", response);
+            Console.WriteLine("Accepted data from server: \n{0}", response);
             stream.Close();
             client.Close();
+            return response.ToString();
         }
         catch (SocketException e)
         {
             Console.WriteLine(e.Message);
+            return null;
         }
     }
-
+    
+    public void Save(string fsPath, string data)
+    {
+        var directories = Path.GetDirectoryName(fsPath);
+        if (!Equals(directories, null) && !Directory.Exists(directories)) Directory.CreateDirectory(directories);
+        var actualPath = Path.Combine(_basePath, fsPath);
+        
+        using var fs = File.Create(actualPath);
+        var bytes = Encoding.ASCII.GetBytes(data);
+        fs.Write(bytes, 0, bytes.Length);
+    }
     public override string ToString()
     {
         return $"{_ipAddress}:{_port} | {_basePath}";
-    }
-
-    public bool ExistsDirectory(string? directoryPath)
-    {
-        return Equals(directoryPath, null) || Directory.Exists(Path.Combine(_basePath, directoryPath));
     }
 }
