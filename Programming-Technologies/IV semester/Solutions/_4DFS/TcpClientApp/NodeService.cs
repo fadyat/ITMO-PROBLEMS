@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Collections.Immutable;
+using System.Net.Sockets;
 using Analyzer;
 
 namespace TcpClientApp;
@@ -11,6 +12,12 @@ public class NodeService : RequestAnalyzer
         {"/new-node", 3}, // <fs_path> <ip> <port>
         {"/listen", 0},
         {"/stop", 0},
+    };
+
+    private static readonly List<string> ServerOptions = new()
+    {
+        "/save",
+        "/remove"
     };
 
     private Node? _currentNode;
@@ -48,9 +55,9 @@ public class NodeService : RequestAnalyzer
         }
         else if (Equals("/listen", mainCommand))
         {
-            Console.WriteLine("Listen mode ON");
+            Console.WriteLine("\tListen mode ON");
             Listen();
-            Console.WriteLine("Listen mode OFF");
+            Console.WriteLine("\tListen mode OFF");
         }
         else if (Equals("/stop", mainCommand))
         {
@@ -77,7 +84,6 @@ public class NodeService : RequestAnalyzer
             node.Start();
             _currentNode?.Stop();
             _currentNode = node;
-            Console.WriteLine("Created node: '{0}'", node);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
@@ -85,13 +91,34 @@ public class NodeService : RequestAnalyzer
         }
     }
     
+    // fix null
     private void Listen()
     {
-        var fileLocation = _currentNode?.Listen();
-        var fileData = _currentNode?.Listen();
-        if (!Equals(fileData, null) && !Equals(fileLocation, null))
+        var data = _currentNode?.Listen()?.Split(' ');
+        if (Equals(data, null)) return;
+        
+        var option = data[0];
+        if (!IsCorrectServerOption(option))
         {
-            Save(fileLocation, fileData);
+            Console.WriteLine("Unknown option");
+            return;
+        }
+        
+        var listenCnt = Convert.ToInt32(data[1]);
+        var responses = new List<string?>();
+        for (var i = 0; i < listenCnt; i++) responses.Add(_currentNode?.Listen());
+
+        if (Equals(option, "/save"))
+        {
+            Console.WriteLine("\tSave option ON");
+            Save(responses[0]!, responses[1]!);
+            Console.WriteLine("\tSave option OFF");
+        }
+        else if (Equals(option, "/remove"))
+        {
+            Console.WriteLine("\tRemove option ON");
+            Remove(responses.ToImmutableList());
+            Console.WriteLine("\tRemove option OFF");
         }
     }
 
@@ -104,5 +131,15 @@ public class NodeService : RequestAnalyzer
     private void Save(string fsPath, string data)
     {
         _currentNode?.Save(fsPath, data);
+    }
+
+    private void Remove(ImmutableList<string?> files)
+    {
+        _currentNode?.Remove(files);
+    }
+
+    private static bool IsCorrectServerOption(string? option)
+    {
+        return !Equals(option, null) && ServerOptions.Contains(option);
     }
 }

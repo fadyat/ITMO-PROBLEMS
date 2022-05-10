@@ -18,12 +18,12 @@ public class Server : RequestAnalyzer
         {"/stop", 0}
     };
 
-    private readonly Dictionary<string, NodeData> _nodes;
+    private readonly Dictionary<string, NodeData> _nodesData;
 
     public Server()
     {
         Active = false;
-        _nodes = new Dictionary<string, NodeData>();
+        _nodesData = new Dictionary<string, NodeData>();
     }
 
     public override void AnalyzeRequests()
@@ -40,7 +40,7 @@ public class Server : RequestAnalyzer
             }
             catch (FormatException e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"\t{e.Message}");
                 correct = false;
             }
         }
@@ -57,7 +57,7 @@ public class Server : RequestAnalyzer
         }
         else if (Equals(mainCommand, "/remove-file"))
         {
-            // ...
+            RemoveFile(parsedCommand[1..]);
         }
         else if (Equals(mainCommand, "/exec"))
         {
@@ -94,8 +94,8 @@ public class Server : RequestAnalyzer
         {
             var nodeName = args[0];
             var nodeData = new NodeData(args[1..]);
-            _nodes.Add(nodeName, nodeData);
-            Console.WriteLine("'{0}' with '{1}' successfully added to connected list!", nodeName, nodeData);
+            _nodesData.Add(nodeName, nodeData);
+            Console.WriteLine("\t'{0}' with '{1}' successfully added to connected list!", nodeName, nodeData);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
@@ -106,18 +106,25 @@ public class Server : RequestAnalyzer
     private void AddFile(IReadOnlyList<string> args)
     {
         var fsPath = args[0];
-        var partialPath = args[1];
+        var i = 0;
+        while (i < args[1].Length - 1 && (Equals(args[1][i], '/') || Equals(args[1][i], '\\'))) i++;
         
-        _nodes.Values.ToImmutableList().ForEach(node =>
+        var partialPath = args[1][i..];
+        
+        // do first
+        _nodesData.Values.ToImmutableList().ForEach(nodeData =>
         {
-            if (node.Filled()) return;
+            if (nodeData.Filled()) return;
             try
             {
+                var option = Encoding.ASCII.GetBytes("/save 2");
+                SendData(nodeData, option);
+                
                 var fileLocation = Encoding.ASCII.GetBytes(partialPath);
                 var fileData = File.ReadAllBytes(fsPath);
-                SendData(node, fileLocation);
-                SendData(node, fileData);
-                node.IncreaseReserved();
+                SendData(nodeData, fileLocation);
+                SendData(nodeData, fileData);
+                nodeData.SaveTransportedFileSourceData(fsPath, partialPath);
             }
             catch (SocketException e)
             {
@@ -126,10 +133,30 @@ public class Server : RequestAnalyzer
         });
     }
 
-    private static void SendData(NodeData node, byte[] data)
+    private void RemoveFile(IReadOnlyList<string> args)
+    {
+        var fsPath = args[0];
+
+        _nodesData.Values.ToImmutableList().ForEach(nodeData =>
+        {
+            var locations = nodeData.GetFilesToRemove(fsPath);
+            if (!locations.Any()) return;
+
+            var option = Encoding.ASCII.GetBytes($"/remove {locations.Count}");
+            SendData(nodeData, option);
+            locations.ForEach(location =>
+            {
+                var fileLocation = Encoding.ASCII.GetBytes(location);
+                nodeData.RemoveTransportedFileData(fsPath, location);
+                SendData(nodeData, fileLocation);
+            });
+        });
+    }
+    
+    private static void SendData(NodeData nodeData, byte[] data)
     {
         var client = new TcpClient();
-        client.Connect(node.IpAddress, node.Port);
+        client.Connect(nodeData.IpAddress, nodeData.Port);
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
         stream.Close();

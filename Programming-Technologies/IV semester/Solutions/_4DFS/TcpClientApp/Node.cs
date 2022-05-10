@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Immutable;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -33,12 +34,13 @@ public class Node
     public void Start()
     {
         _nodeTcpClient.Start();
+        Console.WriteLine("\tNode '{0}' started!", ToString());
     }
 
     public void Stop()
     {
-        Console.WriteLine("Node '{0}' stopped!", ToString());
         _nodeTcpClient.Stop();
+        Console.WriteLine("\tNode '{0}' stopped!", ToString());
     }
     
     public string? Listen()
@@ -55,7 +57,9 @@ public class Node
                 response.Append(Encoding.UTF8.GetString(data, 0, bytes));
             } while (stream.DataAvailable);
 
-            Console.WriteLine("Accepted data from server: \n{0}", response);
+            var responseQuick = response.ToString()[..Math.Min(10, response.Length)];
+            if (response.Length > 10) responseQuick = string.Concat(responseQuick, "...");
+            Console.WriteLine("\tAccepted data from server: \n\t'{0}'", responseQuick);
             stream.Close();
             client.Close();
             return response.ToString();
@@ -69,14 +73,42 @@ public class Node
     
     public void Save(string fsPath, string data)
     {
-        var directories = Path.GetDirectoryName(fsPath);
-        if (!Equals(directories, null) && !Directory.Exists(directories)) Directory.CreateDirectory(directories);
-        var actualPath = Path.Combine(_basePath, fsPath);
-        
-        using var fs = File.Create(actualPath);
-        var bytes = Encoding.ASCII.GetBytes(data);
-        fs.Write(bytes, 0, bytes.Length);
+        try
+        {
+            var actualPath = Path.Combine(_basePath, fsPath);
+            var directory = Path.GetDirectoryName(actualPath);
+            if (!Equals(directory, null) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            using var fs = File.Create(actualPath);
+            {
+                var bytes = Encoding.ASCII.GetBytes(data);
+                fs.Write(bytes, 0, bytes.Length);
+            }
+            
+            Console.WriteLine($"\t'{actualPath}' saved!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"\t{e.Message}");
+        }
     }
+
+    public void Remove(ImmutableList<string?> files)
+    {
+        files.ForEach(fsPath =>
+        {
+            try
+            {
+                var actualPath = Path.Combine(_basePath, fsPath!);
+                File.Delete(actualPath);
+                Console.WriteLine($"\t'{actualPath}' removed!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\t{e.Message}");
+            }
+        });
+    }
+    
     public override string ToString()
     {
         return $"{_ipAddress}:{_port} | {_basePath}";
