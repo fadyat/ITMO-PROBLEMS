@@ -14,7 +14,19 @@ public class NodeData
 
     public int Size { get; }
 
-    public ImmutableDictionary<string, List<string>> SavedFiles => _savedFiles.ToImmutableDictionary();
+    public ImmutableDictionary<string, ImmutableList<string>> SavedFiles
+    {
+        get
+        {
+            var tmpDictionary = new Dictionary<string, ImmutableList<string>>();
+            foreach (var (key, value) in _savedFiles)
+            {
+                tmpDictionary.Add(key, value.ToImmutableList());
+            }
+
+            return tmpDictionary.ToImmutableDictionary();
+        }
+    }
 
     private NodeData(string ip, string port, string size)
     {
@@ -75,12 +87,12 @@ public class NodeData
 
     public bool Filled()
     {
-        return Equals(SavedFilesReserved(), Size);
+        return Equals(UsedFilesNumber(), Size);
     }
 
     public override string ToString()
     {
-        return $"{IpAddress}:{Port} {SavedFilesReserved()}/{Size}";
+        return $"{IpAddress}:{Port} {UsedFilesNumber()}/{Size}";
     }
 
     protected bool Equals(NodeData other)
@@ -93,7 +105,7 @@ public class NodeData
         return HashCode.Combine(IpAddress, Port);
     }
 
-    private int SavedFilesReserved()
+    public int UsedFilesNumber()
     {
         return _savedFiles.Values.Sum(list => list.Count);
     }

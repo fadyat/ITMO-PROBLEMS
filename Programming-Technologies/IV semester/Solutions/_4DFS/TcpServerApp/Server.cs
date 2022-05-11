@@ -170,6 +170,15 @@ public class Server : RequestAnalyzer
         });
     }
 
+    private void RemoveFile(string fsPath, string location, NodeData nodeData)
+    {
+        var option = Encoding.ASCII.GetBytes("/remove 1");
+        SendData(nodeData, option);
+        var fileLocation = Encoding.ASCII.GetBytes(location);
+        nodeData.RemoveTransportedFileData(fsPath, location);
+        SendData(nodeData, fileLocation);
+    }
+
     private static void SendData(NodeData nodeData, byte[] data)
     {
         var client = new TcpClient();
@@ -203,19 +212,34 @@ public class Server : RequestAnalyzer
     {
         var nodeName = args[0];
         var nodeToCleanData = _nodesData[nodeName];
-        RemoveNode(nodeName);
+        var totalFreePlace = GetTotalNodesDataFreeSpace();
+        totalFreePlace -= nodeToCleanData.Size - nodeToCleanData.UsedFilesNumber();
+        if (totalFreePlace < nodeToCleanData.UsedFilesNumber())
+        {
+            Console.WriteLine($"\tNot enough free nodes for cleaning node '{nodeToCleanData}'");
+            return;
+        }
 
-        // * check if you will remove node, you will have enough place for saving here files  
-        foreach (var (fsPath, partialFiles) in nodeToCleanData.SavedFiles)
+        RemoveNode(nodeName);
+        var savedFiles = nodeToCleanData.SavedFiles;
+        foreach (var (fsPath, partialFiles) in savedFiles)
         {
             partialFiles.ForEach(partialFile =>
             {
-                // * remove files on previous node
+                // add file to new free node
                 AddFile(new[] {fsPath, partialFile});
+                // remove file from previous node
+                RemoveFile(fsPath, partialFile, nodeToCleanData);
             });
         }
 
-        // * add node back
+        AddNode(new[]
+        {
+            nodeName,
+            nodeToCleanData.IpAddress.ToString(),
+            nodeToCleanData.Port.ToString(),
+            nodeToCleanData.Size.ToString()
+        });
     }
 
     private void ShowNodes()
@@ -224,5 +248,12 @@ public class Server : RequestAnalyzer
         {
             Console.WriteLine($"{nodeName} {nodeData}");
         }
+    }
+
+    private int GetTotalNodesDataFreeSpace()
+    {
+        var totalUsed = _nodesData.Values.Sum(x => x.UsedFilesNumber());
+        var totalSize = _nodesData.Values.Sum(x => x.Size);
+        return totalSize - totalUsed;
     }
 }
