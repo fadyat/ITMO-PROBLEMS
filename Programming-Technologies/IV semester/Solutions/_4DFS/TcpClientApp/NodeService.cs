@@ -47,22 +47,22 @@ public class NodeService : RequestAnalyzer
                 correct = false;
             }
         }
-        
+
         CommandSelector(parsedCommand);
     }
 
     protected override void CommandSelector(string[]? parsedCommand)
     {
         var mainCommand = parsedCommand![0];
-        if (Equals("/new-node", mainCommand))
+        if (mainCommand == "/new-node")
         {
             CreateNode(parsedCommand[1..]);
         }
-        else if (Equals("/listen", mainCommand))
-        { 
+        else if (mainCommand == "/listen")
+        {
             Listen();
         }
-        else if (Equals("/stop", mainCommand))
+        else if (mainCommand == "/stop")
         {
             Stop();
         }
@@ -70,12 +70,12 @@ public class NodeService : RequestAnalyzer
 
     protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
     {
-        var correctMainCommand = !Equals(parsedCommand, null) && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
+        var correctMainCommand = parsedCommand != null && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
         if (!correctMainCommand)
         {
             throw new FormatException("Unknown command!");
         }
-        
+
         var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
         if (!correctArgs)
         {
@@ -99,17 +99,18 @@ public class NodeService : RequestAnalyzer
             Console.WriteLine($"\t{e.Message}");
         }
     }
-    
+
     // fix null
     private void Listen()
     {
         while (true)
         {
             var data = _currentNode?.Listen()?.Split(' ');
-            if (Equals(data, null)) return;
+            if (data == null) return;
 
             var option = data[0];
             if (!IsCorrectServerOption(option)) return;
+
             var listenCnt = Convert.ToInt32(data[1]);
             var responses = new List<string?>();
             for (var i = 0; i < listenCnt; i++)
@@ -123,12 +124,11 @@ public class NodeService : RequestAnalyzer
 
     private void OptionSelector(string option, IReadOnlyList<string?> responses)
     {
-        
-        if (Equals(option, "/save"))
+        if (option == "/save")
         {
             Save(responses[0]!, responses[1]!);
         }
-        else if (Equals(option, "/remove"))
+        else if (option == "/remove")
         {
             Remove(responses.ToImmutableList());
         }
@@ -152,6 +152,6 @@ public class NodeService : RequestAnalyzer
 
     private static bool IsCorrectServerOption(string? option)
     {
-        return !Equals(option, null) && ServerOptions.Contains(option);
+        return option != null && ServerOptions.Contains(option);
     }
 }

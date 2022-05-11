@@ -8,7 +8,7 @@ public abstract class RequestAnalyzer
 
     public abstract void AnalyzeRequests();
 
-    protected static string[]? ParseInputCommand(string?command)
+    protected static string[]? ParseInputCommand(string? command)
     {
         var parsedCommand = command?.Split(' ');
         return parsedCommand;

@@ -7,12 +7,12 @@ namespace TcpServerApp;
 public class NodeData
 {
     private readonly Dictionary<string, List<string>> _savedFiles;
-    
+
     public IPAddress IpAddress { get; }
-    
+
     public int Port { get; }
-    
-    private int Size { get; }
+
+    public int Size { get; }
 
     public ImmutableDictionary<string, List<string>> SavedFiles => _savedFiles.ToImmutableDictionary();
 
@@ -28,9 +28,8 @@ public class NodeData
     public NodeData(IReadOnlyList<string> args)
         : this(args[0], args[1], args[2])
     {
-        
     }
-    
+
     private void CheckTcpConnection()
     {
         var active = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().ToImmutableList();
@@ -44,16 +43,20 @@ public class NodeData
 
     public void SaveTransportedFileSourceData(string fsPath, string location)
     {
-        if (!_savedFiles.ContainsKey(fsPath)) _savedFiles.Add(fsPath, new List<string>());
+        if (!_savedFiles.ContainsKey(fsPath))
+        {
+            _savedFiles.Add(fsPath, new List<string>());
+        }
+
         _savedFiles[fsPath].Add(location);
     }
 
     public ImmutableList<string> GetFilesToRemove(string fsPath)
     {
-        var files =  _savedFiles.ContainsKey(fsPath) 
-            ? _savedFiles[fsPath].ToImmutableList() 
+        var files = _savedFiles.ContainsKey(fsPath)
+            ? _savedFiles[fsPath].ToImmutableList()
             : ImmutableList<string>.Empty;
-        
+
         return files;
     }
 
@@ -72,11 +75,26 @@ public class NodeData
 
     public bool Filled()
     {
-        return Equals(_savedFiles.Count, Size);
+        return Equals(SavedFilesReserved(), Size);
     }
-    
+
     public override string ToString()
     {
-        return $"{IpAddress}:{Port}";
+        return $"{IpAddress}:{Port} {SavedFilesReserved()}/{Size}";
+    }
+
+    protected bool Equals(NodeData other)
+    {
+        return IpAddress.Equals(other.IpAddress) && Port == other.Port;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(IpAddress, Port);
+    }
+
+    private int SavedFilesReserved()
+    {
+        return _savedFiles.Values.Sum(list => list.Count);
     }
 }

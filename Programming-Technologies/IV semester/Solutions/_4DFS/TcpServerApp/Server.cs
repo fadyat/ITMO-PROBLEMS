@@ -7,14 +7,15 @@ namespace TcpServerApp;
 
 public class Server : RequestAnalyzer
 {
-    private new static readonly Dictionary<string, int> Requests = new ()
+    private new static readonly Dictionary<string, int> Requests = new()
     {
-        {"/add-node", 4},           // <name> <ip> <port> <size>
-        {"/add-file", 2},           // <file-path> <partial-path>
-        {"/remove-file", 1},        // <file-path>
-        {"/exec", 1},               // <file-path>
-        {"/clean-node", 1},         // <node-name>
+        {"/add-node", 4}, // <name> <ip> <port> <size>
+        {"/add-file", 2}, // <file-path> <partial-path>
+        {"/remove-file", 1}, // <file-path>
+        {"/exec", 1}, // <file-path>
+        {"/clean-node", 1}, // <node-name>
         {"/balance-node", 0},
+        {"/show-nodes", 0},
         {"/stop", 0}
     };
 
@@ -45,39 +46,43 @@ public class Server : RequestAnalyzer
                 correct = false;
             }
         }
-        
+
         CommandSelector(parsedCommand);
     }
 
     protected override void CommandSelector(string[]? parsedCommand)
     {
         var mainCommand = parsedCommand![0];
-        
-        if (Equals(mainCommand, "/add-node"))
+
+        if (mainCommand == "/add-node")
         {
             AddNode(parsedCommand[1..]);
         }
-        else if (Equals(mainCommand, "/add-file"))
+        else if (mainCommand == "/add-file")
         {
             AddFile(parsedCommand[1..]);
         }
-        else if (Equals(mainCommand, "/remove-file"))
+        else if (mainCommand == "/remove-file")
         {
             RemoveFile(parsedCommand[1..]);
         }
-        else if (Equals(mainCommand, "/exec"))
+        else if (mainCommand == "/exec")
         {
             ExecCommands(parsedCommand[1..]);
         }
-        else if (Equals(mainCommand, "/clean-node"))
+        else if (mainCommand == "/clean-node")
+        {
+            CleanNode(parsedCommand[1..]);
+        }
+        else if (mainCommand == "/balance-node")
         {
             // ...
         }
-        else if (Equals(mainCommand, "/balance-node"))
+        else if (mainCommand == "/show-nodes")
         {
-            // ...
+            ShowNodes();
         }
-        else if (Equals(mainCommand, "/stop"))
+        else if (mainCommand == "/stop")
         {
             Stop();
         }
@@ -85,12 +90,12 @@ public class Server : RequestAnalyzer
 
     protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
     {
-        var correctMainCommand = !Equals(parsedCommand, null) && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
+        var correctMainCommand = parsedCommand != null && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
         if (!correctMainCommand)
         {
             throw new FormatException("Unknown command!");
         }
-        
+
         var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
         if (!correctArgs)
         {
@@ -99,7 +104,7 @@ public class Server : RequestAnalyzer
 
         return correctMainCommand & correctArgs;
     }
-    
+
     private void AddNode(string[] args)
     {
         try
@@ -115,34 +120,34 @@ public class Server : RequestAnalyzer
         }
     }
 
+    private void RemoveNode(string nodeName)
+    {
+        _nodesData.Remove(nodeName);
+    }
+
     private void AddFile(IReadOnlyList<string> args)
     {
         var fsPath = args[0];
         var i = 0;
         while (i < args[1].Length - 1 && (Equals(args[1][i], '/') || Equals(args[1][i], '\\'))) i++;
-        
+
         var partialPath = args[1][i..];
-        
-        // do first
-        _nodesData.Values.ToImmutableList().ForEach(nodeData =>
+
+        try
         {
-            if (nodeData.Filled()) return;
-            try
-            {
-                var option = Encoding.ASCII.GetBytes("/save 2");
-                SendData(nodeData, option);
-                
-                var fileLocation = Encoding.ASCII.GetBytes(partialPath);
-                var fileData = File.ReadAllBytes(fsPath);
-                SendData(nodeData, fileLocation);
-                SendData(nodeData, fileData);
-                nodeData.SaveTransportedFileSourceData(fsPath, partialPath);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        });
+            var nodeToUpdate = _nodesData.Values.First(nodeData => !nodeData.Filled());
+            var option = Encoding.ASCII.GetBytes("/save 2");
+            SendData(nodeToUpdate, option);
+            var fileLocation = Encoding.ASCII.GetBytes(partialPath);
+            var fileData = File.ReadAllBytes(fsPath);
+            SendData(nodeToUpdate, fileLocation);
+            SendData(nodeToUpdate, fileData);
+            nodeToUpdate.SaveTransportedFileSourceData(fsPath, partialPath);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     private void RemoveFile(IReadOnlyList<string> args)
@@ -164,7 +169,7 @@ public class Server : RequestAnalyzer
             });
         });
     }
-    
+
     private static void SendData(NodeData nodeData, byte[] data)
     {
         var client = new TcpClient();
@@ -174,7 +179,7 @@ public class Server : RequestAnalyzer
         stream.Close();
         client.Close();
     }
-    
+
     private void ExecCommands(IReadOnlyList<string> args)
     {
         var fileWithCommands = args[0];
@@ -192,5 +197,32 @@ public class Server : RequestAnalyzer
 
             CommandSelector(parsedCommand);
         });
+    }
+
+    private void CleanNode(IReadOnlyList<string> args)
+    {
+        var nodeName = args[0];
+        var nodeToCleanData = _nodesData[nodeName];
+        RemoveNode(nodeName);
+
+        // * check if you will remove node, you will have enough place for saving here files  
+        foreach (var (fsPath, partialFiles) in nodeToCleanData.SavedFiles)
+        {
+            partialFiles.ForEach(partialFile =>
+            {
+                // * remove files on previous node
+                AddFile(new[] {fsPath, partialFile});
+            });
+        }
+
+        // * add node back
+    }
+
+    private void ShowNodes()
+    {
+        foreach (var (nodeName, nodeData) in _nodesData)
+        {
+            Console.WriteLine($"{nodeName} {nodeData}");
+        }
     }
 }

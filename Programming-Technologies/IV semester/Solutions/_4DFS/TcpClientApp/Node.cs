@@ -80,7 +80,7 @@ public class Node
         {
             var actualPath = Path.Combine(_basePath, fsPath);
             var directory = Path.GetDirectoryName(actualPath);
-            if (!Equals(directory, null) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            if (directory != null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
             using var fs = File.Create(actualPath);
             {
                 var bytes = Encoding.ASCII.GetBytes(data);
@@ -129,5 +129,10 @@ public class Node
     public override string ToString()
     {
         return $"{_ipAddress}:{_port} | {_basePath}";
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_basePath, _nodeTcpClient, _ipAddress, _port);
     }
 }
