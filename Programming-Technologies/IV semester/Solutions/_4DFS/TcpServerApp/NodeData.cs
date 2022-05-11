@@ -59,8 +59,15 @@ public class NodeData
 
     public void RemoveTransportedFileData(string fsPath, string location)
     {
-        if (_savedFiles.ContainsKey(fsPath)) _savedFiles[fsPath].Remove(location);
-        if (!_savedFiles[fsPath].Any()) _savedFiles.Remove(fsPath);
+        if (_savedFiles.ContainsKey(fsPath))
+        {
+            _savedFiles[fsPath].Remove(location);
+        }
+
+        if (!_savedFiles[fsPath].Any())
+        {
+            _savedFiles.Remove(fsPath);
+        }
     }
 
     public bool Filled()

@@ -8,19 +8,20 @@ public abstract class RequestAnalyzer
 
     public abstract void AnalyzeRequests();
 
-    protected static string[]? ParseInputCommand()
+    protected static string[]? ParseInputCommand(string?command)
     {
-        var command = Console.ReadLine();
         var parsedCommand = command?.Split(' ');
         return parsedCommand;
     }
+
+    protected abstract void CommandSelector(string[]? parsedCommand);
 
     public virtual void Start()
     {
         Active = true;
     }
 
-    public virtual void Stop()
+    protected virtual void Stop()
     {
         Active = false;
     }

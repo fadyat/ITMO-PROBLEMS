@@ -28,7 +28,6 @@ public class Node
     public Node(IReadOnlyList<string> args)
         : this(args[0], args[1], args[2])
     {
-        
     }
 
     public void Start()
@@ -42,7 +41,7 @@ public class Node
         _nodeTcpClient.Stop();
         Console.WriteLine("\tNode '{0}' stopped!", ToString());
     }
-    
+
     public string? Listen()
     {
         try
@@ -58,7 +57,11 @@ public class Node
             } while (stream.DataAvailable);
 
             var responseQuick = response.ToString()[..Math.Min(10, response.Length)];
-            if (response.Length > 10) responseQuick = string.Concat(responseQuick, "...");
+            if (response.Length > 10)
+            {
+                responseQuick = string.Concat(responseQuick, "...");
+            }
+
             Console.WriteLine("\tAccepted data from server: \n\t'{0}'", responseQuick);
             stream.Close();
             client.Close();
@@ -70,7 +73,7 @@ public class Node
             return null;
         }
     }
-    
+
     public void Save(string fsPath, string data)
     {
         try
@@ -83,7 +86,7 @@ public class Node
                 var bytes = Encoding.ASCII.GetBytes(data);
                 fs.Write(bytes, 0, bytes.Length);
             }
-            
+
             Console.WriteLine($"\t'{actualPath}' saved!");
         }
         catch (Exception e)
@@ -100,6 +103,7 @@ public class Node
             {
                 var actualPath = Path.Combine(_basePath, fsPath!);
                 File.Delete(actualPath);
+                RemoveEmptyDirectories(Path.GetDirectoryName(actualPath)!);
                 Console.WriteLine($"\t'{actualPath}' removed!");
             }
             catch (Exception e)
@@ -108,7 +112,20 @@ public class Node
             }
         });
     }
-    
+
+    private static void RemoveEmptyDirectories(string path)
+    {
+        foreach (var directory in Directory.GetDirectories(path))
+        {
+            RemoveEmptyDirectories(directory);
+            if (Directory.GetFiles(directory).Length == 0 &&
+                Directory.GetDirectories(directory).Length == 0)
+            {
+                Directory.Delete(directory, false);
+            }
+        }
+    }
+
     public override string ToString()
     {
         return $"{_ipAddress}:{_port} | {_basePath}";

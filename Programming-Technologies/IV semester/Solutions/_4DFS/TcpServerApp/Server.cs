@@ -35,7 +35,8 @@ public class Server : RequestAnalyzer
         {
             try
             {
-                parsedCommand = ParseInputCommand();
+                var command = Console.ReadLine();
+                parsedCommand = ParseInputCommand(command);
                 correct = IsCorrectCommand(parsedCommand);
             }
             catch (FormatException e)
@@ -45,6 +46,11 @@ public class Server : RequestAnalyzer
             }
         }
         
+        CommandSelector(parsedCommand);
+    }
+
+    protected override void CommandSelector(string[]? parsedCommand)
+    {
         var mainCommand = parsedCommand![0];
         
         if (Equals(mainCommand, "/add-node"))
@@ -61,7 +67,7 @@ public class Server : RequestAnalyzer
         }
         else if (Equals(mainCommand, "/exec"))
         {
-            // ...
+            ExecCommands(parsedCommand[1..]);
         }
         else if (Equals(mainCommand, "/clean-node"))
         {
@@ -80,10 +86,16 @@ public class Server : RequestAnalyzer
     protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
     {
         var correctMainCommand = !Equals(parsedCommand, null) && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
-        if (!correctMainCommand) throw new FormatException("Unknown command!");
+        if (!correctMainCommand)
+        {
+            throw new FormatException("Unknown command!");
+        }
         
         var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
-        if (!correctArgs) throw new FormatException($"Expected {Requests[parsedCommand[0]]} args, was {parsedCommand.Count - 1}");
+        if (!correctArgs)
+        {
+            throw new FormatException($"Expected {Requests[parsedCommand[0]]} args, was {parsedCommand.Count - 1}");
+        }
 
         return correctMainCommand & correctArgs;
     }
@@ -161,5 +173,24 @@ public class Server : RequestAnalyzer
         stream.Write(data, 0, data.Length);
         stream.Close();
         client.Close();
+    }
+    
+    private void ExecCommands(IReadOnlyList<string> args)
+    {
+        var fileWithCommands = args[0];
+        var fileData = File.ReadLines(fileWithCommands);
+
+        fileData.ToImmutableList().ForEach(line =>
+        {
+            var parsedCommand = ParseInputCommand(line);
+            var correct = IsCorrectCommand(parsedCommand);
+            if (!correct)
+            {
+                Console.WriteLine($"'{line}' is incorrect command!");
+                return;
+            }
+
+            CommandSelector(parsedCommand);
+        });
     }
 }
