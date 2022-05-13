@@ -14,7 +14,7 @@ public class Server : RequestAnalyzer
         {"/remove-file", 1}, // <file-path>
         {"/exec", 1}, // <file-path>
         {"/clean-node", 1}, // <node-name>
-        {"/balance-node", 0},
+        {"/balance-nodes", 0},
         {"/show-nodes", 0},
         {"/stop", 0}
     };
@@ -74,9 +74,9 @@ public class Server : RequestAnalyzer
         {
             CleanNode(parsedCommand[1]);
         }
-        else if (mainCommand == "/balance-node")
+        else if (mainCommand == "/balance-nodes")
         {
-            // ...
+            BalanceNodes();
         }
         else if (mainCommand == "/show-nodes")
         {
@@ -237,5 +237,46 @@ public class Server : RequestAnalyzer
         var used = _connectedNodes.Values.Sum(x => x.UsedMemory);
         var glob = _connectedNodes.Values.Sum(x => x.GlobalMemory);
         return glob - used;
+    }
+
+    private void BalanceNodes()
+    {
+        var nodesValues = _connectedNodes.Values;
+        var avgNodeUsedMemory =
+            (double) nodesValues.Sum(x => x.UsedMemory) / nodesValues.Sum(x => x.NumberOfSavedFiles());
+        var avgUsedMemoryOnEveryNode = nodesValues.Select(x =>
+            x.NumberOfSavedFiles() == 0 ? 0 : x.UsedMemory / x.NumberOfSavedFiles());
+
+
+        var allNodesFiles = new List<(string nodeName, string fsPath, string partialPath, long usedMemory)>();
+        foreach (var (nodeName, connectedNode) in _connectedNodes)
+        {
+            foreach (var (fsPath, partialPaths) in connectedNode.SavedFiles)
+            {
+                // new FileInfo(fsPath).Length) is correct ???
+                allNodesFiles.AddRange(partialPaths.Select(partialPath =>
+                    (nodeName, fsPath, partialPath, new FileInfo(fsPath).Length))
+                );
+            }
+        }
+
+        var transportedNodes = _connectedNodes.Keys.ToDictionary(
+            nodeName => nodeName,
+            _ => (long) 0
+        );
+
+        var newNodesContent = _connectedNodes.Keys.ToDictionary(
+            nodeName => nodeName,
+            _ => new List<(string fsPath, string partialPath)>()
+        );
+
+        allNodesFiles.Sort((x, y) => x.usedMemory.CompareTo(y.usedMemory));
+        allNodesFiles.Reverse();
+
+        // add greedy here
+        foreach (var file in allNodesFiles)
+        {
+            Console.WriteLine(file);
+        }
     }
 }

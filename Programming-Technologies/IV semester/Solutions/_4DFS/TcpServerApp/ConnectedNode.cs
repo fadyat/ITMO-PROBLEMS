@@ -51,7 +51,7 @@ public class ConnectedNode
         }
     }
 
-    public void SaveTransportedFileSourceData(string fsPath, string location)
+    public void SaveTransportedFileSourceData(string fsPath, string partialPath)
     {
         if (!_savedFiles.ContainsKey(fsPath))
         {
@@ -59,7 +59,7 @@ public class ConnectedNode
         }
 
         UsedMemory += new FileInfo(fsPath).Length;
-        _savedFiles[fsPath].Add(location);
+        _savedFiles[fsPath].Add(partialPath);
     }
 
     public ImmutableList<string> GetFilesToRemove(string fsPath)
@@ -71,11 +71,12 @@ public class ConnectedNode
         return files;
     }
     
-    public void RemoveTransportedFileData(string fsPath, string location)
+    public void RemoveTransportedFileData(string fsPath, string partialPath)
     {
         if (_savedFiles.ContainsKey(fsPath))
         {
-            _savedFiles[fsPath].Remove(location);
+            UsedMemory -= new FileInfo(fsPath).Length;
+            _savedFiles[fsPath].Remove(partialPath);
         }
 
         if (!_savedFiles[fsPath].Any())
@@ -102,5 +103,10 @@ public class ConnectedNode
     public override int GetHashCode()
     {
         return HashCode.Combine(IpAddress, Port);
+    }
+
+    public int NumberOfSavedFiles()
+    {
+        return _savedFiles.Sum(x => x.Value.Count);
     }
 }
