@@ -4,7 +4,7 @@ using System.Net.NetworkInformation;
 
 namespace TcpServerApp;
 
-public class NodeData
+public class ConnectedNode
 {
     private readonly Dictionary<string, List<string>> _savedFiles;
 
@@ -12,7 +12,9 @@ public class NodeData
 
     public int Port { get; }
 
-    public int Size { get; }
+    public long GlobalMemory { get; } // in Bytes
+    
+    public long UsedMemory { get; private set; }
 
     public ImmutableDictionary<string, ImmutableList<string>> SavedFiles
     {
@@ -28,18 +30,14 @@ public class NodeData
         }
     }
 
-    private NodeData(string ip, string port, string size)
+    public ConnectedNode(string ip, string port, string size)
     {
         IpAddress = IPAddress.Parse(ip);
         Port = Convert.ToInt32(port);
-        Size = Convert.ToInt32(size);
+        GlobalMemory = Convert.ToInt32(size);
+        UsedMemory = 0;
         _savedFiles = new Dictionary<string, List<string>>();
         CheckTcpConnection();
-    }
-
-    public NodeData(IReadOnlyList<string> args)
-        : this(args[0], args[1], args[2])
-    {
     }
 
     private void CheckTcpConnection()
@@ -49,7 +47,7 @@ public class NodeData
 
         if (!correctNode)
         {
-            throw new FormatException($"Node with TcpListener '{IpAddress}:{Port}' doesn't exist!");
+            throw new FormatException($"Node with TcpListener '{this}' doesn't exist!");
         }
     }
 
@@ -60,6 +58,7 @@ public class NodeData
             _savedFiles.Add(fsPath, new List<string>());
         }
 
+        UsedMemory += new FileInfo(fsPath).Length;
         _savedFiles[fsPath].Add(location);
     }
 
@@ -71,7 +70,7 @@ public class NodeData
 
         return files;
     }
-
+    
     public void RemoveTransportedFileData(string fsPath, string location)
     {
         if (_savedFiles.ContainsKey(fsPath))
@@ -85,17 +84,17 @@ public class NodeData
         }
     }
 
-    public bool Filled()
+    public bool HaveFreeMemory(long newFileSize)
     {
-        return Equals(UsedFilesNumber(), Size);
+        return UsedMemory + newFileSize < GlobalMemory;
     }
-
+    
     public override string ToString()
     {
-        return $"{IpAddress}:{Port} {UsedFilesNumber()}/{Size}";
+        return $"{IpAddress}:{Port} {UsedMemory}/{GlobalMemory}";
     }
 
-    protected bool Equals(NodeData other)
+    protected bool Equals(ConnectedNode other)
     {
         return IpAddress.Equals(other.IpAddress) && Port == other.Port;
     }
@@ -103,10 +102,5 @@ public class NodeData
     public override int GetHashCode()
     {
         return HashCode.Combine(IpAddress, Port);
-    }
-
-    public int UsedFilesNumber()
-    {
-        return _savedFiles.Values.Sum(list => list.Count);
     }
 }

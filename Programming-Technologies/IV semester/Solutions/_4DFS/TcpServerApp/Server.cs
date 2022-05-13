@@ -19,12 +19,12 @@ public class Server : RequestAnalyzer
         {"/stop", 0}
     };
 
-    private readonly Dictionary<string, NodeData> _nodesData;
+    private readonly Dictionary<string, ConnectedNode> _connectedNodes;
 
     public Server()
     {
         Active = false;
-        _nodesData = new Dictionary<string, NodeData>();
+        _connectedNodes = new Dictionary<string, ConnectedNode>();
     }
 
     public override void AnalyzeRequests()
@@ -56,23 +56,23 @@ public class Server : RequestAnalyzer
 
         if (mainCommand == "/add-node")
         {
-            AddNode(parsedCommand[1..]);
+            AddNode(parsedCommand[1], parsedCommand[2], parsedCommand[3], parsedCommand[4]);
         }
         else if (mainCommand == "/add-file")
         {
-            AddFile(parsedCommand[1..]);
+            AddFile(parsedCommand[1], parsedCommand[2]);
         }
         else if (mainCommand == "/remove-file")
         {
-            RemoveFile(parsedCommand[1..]);
+            RemoveFile(parsedCommand[1]);
         }
         else if (mainCommand == "/exec")
         {
-            ExecCommands(parsedCommand[1..]);
+            ExecuteCommands(parsedCommand[1]);
         }
         else if (mainCommand == "/clean-node")
         {
-            CleanNode(parsedCommand[1..]);
+            CleanNode(parsedCommand[1]);
         }
         else if (mainCommand == "/balance-node")
         {
@@ -105,14 +105,13 @@ public class Server : RequestAnalyzer
         return correctMainCommand & correctArgs;
     }
 
-    private void AddNode(string[] args)
+    private void AddNode(string nodeName, string ipAddress, string port, string globalMemory)
     {
         try
         {
-            var nodeName = args[0];
-            var nodeData = new NodeData(args[1..]);
-            _nodesData.Add(nodeName, nodeData);
-            Console.WriteLine("\t'{0}' with '{1}' successfully added to connected list!", nodeName, nodeData);
+            var connectedNode = new ConnectedNode(ipAddress, port, globalMemory);
+            _connectedNodes.Add(nodeName, connectedNode);
+            Console.WriteLine("\t'{0}' with '{1}' successfully added to connected list!", nodeName, connectedNode);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
@@ -122,27 +121,22 @@ public class Server : RequestAnalyzer
 
     private void RemoveNode(string nodeName)
     {
-        _nodesData.Remove(nodeName);
+        _connectedNodes.Remove(nodeName);
     }
 
-    private void AddFile(IReadOnlyList<string> args)
+    private void AddFile(string fsPath, string partialPath)
     {
-        var fsPath = args[0];
-        var i = 0;
-        while (i < args[1].Length - 1 && (Equals(args[1][i], '/') || Equals(args[1][i], '\\'))) i++;
-
-        var partialPath = args[1][i..];
-
         try
         {
-            var nodeToUpdate = _nodesData.Values.First(nodeData => !nodeData.Filled());
-            var option = Encoding.ASCII.GetBytes("/save 2");
-            SendData(nodeToUpdate, option);
-            var fileLocation = Encoding.ASCII.GetBytes(partialPath);
-            var fileData = File.ReadAllBytes(fsPath);
-            SendData(nodeToUpdate, fileLocation);
-            SendData(nodeToUpdate, fileData);
-            nodeToUpdate.SaveTransportedFileSourceData(fsPath, partialPath);
+            var fileSize = new FileInfo(fsPath).Length;
+            var updatedNode = _connectedNodes.Values.First(connectedNode => connectedNode.HaveFreeMemory(fileSize));
+            var optionBytes = Encoding.ASCII.GetBytes("/save 2");
+            SendData(updatedNode, optionBytes);
+            var partialPathBytes = Encoding.ASCII.GetBytes(partialPath);
+            var fileDataBytes = File.ReadAllBytes(fsPath);
+            SendData(updatedNode, partialPathBytes);
+            SendData(updatedNode, fileDataBytes);
+            updatedNode.SaveTransportedFileSourceData(fsPath, partialPath);
         }
         catch (Exception e)
         {
@@ -150,110 +144,98 @@ public class Server : RequestAnalyzer
         }
     }
 
-    private void RemoveFile(IReadOnlyList<string> args)
+    private void RemoveFile(string fsPath)
     {
-        var fsPath = args[0];
-
-        _nodesData.Values.ToImmutableList().ForEach(nodeData =>
+        foreach (var connectedNode in _connectedNodes.Values.ToImmutableList())
         {
-            var locations = nodeData.GetFilesToRemove(fsPath);
-            if (!locations.Any()) return;
+            var partialPaths = connectedNode.GetFilesToRemove(fsPath);
+            if (!partialPaths.Any()) continue;
 
-            var option = Encoding.ASCII.GetBytes($"/remove {locations.Count}");
-            SendData(nodeData, option);
-            locations.ForEach(location =>
+            var option = Encoding.ASCII.GetBytes($"/remove {partialPaths.Count}");
+            SendData(connectedNode, option);
+            foreach (var partialPath in partialPaths)
             {
-                var fileLocation = Encoding.ASCII.GetBytes(location);
-                nodeData.RemoveTransportedFileData(fsPath, location);
-                SendData(nodeData, fileLocation);
-            });
-        });
+                var fileLocation = Encoding.ASCII.GetBytes(partialPath);
+                connectedNode.RemoveTransportedFileData(fsPath, partialPath);
+                SendData(connectedNode, fileLocation);
+            }
+        }
     }
 
-    private void RemoveFile(string fsPath, string location, NodeData nodeData)
+    private static void RemoveFile(string fsPath, string partialPath, ConnectedNode connectedNode)
     {
         var option = Encoding.ASCII.GetBytes("/remove 1");
-        SendData(nodeData, option);
-        var fileLocation = Encoding.ASCII.GetBytes(location);
-        nodeData.RemoveTransportedFileData(fsPath, location);
-        SendData(nodeData, fileLocation);
+        SendData(connectedNode, option);
+        var fileLocation = Encoding.ASCII.GetBytes(partialPath);
+        connectedNode.RemoveTransportedFileData(fsPath, partialPath);
+        SendData(connectedNode, fileLocation);
     }
 
-    private static void SendData(NodeData nodeData, byte[] data)
+    private static void SendData(ConnectedNode connectedNode, byte[] data)
     {
         var client = new TcpClient();
-        client.Connect(nodeData.IpAddress, nodeData.Port);
+        client.Connect(connectedNode.IpAddress, connectedNode.Port);
         var stream = client.GetStream();
         stream.Write(data, 0, data.Length);
         stream.Close();
         client.Close();
     }
 
-    private void ExecCommands(IReadOnlyList<string> args)
+    private void ExecuteCommands(string fileWithCommandsPath)
     {
-        var fileWithCommands = args[0];
-        var fileData = File.ReadLines(fileWithCommands);
+        var commands = File.ReadLines(fileWithCommandsPath);
 
-        fileData.ToImmutableList().ForEach(line =>
+        foreach (var command in commands)
         {
-            var parsedCommand = ParseInputCommand(line);
-            var correct = IsCorrectCommand(parsedCommand);
-            if (!correct)
+            var parsedCommand = ParseInputCommand(command);
+            if (!IsCorrectCommand(parsedCommand))
             {
-                Console.WriteLine($"'{line}' is incorrect command!");
+                Console.WriteLine($"'{command}' is incorrect command!");
                 return;
             }
 
             CommandSelector(parsedCommand);
-        });
+        }
     }
 
-    private void CleanNode(IReadOnlyList<string> args)
+    private void CleanNode(string nodeName)
     {
-        var nodeName = args[0];
-        var nodeToCleanData = _nodesData[nodeName];
-        var totalFreePlace = GetTotalNodesDataFreeSpace();
-        totalFreePlace -= nodeToCleanData.Size - nodeToCleanData.UsedFilesNumber();
-        if (totalFreePlace < nodeToCleanData.UsedFilesNumber())
+        var cleaningNode = _connectedNodes[nodeName];
+        var totalFreeMemory =
+            GetTotalConnectedNodesFreeMemory() - (cleaningNode.GlobalMemory - cleaningNode.UsedMemory);
+        if (totalFreeMemory < cleaningNode.UsedMemory)
         {
-            Console.WriteLine($"\tNot enough free nodes for cleaning node '{nodeToCleanData}'");
+            Console.WriteLine($"\tNot enough free nodes for cleaning node '{cleaningNode}'");
             return;
         }
 
         RemoveNode(nodeName);
-        var savedFiles = nodeToCleanData.SavedFiles;
-        foreach (var (fsPath, partialFiles) in savedFiles)
+        var cleaningNodeFiles = cleaningNode.SavedFiles;
+        foreach (var (fsPath, partialPaths) in cleaningNodeFiles)
         {
-            partialFiles.ForEach(partialFile =>
+            foreach (var partialPath in partialPaths)
             {
-                // add file to new free node
-                AddFile(new[] {fsPath, partialFile});
-                // remove file from previous node
-                RemoveFile(fsPath, partialFile, nodeToCleanData);
-            });
+                AddFile(fsPath, partialPath); // add file to new free node
+                RemoveFile(fsPath, partialPath, cleaningNode); // remove file from previous node
+            }
         }
 
-        AddNode(new[]
-        {
-            nodeName,
-            nodeToCleanData.IpAddress.ToString(),
-            nodeToCleanData.Port.ToString(),
-            nodeToCleanData.Size.ToString()
-        });
+        AddNode(nodeName, cleaningNode.IpAddress.ToString(), cleaningNode.Port.ToString(),
+            cleaningNode.GlobalMemory.ToString());
     }
 
     private void ShowNodes()
     {
-        foreach (var (nodeName, nodeData) in _nodesData)
+        foreach (var (nodeName, connectedNode) in _connectedNodes)
         {
-            Console.WriteLine($"{nodeName} {nodeData}");
+            Console.WriteLine($"{nodeName} {connectedNode}");
         }
     }
 
-    private int GetTotalNodesDataFreeSpace()
+    private long GetTotalConnectedNodesFreeMemory()
     {
-        var totalUsed = _nodesData.Values.Sum(x => x.UsedFilesNumber());
-        var totalSize = _nodesData.Values.Sum(x => x.Size);
-        return totalSize - totalUsed;
+        var used = _connectedNodes.Values.Sum(x => x.UsedMemory);
+        var glob = _connectedNodes.Values.Sum(x => x.GlobalMemory);
+        return glob - used;
     }
 }

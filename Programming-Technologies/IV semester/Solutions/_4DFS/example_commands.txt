@@ -8,7 +8,3 @@
 /listen
 
 /exec /users/artyomfadeyev/execMe.txt
-/add-node me3 127.0.0.1 8891 10
-/show-nodes
-/clean-node me
-/show-nodes

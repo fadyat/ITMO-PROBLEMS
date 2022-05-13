@@ -56,7 +56,7 @@ public class NodeService : RequestAnalyzer
         var mainCommand = parsedCommand![0];
         if (mainCommand == "/new-node")
         {
-            CreateNode(parsedCommand[1..]);
+            CreateNode(parsedCommand[1], parsedCommand[2], parsedCommand[3]);
         }
         else if (mainCommand == "/listen")
         {
@@ -85,11 +85,11 @@ public class NodeService : RequestAnalyzer
         return correctMainCommand & correctArgs;
     }
 
-    private void CreateNode(IReadOnlyList<string> args)
+    private void CreateNode(string fsPath, string ipAddress, string port)
     {
         try
         {
-            var node = new Node(args);
+            var node = new Node(fsPath, ipAddress, port);
             node.Start();
             _currentNode?.Stop();
             _currentNode = node;

@@ -12,7 +12,7 @@ public class Node
     private readonly IPAddress _ipAddress;
     private readonly int _port;
 
-    private Node(string basePath, string ipAddress, string port)
+    public Node(string basePath, string ipAddress, string port)
     {
         if (!Directory.Exists(basePath))
         {
@@ -23,11 +23,6 @@ public class Node
         _ipAddress = IPAddress.Parse(ipAddress);
         _port = Convert.ToInt32(port);
         _nodeTcpClient = new TcpListener(_ipAddress, _port);
-    }
-
-    public Node(IReadOnlyList<string> args)
-        : this(args[0], args[1], args[2])
-    {
     }
 
     public void Start()
@@ -67,7 +62,7 @@ public class Node
             client.Close();
             return response.ToString();
         }
-        catch (SocketException e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
             return null;
@@ -80,7 +75,11 @@ public class Node
         {
             var actualPath = Path.Combine(_basePath, fsPath);
             var directory = Path.GetDirectoryName(actualPath);
-            if (directory != null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            if (directory != null && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             using var fs = File.Create(actualPath);
             {
                 var bytes = Encoding.ASCII.GetBytes(data);
@@ -129,10 +128,5 @@ public class Node
     public override string ToString()
     {
         return $"{_ipAddress}:{_port} | {_basePath}";
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(_basePath, _nodeTcpClient, _ipAddress, _port);
     }
 }
