@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using AntlrParser.Analysis;
 
@@ -7,15 +6,6 @@ namespace AntlrParser.Visitors;
 
 public class ServerMethodVisitor : ServerBaseVisitor<object>
 {
-    private static readonly List<string> HttpMethods = new()
-        {"get", "post", "put", "head", "delete", "patch", "options", "connect", "trace"};
-
-    private static readonly Dictionary<string, string> PrimitiveTypesJavaToCSharp = new()
-    {
-        { "Integer", "int" }, { "String", "string" }, // ...
-    };
-
-    private readonly TextInfo _textInfo = new CultureInfo("en-US", false).TextInfo;
     private MethodDeclaration _currentMethodDeclaration;
     private readonly List<MethodDeclaration> _previousMethodDeclarations;
 
@@ -64,11 +54,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitFunction_annotation(ServerParser.Function_annotationContext context)
     {
-        var httpMethodName = HttpMethods.FirstOrDefault(httpMethod =>
-            context.GetText().ToLower().Contains(httpMethod));
-
-        if (httpMethodName != null) httpMethodName = _textInfo.ToTitleCase(httpMethodName);
-        
+        var httpMethodName = Transformer.MakeHttpMethodTitle(context.GetText());
         var regex = new Regex("\"(.*?)\"");
         var match = regex.Match(context.GetText()).Value;
         var url = match != string.Empty
@@ -89,13 +75,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
 
     public override object VisitReturn_type(ServerParser.Return_typeContext context)
     {
-        var returnType = context.GetText();
-        foreach (var keyValuePair in PrimitiveTypesJavaToCSharp.Where(x =>
-                     returnType.Contains(x.Key)))
-        {
-            returnType = returnType.Replace(keyValuePair.Key, keyValuePair.Value);
-        }
-        
+        var returnType = Transformer.MakeCorrectTypes(context.GetText());
         _currentMethodDeclaration = _currentMethodDeclaration.ToBuilder()
             .WithReturnType(returnType)
             .Build();
@@ -109,13 +89,7 @@ public class ServerMethodVisitor : ServerBaseVisitor<object>
             .Select(arg =>
             {
                 var argName = arg.var().GetText();
-                var argType = arg.var_type().GetText();
-                foreach (var keyValuePair in PrimitiveTypesJavaToCSharp.Where(x => 
-                             argType.Contains(x.Key)))
-                {
-                    argType = argType.Replace(keyValuePair.Key, keyValuePair.Value);
-                }
-                
+                var argType = Transformer.MakeCorrectTypes(arg.var_type().GetText());
                 return new ArgumentDeclaration(argName, argType);
             })
             .ToImmutableList();
