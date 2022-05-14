@@ -17,7 +17,8 @@ public class NodeService : RequestAnalyzer
     private static readonly HashSet<string> ServerOptions = new()
     {
         "/save",
-        "/remove"
+        "/remove",
+        "/send"
     };
 
     private Node? _currentNode;
@@ -124,13 +125,14 @@ public class NodeService : RequestAnalyzer
 
     private void OptionSelector(string option, IReadOnlyList<string?> responses)
     {
-        if (option == "/save")
+        switch (option)
         {
-            Save(responses[0]!, responses[1]!);
-        }
-        else if (option == "/remove")
-        {
-            Remove(responses.ToImmutableList());
+            case "/save":
+                Save(responses[0]!, responses[1]!);
+                break;
+            case "/remove":
+                Remove(responses.ToImmutableList());
+                break;
         }
     }
 

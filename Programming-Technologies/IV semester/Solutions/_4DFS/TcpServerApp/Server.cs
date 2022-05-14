@@ -144,6 +144,24 @@ public class Server : RequestAnalyzer
         }
     }
 
+    private static void AddFile(string fsPath, string partialPath, ConnectedNode updatedNode)
+    {
+        try
+        {
+            var optionBytes = Encoding.ASCII.GetBytes("/save 2");
+            SendData(updatedNode, optionBytes);
+            var partialPathBytes = Encoding.ASCII.GetBytes(partialPath);
+            var fileDataBytes = File.ReadAllBytes(fsPath);
+            SendData(updatedNode, partialPathBytes);
+            SendData(updatedNode, fileDataBytes);
+            updatedNode.SaveTransportedFileSourceData(fsPath, partialPath);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
     private void RemoveFile(string fsPath)
     {
         foreach (var connectedNode in _connectedNodes.Values.ToImmutableList())
@@ -241,42 +259,74 @@ public class Server : RequestAnalyzer
 
     private void BalanceNodes()
     {
-        var nodesValues = _connectedNodes.Values;
-        var avgNodeUsedMemory =
-            (double) nodesValues.Sum(x => x.UsedMemory) / nodesValues.Sum(x => x.NumberOfSavedFiles());
-        var avgUsedMemoryOnEveryNode = nodesValues.Select(x =>
-            x.NumberOfSavedFiles() == 0 ? 0 : x.UsedMemory / x.NumberOfSavedFiles());
-
-
         var allNodesFiles = new List<(string nodeName, string fsPath, string partialPath, long usedMemory)>();
         foreach (var (nodeName, connectedNode) in _connectedNodes)
         {
             foreach (var (fsPath, partialPaths) in connectedNode.SavedFiles)
             {
-                // new FileInfo(fsPath).Length) is correct ???
+                // fsPath may not exist! >>
                 allNodesFiles.AddRange(partialPaths.Select(partialPath =>
                     (nodeName, fsPath, partialPath, new FileInfo(fsPath).Length))
                 );
             }
         }
 
-        var transportedNodes = _connectedNodes.Keys.ToDictionary(
+        var nodesNames = _connectedNodes.Keys.ToImmutableList();
+        var transportedNodes = nodesNames.ToDictionary(
             nodeName => nodeName,
             _ => (long) 0
         );
 
-        var newNodesContent = _connectedNodes.Keys.ToDictionary(
+        var newNodesContent = nodesNames.ToDictionary(
             nodeName => nodeName,
-            _ => new List<(string fsPath, string partialPath)>()
+            _ => new List<(string prevNode, string fsPath, string partialPath)>()
         );
 
         allNodesFiles.Sort((x, y) => x.usedMemory.CompareTo(y.usedMemory));
         allNodesFiles.Reverse();
 
-        // add greedy here
+        // greedy here -- incorrect algo?
         foreach (var file in allNodesFiles)
         {
-            Console.WriteLine(file);
+            var currentNodeName = FindNodeWithLowestUsedMemory(transportedNodes);
+
+            // update usedMemory in node
+            transportedNodes[currentNodeName] += file.usedMemory;
+
+            // moving file to new currentNode
+            newNodesContent[currentNodeName].Add((file.nodeName, file.fsPath, file.partialPath));
         }
+
+        // remove incorrect files
+        foreach (var (nodeName, values) in newNodesContent)
+        {
+            foreach (var x in values.Where(x => nodeName != x.prevNode))
+            {
+                RemoveFile(x.fsPath, x.partialPath, _connectedNodes[x.prevNode]);
+            }
+        }
+
+        // move files
+        foreach (var (nodeName, values) in newNodesContent)
+        {
+            foreach (var x in values.Where(x => nodeName != x.prevNode))
+            {
+                AddFile(x.fsPath, x.partialPath, _connectedNodes[nodeName]);
+            }
+        }
+    }
+
+    private static string FindNodeWithLowestUsedMemory(Dictionary<string, long> nodes)
+    {
+        var (minNodeName, minValue) = (nodes.Keys.First(), nodes.Values.First());
+        foreach (var (node, usedMemory) in nodes)
+        {
+            if (usedMemory < minValue)
+            {
+                minNodeName = node;
+            }
+        }
+
+        return minNodeName;
     }
 }
