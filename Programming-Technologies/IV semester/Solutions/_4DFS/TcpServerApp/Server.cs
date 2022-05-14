@@ -5,9 +5,9 @@ using Analyzer;
 
 namespace TcpServerApp;
 
-public class Server : RequestAnalyzer
+public class Server
 {
-    private new static readonly Dictionary<string, int> Requests = new()
+    private static readonly Dictionary<string, int> Requests = new()
     {
         {"/add-node", 4}, // <name> <ip> <port> <size>
         {"/add-file", 2}, // <file-path> <partial-path>
@@ -20,6 +20,8 @@ public class Server : RequestAnalyzer
     };
 
     private readonly Dictionary<string, ConnectedNode> _connectedNodes;
+    
+    public bool Active { get; private set; }
 
     public Server()
     {
@@ -27,7 +29,7 @@ public class Server : RequestAnalyzer
         _connectedNodes = new Dictionary<string, ConnectedNode>();
     }
 
-    public override void AnalyzeRequests()
+    public void AnalyzeRequests()
     {
         Console.WriteLine("Enter command for server: ");
         string[]? parsedCommand = null;
@@ -37,8 +39,8 @@ public class Server : RequestAnalyzer
             try
             {
                 var command = Console.ReadLine();
-                parsedCommand = ParseInputCommand(command);
-                correct = IsCorrectCommand(parsedCommand);
+                parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+                correct = CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand);
             }
             catch (FormatException e)
             {
@@ -50,7 +52,17 @@ public class Server : RequestAnalyzer
         CommandSelector(parsedCommand);
     }
 
-    protected override void CommandSelector(string[]? parsedCommand)
+    public void Start()
+    {
+        Active = true;
+    }
+
+    public void Stop()
+    {
+        Active = false;
+    }
+
+    private void CommandSelector(IReadOnlyList<string>? parsedCommand)
     {
         var mainCommand = parsedCommand![0];
 
@@ -81,23 +93,6 @@ public class Server : RequestAnalyzer
                 Stop();
                 break;
         }
-    }
-
-    protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
-    {
-        var correctMainCommand = parsedCommand != null && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
-        if (!correctMainCommand)
-        {
-            throw new FormatException("Unknown command!");
-        }
-
-        var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
-        if (!correctArgs)
-        {
-            throw new FormatException($"Expected {Requests[parsedCommand[0]]} args, was {parsedCommand.Count - 1}");
-        }
-
-        return correctMainCommand & correctArgs;
     }
 
     private void AddNode(string nodeName, string ipAddress, string port, string globalMemory)
@@ -200,8 +195,8 @@ public class Server : RequestAnalyzer
 
         foreach (var command in commands)
         {
-            var parsedCommand = ParseInputCommand(command);
-            if (!IsCorrectCommand(parsedCommand))
+            var parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+            if (!CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand))
             {
                 Console.WriteLine($"'{command}' is incorrect command!");
                 return;
@@ -228,8 +223,10 @@ public class Server : RequestAnalyzer
         {
             foreach (var partialPath in partialPaths)
             {
-                AddFile(fsPath, partialPath); // add file to new free node
-                RemoveFile(fsPath, partialPath, cleaningNode); // remove file from previous node
+                // add file to new free node
+                AddFile(fsPath, partialPath);
+                // remove file from previous node
+                RemoveFile(fsPath, partialPath, cleaningNode);
             }
         }
 

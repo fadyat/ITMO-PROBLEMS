@@ -5,9 +5,9 @@ using Analyzer;
 namespace TcpClientApp;
 
 // You need to run this project in parallel run, if want many clients
-public class NodeService : RequestAnalyzer
+public class NodeService
 {
-    private new static readonly Dictionary<string, int> Requests = new()
+    private static readonly Dictionary<string, int> Requests = new()
     {
         {"/new-node", 3}, // <fs_path> <ip> <port>
         {"/listen", 0},
@@ -20,6 +20,8 @@ public class NodeService : RequestAnalyzer
         "/remove",
         "/send"
     };
+    
+    public bool Active { get; private set; }
 
     private Node? _currentNode;
 
@@ -29,7 +31,7 @@ public class NodeService : RequestAnalyzer
         _currentNode = null;
     }
 
-    public override void AnalyzeRequests()
+    public void AnalyzeRequests()
     {
         Console.WriteLine("Enter command for node-service: ");
         string[]? parsedCommand = null;
@@ -39,8 +41,8 @@ public class NodeService : RequestAnalyzer
             try
             {
                 var command = Console.ReadLine();
-                parsedCommand = ParseInputCommand(command);
-                correct = IsCorrectCommand(parsedCommand);
+                parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+                correct = CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand);
             }
             catch (FormatException e)
             {
@@ -52,38 +54,21 @@ public class NodeService : RequestAnalyzer
         CommandSelector(parsedCommand);
     }
 
-    protected override void CommandSelector(string[]? parsedCommand)
+    private void CommandSelector(IReadOnlyList<string>? parsedCommand)
     {
         var mainCommand = parsedCommand![0];
-        if (mainCommand == "/new-node")
+        switch (mainCommand)
         {
-            CreateNode(parsedCommand[1], parsedCommand[2], parsedCommand[3]);
+            case "/new-node":
+                CreateNode(parsedCommand[1], parsedCommand[2], parsedCommand[3]);
+                break;
+            case "/listen":
+                Listen();
+                break;
+            case "/stop":
+                Stop();
+                break;
         }
-        else if (mainCommand == "/listen")
-        {
-            Listen();
-        }
-        else if (mainCommand == "/stop")
-        {
-            Stop();
-        }
-    }
-
-    protected override bool IsCorrectCommand(IReadOnlyList<string>? parsedCommand)
-    {
-        var correctMainCommand = parsedCommand != null && Requests.Any() && Requests.ContainsKey(parsedCommand[0]);
-        if (!correctMainCommand)
-        {
-            throw new FormatException("Unknown command!");
-        }
-
-        var correctArgs = Equals(Requests[parsedCommand![0]], parsedCommand.Count - 1);
-        if (!correctArgs)
-        {
-            throw new FormatException($"Expected {Requests[parsedCommand[0]]} args, was {parsedCommand.Count - 1}");
-        }
-
-        return correctMainCommand & correctArgs;
     }
 
     private void CreateNode(string fsPath, string ipAddress, string port)
@@ -136,9 +121,14 @@ public class NodeService : RequestAnalyzer
         }
     }
 
-    protected override void Stop()
+    public void Start()
     {
-        base.Stop();
+        Active = true;
+    }
+
+    public void Stop()
+    {
+        Active = false;
         _currentNode?.Stop();
     }
 
