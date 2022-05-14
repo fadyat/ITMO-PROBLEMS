@@ -54,37 +54,32 @@ public class Server : RequestAnalyzer
     {
         var mainCommand = parsedCommand![0];
 
-        if (mainCommand == "/add-node")
+        switch (mainCommand)
         {
-            AddNode(parsedCommand[1], parsedCommand[2], parsedCommand[3], parsedCommand[4]);
-        }
-        else if (mainCommand == "/add-file")
-        {
-            AddFile(parsedCommand[1], parsedCommand[2]);
-        }
-        else if (mainCommand == "/remove-file")
-        {
-            RemoveFile(parsedCommand[1]);
-        }
-        else if (mainCommand == "/exec")
-        {
-            ExecuteCommands(parsedCommand[1]);
-        }
-        else if (mainCommand == "/clean-node")
-        {
-            CleanNode(parsedCommand[1]);
-        }
-        else if (mainCommand == "/balance-nodes")
-        {
-            BalanceNodes();
-        }
-        else if (mainCommand == "/show-nodes")
-        {
-            ShowNodes();
-        }
-        else if (mainCommand == "/stop")
-        {
-            Stop();
+            case "/add-node":
+                AddNode(parsedCommand[1], parsedCommand[2], parsedCommand[3], parsedCommand[4]);
+                break;
+            case "/add-file":
+                AddFile(parsedCommand[1], parsedCommand[2]);
+                break;
+            case "/remove-file":
+                RemoveFile(parsedCommand[1]);
+                break;
+            case "/exec":
+                ExecuteCommands(parsedCommand[1]);
+                break;
+            case "/clean-node":
+                CleanNode(parsedCommand[1]);
+                break;
+            case "/balance-nodes":
+                BalanceNodes();
+                break;
+            case "/show-nodes":
+                ShowNodes();
+                break;
+            case "/stop":
+                Stop();
+                break;
         }
     }
 
@@ -264,7 +259,7 @@ public class Server : RequestAnalyzer
         {
             foreach (var (fsPath, partialPaths) in connectedNode.SavedFiles)
             {
-                // fsPath may not exist! >>
+                // fsPath may not exist?
                 allNodesFiles.AddRange(partialPaths.Select(partialPath =>
                     (nodeName, fsPath, partialPath, new FileInfo(fsPath).Length))
                 );
@@ -285,10 +280,10 @@ public class Server : RequestAnalyzer
         allNodesFiles.Sort((x, y) => x.usedMemory.CompareTo(y.usedMemory));
         allNodesFiles.Reverse();
 
-        // greedy here -- incorrect algo?
+        // greedy is correct?
         foreach (var file in allNodesFiles)
         {
-            var currentNodeName = FindNodeWithLowestUsedMemory(transportedNodes);
+            var currentNodeName = GetNodeNameWithLowestPercentOfUsedMemory(transportedNodes);
 
             // update usedMemory in node
             transportedNodes[currentNodeName] += file.usedMemory;
@@ -316,15 +311,19 @@ public class Server : RequestAnalyzer
         }
     }
 
-    private static string FindNodeWithLowestUsedMemory(Dictionary<string, long> nodes)
+    // may use binary tree for optimal search
+    private string GetNodeNameWithLowestPercentOfUsedMemory(Dictionary<string, long> nodes)
     {
-        var (minNodeName, minValue) = (nodes.Keys.First(), nodes.Values.First());
+        var minNodeName = string.Empty;
+        double minPercentOfUsedMemory = 1;
         foreach (var (node, usedMemory) in nodes)
         {
-            if (usedMemory < minValue)
-            {
-                minNodeName = node;
-            }
+            var nodeGlobalMemory = _connectedNodes[node].GlobalMemory;
+            var currentPercentOfUsedMemory = (double) usedMemory / nodeGlobalMemory;
+            if (!(currentPercentOfUsedMemory <= minPercentOfUsedMemory)) continue;
+
+            minNodeName = node;
+            minPercentOfUsedMemory = currentPercentOfUsedMemory;
         }
 
         return minNodeName;
