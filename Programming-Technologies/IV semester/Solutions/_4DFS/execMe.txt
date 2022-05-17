@@ -1,9 +1,0 @@
-/add-node me 127.0.0.1 8889 100000
-/add-node me2 127.0.0.1 8890 20000
-/add-file /Users/artyomfadeyev/tmp.txt tmp/tmp.txt
-/add-file /Users/artyomfadeyev/tmp.txt tmp/tmp2.txt
-/add-file /Users/artyomfadeyev/tmp.txt tmp/tmp3.txt
-/add-node me3 127.0.0.1 8891 100000
-/show-nodes
-/remove-file /Users/artyomfadeyev/tmp.txt
-/show-nodes

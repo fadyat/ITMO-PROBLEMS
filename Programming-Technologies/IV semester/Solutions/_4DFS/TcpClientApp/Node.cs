@@ -102,7 +102,7 @@ public class Node
             {
                 var actualPath = Path.Combine(_basePath, fsPath!);
                 File.Delete(actualPath);
-                RemoveEmptyDirectories(Path.GetDirectoryName(actualPath)!);
+                // ... remove empty directories
                 Console.WriteLine($"\t'{actualPath}' removed!");
             }
             catch (Exception e)
@@ -111,19 +111,7 @@ public class Node
             }
         });
     }
-
-    private static void RemoveEmptyDirectories(string path)
-    {
-        foreach (var directory in Directory.GetDirectories(path))
-        {
-            RemoveEmptyDirectories(directory);
-            if (Directory.GetFiles(directory).Length == 0 &&
-                Directory.GetDirectories(directory).Length == 0)
-            {
-                Directory.Delete(directory, false);
-            }
-        }
-    }
+    
 
     public override string ToString()
     {
