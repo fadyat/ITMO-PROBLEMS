@@ -1,0 +1,91 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\parindent 0pt
+\parskip 8pt
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage[left=2.3cm, right=2.3cm, top=2.7cm, bottom=2.7cm, bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{fancyhdr} 
+\usepackage{extramarks}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[T2A]{fontenc} 
+\definecolor{grey}{RGB}{128,128,128}
+\everymath{\displaystyle}
+
+\title{Лабораторная работа №6 \\ \ \\\large Вариант 4 \\}
+\author{Фадеев Артём, Войнов Лев}
+
+\begin{document}
+
+\maketitle
+
+\section{Задание}
+\begin{itemize}
+    \item Построить ОМП
+    \item Вычислить квадаратичный риск оценок
+    \item Найти информацию Фишера
+    \item Выяснить вопрос об эффективности оценок
+    
+    Для неизвестной дисперсии $d$ нормального распределения $N(0, d)$
+    
+    $d = \sigma^2$ при известном среднем $a = 0$
+
+\end{itemize}
+
+\newpage
+\section{Решение}
+
+\subsection{}
+
+$N(a, d) = N(a, \sigma^2) =
+\frac{1}{\sigma \sqrt{2 \pi}} \exp(-\frac{(x - a)^2}{2\sigma^2}) = f(a, \sigma^2)$
+
+$f(a, x_1, \dots, x_n) =
+\prod\limits_{i = 1}^n \exp(-\frac{{x_i}^2}{2{\sigma_i}^2}) =
+(\frac{1}{\sigma \sqrt{2\pi}})^n \exp(-\frac{\sum\limits_{i = 1}^n (x_i - a)^2}{2\sigma^2})$
+
+$L(a, x_1, \dots, x_n) = \ln(f(a, x_1, \dots, x_n)) = 
+n \ln(\frac{1}{\sigma \sqrt{2\pi}}) - \frac{\sum\limits_{i = 1}^n (x_i - a)^2}{2\sigma^2}$
+
+$\frac{dL}{d\sigma} = -\frac{n}{2\sigma} + \frac{\sum\limits_{i = 1}^n {x_i}^2}{2\sigma^2} = 0 \quad \rightarrow  \quad \sigma = \frac{1}{n} \sum\limits_{i = 1}^n {x_i}^2$
+
+
+\subsection{}
+
+$E_x \frac{1}{n} \sum\limits_{i = 1}^n {x_i}^2 = 
+\frac{1}{n} \sum\limits_{i = 1}^n {x_i}^2 = 
+\frac{1}{n} n \sigma^2 = \sigma^2$
+
+$R_2(\hat{\sigma}, \sigma) =
+D_x \frac{1}{n} \sum\limits_{i = 1}^n {x_i}^2 =
+\frac{1}{n^2} \sum\limits_{i = 1}^n D {x_i}^2 = 
+\frac{1}{n} n (3\sigma^4 - \sigma^4) = \frac{2\sigma^4}{n}$
+
+\subsection{}
+
+$I_n(\sigma^2) = n I(\sigma^2) =
+nE_{\sigma^2} (\frac{d}{d\sigma^2} \ln(f_\sigma(x)))^2 = 
+nE_{\sigma^2} (\frac{x^2}{2\sigma^4} - \frac{1}{2\sigma^2})^2 = 
+\frac{nE_{\sigma^2}}{4\sigma^8} (x^2 - \sigma^2)^2 =
+\frac{n}{4\sigma^8} D_{\sigma^2}(x^2) = 
+\frac{n}{4\sigma^8} 2\sigma^4 = \frac{n}{2\sigma^4}$
+
+\subsection{}
+
+$R_2(\hat{\sigma}, \sigma) =
+D_x(\hat{\sigma}) = 
+\frac{2\sigma^4}{n} = \frac{1}{I_n(\sigma^2)}$
+
+Согласно неравенству Рао-Крамера оценка является эффективной
+\end{document}
