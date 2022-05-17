@@ -20,7 +20,7 @@ public class Server
     };
 
     private readonly Dictionary<string, ConnectedNode> _connectedNodes;
-    
+
     public bool Active { get; private set; }
 
     public Server()
@@ -32,14 +32,14 @@ public class Server
     public void AnalyzeRequests()
     {
         Console.WriteLine("Enter command for server: ");
-        string[]? parsedCommand = null;
+        var parsedCommand = new List<string>();
         var correct = false;
         while (!correct)
         {
             try
             {
                 var command = Console.ReadLine();
-                parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+                parsedCommand = CommandAnalyzer.ParseInputCommand(command).ToList();
                 correct = CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand);
             }
             catch (FormatException e)
@@ -52,6 +52,12 @@ public class Server
         CommandSelector(parsedCommand);
     }
 
+    // method only for benchmarks
+    public void AnalyzeRequests(string command)
+    {
+        CommandSelector(CommandAnalyzer.ParseInputCommand(command).ToList());
+    }
+
     public void Start()
     {
         Active = true;
@@ -62,9 +68,9 @@ public class Server
         Active = false;
     }
 
-    private void CommandSelector(IReadOnlyList<string>? parsedCommand)
+    private void CommandSelector(IReadOnlyList<string> parsedCommand)
     {
-        var mainCommand = parsedCommand![0];
+        var mainCommand = parsedCommand[0];
 
         switch (mainCommand)
         {
@@ -101,7 +107,7 @@ public class Server
         {
             var connectedNode = new ConnectedNode(ipAddress, port, globalMemory);
             _connectedNodes.Add(nodeName, connectedNode);
-            Console.WriteLine("\t'{0}' with '{1}' successfully added to connected list!", nodeName, connectedNode);
+            // Console.WriteLine("\t'{0}' with '{1}' successfully added to connected list!", nodeName, connectedNode);
         }
         catch (Exception e) when (e is FileNotFoundException or SocketException or FormatException)
         {
@@ -195,7 +201,7 @@ public class Server
 
         foreach (var command in commands)
         {
-            var parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+            var parsedCommand = CommandAnalyzer.ParseInputCommand(command).ToList();
             if (!CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand))
             {
                 Console.WriteLine($"'{command}' is incorrect command!");

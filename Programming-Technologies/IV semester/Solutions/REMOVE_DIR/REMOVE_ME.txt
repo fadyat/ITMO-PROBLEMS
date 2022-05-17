@@ -1,0 +1,1 @@
+i'm text inside a new tmp file!

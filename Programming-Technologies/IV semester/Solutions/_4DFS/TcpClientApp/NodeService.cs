@@ -34,14 +34,14 @@ public class NodeService
     public void AnalyzeRequests()
     {
         Console.WriteLine("Enter command for node-service: ");
-        string[]? parsedCommand = null;
+        var parsedCommand = new List<string>();
         var correct = false;
         while (!correct)
         {
             try
             {
                 var command = Console.ReadLine();
-                parsedCommand = CommandAnalyzer.ParseInputCommand(command);
+                parsedCommand = CommandAnalyzer.ParseInputCommand(command).ToList();
                 correct = CommandAnalyzer.IsCorrectCommand(Requests, parsedCommand);
             }
             catch (FormatException e)
@@ -54,9 +54,9 @@ public class NodeService
         CommandSelector(parsedCommand);
     }
 
-    private void CommandSelector(IReadOnlyList<string>? parsedCommand)
+    private void CommandSelector(IReadOnlyList<string> parsedCommand)
     {
-        var mainCommand = parsedCommand![0];
+        var mainCommand = parsedCommand[0];
         switch (mainCommand)
         {
             case "/new-node":
