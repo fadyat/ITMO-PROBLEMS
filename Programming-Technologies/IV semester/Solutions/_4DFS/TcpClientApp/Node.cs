@@ -47,7 +47,7 @@ public class Node
             var response = new StringBuilder();
             do
             {
-                var bytes = stream.Read(data, 0, data.Length);
+                var bytes = stream.ReadAsync(data, 0, data.Length).Result;
                 response.Append(Encoding.UTF8.GetString(data, 0, bytes));
             } while (stream.DataAvailable);
 
@@ -83,7 +83,7 @@ public class Node
             using var fs = File.Create(actualPath);
             {
                 var bytes = Encoding.ASCII.GetBytes(data);
-                fs.Write(bytes, 0, bytes.Length);
+                fs.WriteAsync(bytes, 0, bytes.Length);
             }
 
             Console.WriteLine($"\t'{actualPath}' saved!");

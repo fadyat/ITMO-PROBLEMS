@@ -9,6 +9,5 @@ public static class Program
         // dotnet build -c Release
         // dotnet ./Benchmarks/bin/Release/net6.0/Benchmarks.dll
         BenchmarkRunner.Run<ServerBenchmarks>();
-        // new ServerBenchmarks().AnalyzeFileAdding();
     }
 }

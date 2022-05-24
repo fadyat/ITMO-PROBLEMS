@@ -129,7 +129,7 @@ public class Server
             var optionBytes = Encoding.ASCII.GetBytes("/save 2");
             SendData(updatedNode, optionBytes);
             var partialPathBytes = Encoding.ASCII.GetBytes(partialPath);
-            var fileDataBytes = File.ReadAllBytes(fsPath);
+            var fileDataBytes = File.ReadAllBytesAsync(fsPath).Result;
             SendData(updatedNode, partialPathBytes);
             SendData(updatedNode, fileDataBytes);
             updatedNode.SaveTransportedFileSourceData(fsPath, partialPath);
@@ -147,7 +147,7 @@ public class Server
             var optionBytes = Encoding.ASCII.GetBytes("/save 2");
             SendData(updatedNode, optionBytes);
             var partialPathBytes = Encoding.ASCII.GetBytes(partialPath);
-            var fileDataBytes = File.ReadAllBytes(fsPath);
+            var fileDataBytes = File.ReadAllBytesAsync(fsPath).Result;
             SendData(updatedNode, partialPathBytes);
             SendData(updatedNode, fileDataBytes);
             updatedNode.SaveTransportedFileSourceData(fsPath, partialPath);
@@ -190,7 +190,7 @@ public class Server
         var client = new TcpClient();
         client.Connect(connectedNode.IpAddress, connectedNode.Port);
         var stream = client.GetStream();
-        stream.Write(data, 0, data.Length);
+        stream.WriteAsync(data, 0, data.Length);
         stream.Close();
         client.Close();
     }
@@ -215,8 +215,7 @@ public class Server
     private void CleanNode(string nodeName)
     {
         var cleaningNode = _connectedNodes[nodeName];
-        var totalFreeMemory =
-            GetTotalConnectedNodesFreeMemory() - (cleaningNode.GlobalMemory - cleaningNode.UsedMemory);
+        var totalFreeMemory = GetTotalConnectedNodesFreeMemory() - (cleaningNode.GlobalMemory - cleaningNode.UsedMemory);
         if (totalFreeMemory < cleaningNode.UsedMemory)
         {
             Console.WriteLine($"\tNot enough free nodes for cleaning node '{cleaningNode}'");
