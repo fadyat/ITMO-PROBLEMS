@@ -29,7 +29,6 @@ WHERE UnitPrice * OrderQty = (
 
 - Найти такие продукты, которые покупал только один покупатель.
 
-> idk how to do it w/o joins 😞
 ```SQL
 SELECT Product.Name
 FROM AdventureWorks2017.Production.Product
