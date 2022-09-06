@@ -1,0 +1,3 @@
+[submodule "Web-Programming"]
+	path = "Web-Programming"
+	url = https://github.com/fadyat/itmo-web
