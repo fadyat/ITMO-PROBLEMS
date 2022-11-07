@@ -1,3 +1,6 @@
 [submodule "Web-Programming"]
 	path = "Web-Programming"
 	url = https://github.com/fadyat/itmo-web
+[submodule "Dev-Tools"]
+	path = Dev-Tools
+	url = https://github.com/fadyat/itmo-devtools
