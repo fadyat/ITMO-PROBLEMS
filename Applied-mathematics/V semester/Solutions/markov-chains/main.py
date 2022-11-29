@@ -87,5 +87,9 @@ if __name__ == '__main__':
         initial_state[pos] = 1
         state, std = state_dist_numeric(ergodic_markov_chain, initial_state)
         stds.append(std)
+        print(f'Initial state: {initial_state}, state: {state}')
 
     plot_std(1e-6, *stds)
+
+    state = state_dist_analytic(ergodic_markov_chain)
+    print('Analytic state:', state)
