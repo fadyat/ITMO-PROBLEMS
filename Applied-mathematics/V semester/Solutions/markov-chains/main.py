@@ -15,6 +15,13 @@ ergodic_markov_chain = np.array([
     np.array([0.2, 0.3, 0.1, 0.1, 0, 0.2, 0, 0.1], dtype=float),
 ])
 
+initial_states = np.array([
+    np.array([1, 0, 0, 0, 0, 0, 0, 0], dtype=float),
+    np.array([0, 1, 0, 0, 0, 0, 0, 0], dtype=float),
+])
+
+different_steps = np.array([5, 10, 50])
+
 
 def show_chain(
     chain: np.ndarray[np.ndarray[float]],
@@ -82,14 +89,19 @@ if __name__ == '__main__':
     np.set_printoptions(precision=3, suppress=True)
     # show_chain(ergodic_markov_chain, np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']))
     stds = []
-    for pos in range(len(ergodic_markov_chain)):
-        initial_state = np.zeros(len(ergodic_markov_chain))
-        initial_state[pos] = 1
-        state, std = state_dist_numeric(ergodic_markov_chain, initial_state)
-        stds.append(std)
-        print(f'Initial state: {initial_state}, state: {state}')
+    print('Numeric:')
+    for step in different_steps:
+        for initial_state in initial_states:
+            state, std = state_dist_numeric(
+                ergodic_markov_chain,
+                initial_state,
+                steps=step,
+            )
+            print(
+                f'State distribution after {step} steps: {state},'
+                f' for initial state: {initial_state}'
+            )
+            stds.append(std)
 
     plot_std(1e-6, *stds)
-
-    state = state_dist_analytic(ergodic_markov_chain)
-    print('Analytic state:', state)
+    print(f'\nAnalytic:\n{state_dist_analytic(ergodic_markov_chain)}')
