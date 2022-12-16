@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[9pt, a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -424,19 +424,156 @@
         \item $x_1 = \frac{1}{8}, x_2 = \frac{1}{4}, F(x) = -\frac{3}{8}$
     \end{enumerate}
 
-    \dots
+    Откуда цена игры: $v = \frac{1}{\sum_{i=1}^m x_i} = \frac{1}{\frac{1}{8} + \frac{1}{4}} = \frac{8}{3}$
+
+    Оптимальная стратегия первого игрока:
+    \begin{enumerate}
+        \item $p_i = x_i * v = \frac{1}{8} * \frac{8}{3} = \frac{1}{3}$
+        \item $p_i = x_i * v = \frac{1}{4} * \frac{8}{3} = \frac{2}{3}$
+    \end{enumerate}
+
+    Второй игрок имеет аналогичную стратегию.
 
     \newpage
 
     \subsection{Задача 5}\label{subsec:task5}
     \includegraphics[width=1\textwidth]{docs/5}
-    \dots
+
+    \begin{equation}
+        A^T =
+        \begin{pmatrix}
+            8 & 4 \\
+            4 & 8 \\
+            6 & 5 \\
+        \end{pmatrix}\label{eq:equation26}
+    \end{equation}
+
+    \begin{enumerate}
+        \item
+        \begin{equation}
+            F(x) = x_1 + x_2 + x_3 \rightarrow \max\label{eq:equation27}
+        \end{equation}
+        \begin{equation}
+            \begin{cases}
+                8x_1 + 4x_2 + 6x_3 \leqslant 1\\
+                4x_1 + 8x_2 + 5x_3 \leqslant 1\\
+            \end{cases}\label{eq:equation28}
+        \end{equation}
+
+        \item
+        \begin{equation}
+            F(x) = x_1 + x_2 \rightarrow \min\label{eq:equation29}
+        \end{equation}
+        \begin{equation}
+            \begin{cases}
+                8x_1 + 4x_2 \geqslant 1\\
+                4x_1 + 8x_2 \geqslant 1\\
+                6x_1 + 5x_2 \geqslant 1\\
+            \end{cases}\label{eq:equation30}
+        \end{equation}
+    \end{enumerate}
+
+    Решаем:
+    \begin{enumerate}
+        \item $x_1 = 0, x_2 = 0.03571429, x_3 = 0.14285714, F(x) = 0.17857143$
+        \item $x_1 = 0.10714286, x_2 = 0.07142857, F(x) = -0.17857143$
+    \end{enumerate}
+
+    Откуда цена игры:
+    \begin{equation}
+        v_1 = \frac{1}{\sum_{i=1}^m x_i} = \frac{1}{0.10714286 + 0.07142857} = 5.6\label{eq:equation31}
+    \end{equation}
+
+    \begin{equation}
+        v_2 = \frac{1}{\sum_{i=1}^m x_i} = \frac{1}{0 + 0.03571429 + 0.14285714} = 5.6\label{eq:equation32}
+    \end{equation}
+
+    Стратегии первого игрока:
+    \begin{enumerate}
+        \item $p_1 = x_1 * v_1 = 0.10714286 * 5.6 = 0.6$
+        \item $p_2 = x_2 * v_1 = 0.07142857 * 5.6 = 0.4$
+    \end{enumerate}
+
+    Стратегии второго игрока:
+    \begin{enumerate}
+        \item $p_1 = x_1 * v_2 = 0 * 5.6 = 0$
+        \item $p_2 = x_2 * v_2 = 0.03571429 * 5.6 = 0.2$
+        \item $p_3 = x_3 * v_2 = 0.14285714 * 5.6 = 0.8$
+    \end{enumerate}
 
     \newpage
 
     \subsection{Задача 6}\label{subsec:task6}
     \includegraphics[width=1\textwidth]{docs/6}
-    \dots
+
+    \begin{equation}
+        A^T =
+        \begin{pmatrix}
+            7 & 2 & 5 & 3 \\
+            2 & 2 & 3 & 2 \\
+            5 & 3 & 4 & 1 \\
+            1 & 4 & 4 & 6 \\
+        \end{pmatrix}\label{eq:equation33}
+    \end{equation}
+
+    \begin{enumerate}
+        \item
+        \begin{equation}
+            F(x) = x_1 + x_2 + x_3 + x_4 \rightarrow \max\label{eq:equation34}
+        \end{equation}
+        \begin{equation}
+            \begin{cases}
+                7x_1 + 2x_2 + 5x_3 + 1x_4 \leqslant 1\\
+                2x_1 + 2x_2 + 3x_3 + 4x_4 \leqslant 1\\
+                5x_1 + 3x_2 + 4x_3 + 4x_4 \leqslant 1\\
+                3x_1 + 2x_2 + 1x_3 + 6x_4 \leqslant 1\\
+            \end{cases}\label{eq:equation35}
+        \end{equation}
+
+        \item
+        \begin{equation}
+            F(x) = x_1 + x_2 + x_3 + x_4 \rightarrow \min\label{eq:equation36}
+        \end{equation}
+        \begin{equation}
+            \begin{cases}
+                7x_1 + 2x_2 + 5x_3 + 3x_4 \geqslant 1\\
+                2x_1 + 2x_2 + 3x_3 + 2x_4 \geqslant 1\\
+                5x_1 + 3x_2 + 4x_3 + 1x_4 \geqslant 1\\
+                3x_1 + 4x_2 + 4x_3 + 6x_4 \geqslant 1\\
+            \end{cases}\label{eq:equation37}
+        \end{equation}
+    \end{enumerate}
+
+    Решаем:
+    \begin{enumerate}
+        \item $x_1 = 0, x_2 = 0.33333333, x_3 = 0, x_4 = 0, F(x) = 0.33333333$
+        \item $x_1 = 0, x_2 = 0, x_3 = 0.33333333, x_4 = 0, F(x) = -0.33333333$
+    \end{enumerate}
+
+    Откуда цена игры:
+    \begin{equation}
+        v_1 = \frac{1}{\sum_{i=1}^m x_i} = \frac{1}{0 + 0.33333333 + 0 + 0} = 3\label{eq:equation38}
+    \end{equation}
+
+    \begin{equation}
+        v_2 = \frac{1}{\sum_{i=1}^m x_i} = \frac{1}{0 + 0 + 0.33333333 + 0} = 3\label{eq:equation39}
+    \end{equation}
+
+    Стратегии первого игрока:
+    \begin{enumerate}
+        \item $p_1 = x_1 * v_1 = 0 * 3 = 0$
+        \item $p_2 = x_2 * v_1 = 0.33333333 * 3 = 1$
+        \item $p_3 = x_3 * v_1 = 0 * 3 = 0$
+        \item $p_4 = x_4 * v_1 = 0 * 3 = 0$
+    \end{enumerate}
+
+    Стратегии второго игрока:
+    \begin{enumerate}
+        \item $p_1 = x_1 * v_2 = 0 * 3 = 0$
+        \item $p_2 = x_2 * v_2 = 0 * 3 = 0$
+        \item $p_3 = x_3 * v_2 = 0.33333333 * 3 = 1$
+        \item $p_4 = x_4 * v_2 = 0 * 3 = 0$
+    \end{enumerate}
 
     \newpage
 
@@ -472,7 +609,62 @@
 
     \subsection{Задача 8}\label{subsec:task8}
     \includegraphics[width=1\textwidth]{docs/8}
-    \dots
+
+    Решим исходную систему уравнений:
+
+    \begin{cases}
+        x_1 = 0.12\\
+        x_2 = 0.08
+    \end{cases}
+
+    Представив $x_i = \frac{p_i}{v}$, получим следующие значения:
+
+    \begin{cases}
+        7p_1 + 2p_2 \geqslant u\\
+        p_1 + 11p_2 \geqslant u\\
+        p_1 + p_2 = 1
+    \end{cases}
+
+    \begin{equation}
+        p_1 + p_2 = x_1 * u + x_2 * u = u * L(x) = 1 \Rightarrow u = 5\label{eq:equation40}
+    \end{equation}
+
+
+    Считаем оптимальные статегии:
+
+    \begin{cases}
+        p_1 = 0.6\\
+        p_2 = 0.4
+    \end{cases}
+
+    \begin{equation}
+        A^T =
+        \begin{pmatrix}
+            7 & 1  \\
+            2 & 11 \\
+        \end{pmatrix}\label{eq:equation41}
+    \end{equation}
+
+    Решим полученную систему:
+    \begin{cases}
+        x_1 = 0.133\\
+        x_2 = 0.066\\
+    \end{cases}
+
+    Представив $x_i = \frac{p_i}{v}$, получим следующие значения:
+
+    \begin{cases}
+        7p_1 + 1p_2 \leqslant u\\
+        2p_1 + 11p_2 \leqslant u\\
+        p_1 + p_2 = 1
+    \end{cases}
+
+    Считаем оптимальные статегии:
+
+    \begin{cases}
+        p_1 = 0.666\\
+        p_2 = 0.333
+    \end{cases}
 
     \newpage
 
