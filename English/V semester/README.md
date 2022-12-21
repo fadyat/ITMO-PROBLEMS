@@ -164,6 +164,11 @@ develop software efficiently and effectively.
 
 #### Exercise 6
 
+You need to upload a brushed-up version of your class description of the app.
+Your recording should include the information you and your team members presented (information, but not the exact words your team members said), and the answers to the questions your classmates asked. 
+
+---
+
 Have you ever heard about Telegram bot that can help you stay organized and on top of your schedule? It's really cool.
 You can create events and receive notifications at regular intervals while the event is still ongoing.
 
@@ -192,6 +197,10 @@ It's super easy to use, and it's definitely worth checking out if you want to st
 
 #### Exercise 7
 
+Create presentation, that describes some API
+
+---
+
 Presentation creating using [Marp](https://marp.app/) and run of following command:
 
 ```bash
@@ -201,6 +210,10 @@ marp --pdf --allow-local-files ./docs/api.md --output ./docs/api.pdf
 You can find the presentation [here](docs/api.pdf).
 
 #### Exercise 8
+
+Presentation of Database solution
+
+---
 
 Let’s find out about entity relationship diagram of this database.
 
@@ -241,9 +254,17 @@ However, it is generally more common to use languages like C++, C#, or Java for 
 
 #### Exercise 10
 
+StackOverflow question
+
+---
+
 Here is mine [interesting question](https://stackoverflow.com/questions/74404104/how-to-handle-linked-models) from StackOverflow.
 
 #### Exercise 11
+
+Cover letter for a job application
+
+---
 
 Here is my [cover letter](docs/cl.pdf) to the TikTok company. 
 
