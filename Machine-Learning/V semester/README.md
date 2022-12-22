@@ -1,6 +1,4 @@
-## Machine Learning
-
-### Solutions
+## Solutions
 
 - [Python introduction](./notebooks/lab1.ipynb), 9/10
 
@@ -26,7 +24,9 @@
 > - It is better to implement `predict` as a separate method
 > - 6.2 not completed, no check for `voice` dataset
 
-### Tests
+- [PyTorch. Image classification](), 0/12
+
+## Tests
 
 - [K-Nearest Neighbors](./tests/test1.ipynb) - 6/11 points
 - [Neural Networks](./tests/test2.ipynb) - 4/11 points
