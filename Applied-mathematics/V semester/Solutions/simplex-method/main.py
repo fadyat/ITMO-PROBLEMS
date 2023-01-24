@@ -1,175 +1,223 @@
-import dataclasses
-import time
+import json
 import typing
 
 import numpy as np
 
 
-@dataclasses.dataclass
-class SimplexMethodInput:
-    extremum_type: str
-    obj_func: str
-    constraints: typing.List[str]
+class NoAnswerError(Exception):
+    def __init__(self):
+        super().__init__('No answer')
 
 
-def to_canonical(inp: SimplexMethodInput):
-    """
-    Converts the input to canonical form:
-    - non-negativity constraints for all variables
-    - all remaining constraints are expressed as equalities
-    - the right hand side vector b is non-negative
+class Simplex:
+    def __init__(self):
+        self.goal: str = "min"
+        self.restrictions: typing.List[Restriction] = []
+        self.variables: typing.List[Var] = []
 
-    :return: Inplace conversion.
-    """
+    def add_non_original_variable(self):
+        self.variables.append(Var(0, False))
 
-    c = np.array(inp.obj_func.split(), dtype=float)
-    if inp.extremum_type == "min":
-        c *= -1
-
-    a = np.array([constraint.split()[:-2] for constraint in inp.constraints], dtype=float)
-    b = np.array([constraint.split()[-1] for constraint in inp.constraints], dtype=float)
-    s = np.array([constraint.split()[-2] for constraint in inp.constraints], dtype=str)
-
-    for i, sign in enumerate(s):
-        if sign == ">=":
-            a[i] *= -1
-            b[i] *= -1
-        elif sign in ["<=", "="]:
-            continue
-
-        raise ValueError(f"Unknown sign {sign}")
-
-    a = np.hstack((a, np.eye(a.shape[0])))
-    c = np.hstack((c, np.zeros(a.shape[0])))
-
-    for i, value in enumerate(b):
-        if value < 0:
-            a[i] *= -1
-            b[i] *= -1
-
-    return c, a, b
+    def add_original_variable(self, k: float):
+        self.variables.append(Var(k, True))
 
 
-class SimplexMethod:
+class Var:
+    def __init__(self, k: float, is_original: bool):
+        self.k = k
+        self.is_original = is_original
 
-    def __init__(self, inp: SimplexMethodInput):
-        self.input = input
-        self.c, self.a, self.b = to_canonical(inp)
+
+class Restriction:
+    def __init__(
+        self,
+        coefficients: typing.List[float],
+        answer: float,
+        additional_variable_number: int,
+    ):
+        self.coefficients = coefficients
+        self.answer = answer
+        self.additional_variable_number = additional_variable_number
+        self.has_variable = additional_variable_number != -1
+
+    @staticmethod
+    def create_equal_restriction(
+        coefficients: typing.List[float],
+        answer: float,
+    ):
+        return Restriction(coefficients, answer, -1)
+
+    @staticmethod
+    def create_greater_restriction(
+        coefficients: typing.List[float],
+        answer: float,
+        variable_number: int,
+    ):
+        coefficients = [-i for i in coefficients] + [1]
+        answer = -answer
+        return Restriction(coefficients, answer, variable_number)
+
+    @staticmethod
+    def create_less_restriction(
+        coefficients: typing.List[float],
+        answer: float,
+        variable_number: int,
+    ):
+        coefficients.append(1)
+        return Restriction(coefficients, answer, variable_number)
+
+    def update_for_variables(self, variables: typing.List[Var]):
+        for v in range(len(variables)):
+            if (
+                not variables[v].is_original and
+                self.has_variable and
+                self.additional_variable_number != v
+            ):
+                self.coefficients.insert(v, 0)
+
+
+class Table:
+    def __init__(self, simplex: Simplex):
+        self.si = simplex
+        self.coefficients = np.array([
+            r.coefficients + [r.answer]
+            for r in self.si.restrictions
+        ], dtype=float)
+        self.basis = []
+        self.delta = []
+
+    def get_default_basis(self) -> typing.List[int]:
+        return [
+            -1 if not r.has_variable else r.additional_variable_number
+            for r in self.si.restrictions
+        ]
+
+    def no_answer_condition(self, idx: int) -> bool:
+        return np.max(self.coefficients[:, idx]) <= 0
+
+    def check_optimality(self, idx_worst_argument: int) -> bool:
+        if self.si.goal == "min":
+            return self.delta[idx_worst_argument] <= 0
+        elif self.si.goal == "max":
+            return self.delta[idx_worst_argument] >= 0
+
+    def get_index_worst_argument(self) -> int:
+        if self.si.goal == "min":
+            return int(np.argmax(self.delta[:-1]))
+        elif self.si.goal == "max":
+            return int(np.argmin(self.delta[:-1]))
+
+    def create_answer(self):
+        answer = np.zeros(len(self.si.variables) - 1, dtype=float)
+        for bi in range(len(self.basis)):
+            answer[self.get_basic_element(bi)] = self.coefficients[bi, -1]
+
+        return [True, answer, self.delta[-1]]
+
+    def calc_delta(self):
+        self.delta = []
+        for v in range(len(self.si.variables)):
+            self.delta.append(-self.si.variables[v].k)
+            for r in range(len(self.si.restrictions)):
+                self.delta[v] += self.coefficients[r, v] * self.si.variables[self.basis[r]].k
+
+    def get_basic_element(self, idx: int):
+        if self.basis[idx] != -1:
+            return self.basis[idx]
+
+        self.basis[idx] += 1
+
+        while self.coefficients[idx, self.basis[idx]] == 0:
+            self.basis[idx] += 1
+
+        return self.basis[idx]
+
+    def make_new_basic(self, idx: int):
+        if self.no_answer_condition(idx):
+            raise NoAnswerError()
+
+        i = np.argmax(self.coefficients[:, idx])
+        self.basis[i] = idx
 
     def solve(self):
-        table = create_simplex_table(self.c, self.a, self.b)
-        print(table)
-        while not is_optimal(table):
-            table = step(table)
-            time.sleep(1)
-            print(table)
+        self.basis = self.get_default_basis()
 
-        res = table[-1, -1]
-        if inp.extremum_type == "min":
-            res *= -1
+        while True:
+            for bi in range(len(self.basis)):
+                be = self.get_basic_element(bi)
+                coef = self.coefficients[bi, be]
 
-        return res
+                for ei in range(len(self.coefficients[bi, :])):
+                    self.coefficients[bi, ei] /= coef
 
+                for bdi in range(len(self.basis)):
+                    if bdi == bi:
+                        continue
 
-def step(table):
-    """
-    Performs one step of the simplex method.
+                    coef = self.coefficients[bdi, be]
+                    self.coefficients[bdi, :] -= coef * self.coefficients[bi, :]
 
-    :param table: The simplex table.
-    :return: The next simplex table.
-    """
-    pivot = find_pivot(table)
-    print(f"Pivot: {pivot}")
-    return pivotize(table, pivot)
+                self.calc_delta()
+                wdi = self.get_index_worst_argument()
 
+                if self.check_optimality(wdi):
+                    return self.create_answer()
 
-def find_pivot(table):
-    """
-    Finds the pivot element.
-
-    :param table: The simplex table.
-    :return: The pivot element.
-    """
-
-    pivot_col = np.argmin(np.where(table[-1, :-1] < 0, table[-1, :-1], np.inf))
-    pivot_row = np.argmin(table[:-1, -1] / table[:-1, pivot_col])
-    return pivot_row, pivot_col
+                try:
+                    self.make_new_basic(wdi)
+                except NoAnswerError:
+                    return [False, None, None]
 
 
-def pivotize(table, pivot):
-    """
-    Pivotizes the table.
+def from_json(
+    path: str,
+) -> typing.List[Simplex]:
+    with open(path, 'r') as f:
+        data = json.load(f)
 
-    :param table: The simplex table.
-    :param pivot: The pivot element.
-    :return: The pivotized table.
-    """
+    return [
+        parse_test(test)
+        for test in data['tests']
+    ]
 
-    pivot_row, pivot_col = pivot
-    pivot_value = table[pivot_row, pivot_col]
-    table[pivot_row] /= pivot_value
-    for i, row in enumerate(table):
-        if i == pivot_row:
+
+def parse_test(
+    test: typing.Dict[str, typing.Any],
+) -> Simplex:
+    si = Simplex()
+    si.goal = test["goal"]["case"]
+
+    for k in test["goal"]["coefs"]:
+        si.add_original_variable(k)
+
+    for r in test['restrictions']:
+        c, a, v = r['coefs'], r['answer'], len(si.variables)
+        if r['case'] == 'equal':
+            si.restrictions.append(Restriction.create_equal_restriction(c, a))
             continue
-        table[i] -= row[pivot_col] * table[pivot_row]
-    return table
+
+        if r['case'] == 'greater':
+            si.restrictions.append(Restriction.create_greater_restriction(c, a, v))
+        elif r['case'] == 'less':
+            si.restrictions.append(Restriction.create_less_restriction(c, a, v))
+
+        si.add_non_original_variable()
+
+    for r in range(len(si.restrictions)):
+        si.restrictions[r].update_for_variables(si.variables)
+
+    si.add_original_variable(0)
+    return si
 
 
-def is_optimal(table):
-    """
-    Checks if the table is optimal.
-
-    :param table: The simplex table.
-    :return: True if the table is optimal, False otherwise.
-    """
-
-    return np.all(table[-1, :-1] >= 0)
+def solve_from_json(
+    path: str,
+) -> typing.List[typing.List[typing.Any]]:
+    sis = from_json(path)
+    return [Table(si).solve() for si in sis]
 
 
-def create_simplex_table(c, a, b):
-    """
-    Creates a simplex table.
-
-    :param c: The objective function coefficients.
-    :param a: The coefficients of the constraints.
-    :param b: The right hand side vector.
-    :return: The simplex table.
-    """
-
-    upd_a = np.hstack((a, np.zeros((a.shape[0], 1))))
-    table = np.hstack((upd_a, b.reshape(-1, 1)))
-    upd_c = np.hstack((-c, np.array([1, 0])))
-    table = np.vstack((table, upd_c))
-    return table
-
-
-def scan(
-    filename: str,
-) -> SimplexMethodInput:
-    """
-    Reads a file and returns the contents as a string.
-
-    File format:
-    1. Extremum type (min or max)
-    2. Objective function parameters separated by spaces, e.g. 1 2 3 for f(x) = x1 + 2x2 + 3x3
-    3. Constraints and signs separated by spaces, e.g. 1 2 3 <= 4 for 1x1 + 2x2 + 3x3 <= 4
-
-    :param filename: The name of the file to read.
-    :return: Parsed input.
-    """
-
-    with open(filename, "r") as file:
-        f = file.read()
-
-    extremum, obj_func, *constraints = f.splitlines()
-    return SimplexMethodInput(
-        extremum_type=extremum,
-        obj_func=obj_func,
-        constraints=constraints,
-    )
-
-
-if __name__ == "__main__":
-    inp = scan("test.txt")
-    method = SimplexMethod(inp)
-    print(method.solve())
+if __name__ == '__main__':
+    np.set_printoptions(precision=3, suppress=True)
+    for s in solve_from_json('test.json'):
+        print(s)
