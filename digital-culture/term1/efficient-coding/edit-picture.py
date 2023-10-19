@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 # to download, show, save my image
 from skimage.io import imread, imshow, imsave
 # my image
-img = imread('kek_black.jpg')
+img = imread('./docs/kek_black.jpg')
 # show me my image
 plt.imshow(img)
 plt.show()

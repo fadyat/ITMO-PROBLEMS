@@ -190,7 +190,7 @@ void print() {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    ifstream in("graphedges240.txt");
+    ifstream in("./docs/graphedges240.txt");
     in.is_open();
     int x, y;
     g.resize(1000);

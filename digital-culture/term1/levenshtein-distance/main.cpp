@@ -64,7 +64,7 @@ int levenshtein(string s1, string s2) {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    ifstream in("input.txt");
+    ifstream in("./docs/input.txt");
     in.is_open();
     string s;
     unordered_map<string, pair<int, string>> all;
@@ -86,7 +86,7 @@ int main() {
     cout << "Different wordforms: " << (int)all.size() << '\n' << '\n';
     in.close();
 
-    ifstream inn("dictionary.txt");
+    ifstream inn("./docs/dictionary.txt");
     inn.is_open();
     map<string, int> dict;
     bool now_string = true;
@@ -168,7 +168,7 @@ int main() {
     cout << "\nDifferent wordforms: " << dif_forms << '\n';
     cout << "Not in dictionary(potentional mistakes): " << forms1 << '\n';
 
-    ofstream out("answer.txt");
+    ofstream out("./docs/answer.txt");
     out.is_open();
     for(int i = 0; i < my_ans.size(); i++) {
         out << all[my_ans[i]].second << " ";
