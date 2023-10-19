@@ -1,14 +1,16 @@
-## Solutions
-
-> [SQL problems](problems.pdf) with some theoretical material
-
-- [1.](basics/basics.md) `SELECT`, `WHERE`, `FROM`
-- [2.](grouping/grouping.md) `ORDER BY`, `GROUP BY`
-- [3.](joins/joins.md) `JOINS`
-- [4.](subqueries/subqueries.md) `Subqueries`
-- [5.](cte/cte.md) `CTE - WITH AS`
-- [6.](window-fn/window-fn.md) `WF - OVER BY`
-
-
-## Conspect
-> [This is](conspect/pdf) a summary of the first 10 lectures in `latex`, converted to `pdf`. 
+<pre>
+├── <a href="./basics">basics</a>
+│   └── <a href="./basics.md">basics.md</a>
+├── <a href="./conspect">conspect</a>
+├── <a href="./cte">cte</a>
+│   └── <a href="./cte.md">cte.md</a>
+├── <a href="./grouping">grouping</a>
+│   └── <a href="./grouping.md">grouping.md</a>
+├── <a href="./joins">joins</a>
+│   └── <a href="./joins.md">joins.md</a>
+├── <a href="./subqueries">subqueries</a>
+│   └── <a href="./subqueries.md">subqueries.md</a>
+├── <a href="./window-fn">window-fn</a>
+│   └── <a href="./window-fn.md">window-fn.md</a>
+└── <a href="./problems.pdf">problems.pdf</a>
+</pre>

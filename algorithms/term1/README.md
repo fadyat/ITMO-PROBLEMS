@@ -39,17 +39,17 @@
 │   ├── <a href="./mstrings.cpp">mstrings.cpp</a>
 │   └── <a href="./qs-ms.cpp">qs-ms.cpp</a>
 └── <a href="./stack-queue-bs">stack-queue-bs</a>
-    ├── <a href="./_stack-queue-bs.pdf">_stack-queue-bs.pdf</a>
-    ├── <a href="./binsearch.cpp">binsearch.cpp</a>
-    ├── <a href="./garland.cpp">garland.cpp</a>
     ├── <a href="./using-array">using-array</a>
     │   ├── <a href="./correct-bracket-sequence.cpp">correct-bracket-sequence.cpp</a>
     │   ├── <a href="./postfix-notation.cpp">postfix-notation.cpp</a>
     │   ├── <a href="./queue.cpp">queue.cpp</a>
     │   └── <a href="./stack.cpp">stack.cpp</a>
-    └── <a href="./using-linked-list">using-linked-list</a>
-        ├── <a href="./correct-bracket-sequence.cpp">correct-bracket-sequence.cpp</a>
-        ├── <a href="./postfix-notation.cpp">postfix-notation.cpp</a>
-        ├── <a href="./queue.cpp">queue.cpp</a>
-        └── <a href="./stack.cpp">stack.cpp</a>
+    ├── <a href="./using-linked-list">using-linked-list</a>
+    │   ├── <a href="./correct-bracket-sequence.cpp">correct-bracket-sequence.cpp</a>
+    │   ├── <a href="./postfix-notation.cpp">postfix-notation.cpp</a>
+    │   ├── <a href="./queue.cpp">queue.cpp</a>
+    │   └── <a href="./stack.cpp">stack.cpp</a>
+    ├── <a href="./_stack-queue-bs.pdf">_stack-queue-bs.pdf</a>
+    ├── <a href="./binsearch.cpp">binsearch.cpp</a>
+    └── <a href="./garland.cpp">garland.cpp</a>
 </pre>
