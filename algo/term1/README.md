@@ -1,5 +1,4 @@
 <pre>
-├── <a href="./README.md">README.md</a>
 ├── <a href="./avl-tree">avl-tree</a>
 │   ├── <a href="./_avl-tree.pdf">_avl-tree.pdf</a>
 │   ├── <a href="./avl-set.cpp">avl-set.cpp</a>

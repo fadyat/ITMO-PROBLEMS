@@ -1,5 +1,4 @@
 <pre>
-├── <a href="./README.md">README.md</a>
 ├── <a href="./bfs">bfs</a>
 │   ├── <a href="./_bfs.pdf">_bfs.pdf</a>
 │   ├── <a href="./component.cpp">component.cpp</a>
@@ -10,7 +9,7 @@
 │   └── <a href="./unorientation.cpp">unorientation.cpp</a>
 ├── <a href="./dfs">dfs</a>
 │   ├── <a href="./_dfs.pdf">_dfs.pdf</a>
-│   ├── <a href="./bipartitegraph.cpp">bipartitegraph.cpp</a>
+│   ├── <a href="./bipartite-graph.cpp">bipartite-graph.cpp</a>
 │   ├── <a href="./finding-circle.cpp">finding-circle.cpp</a>
 │   ├── <a href="./game.cpp">game.cpp</a>
 │   ├── <a href="./graph-condensation.cpp">graph-condensation.cpp</a>

@@ -1,10 +1,10 @@
 ### Задание
 
-![](docs.png)
+![](./docs/1.png)
 
-![](docs.png)
+![](./docs/2.png)
 
-![](docs.png)
+![](./docs/3.png)
 
 ### Ход работы
 
