@@ -16,6 +16,7 @@ type readmeConfig struct {
 		Path     string `yaml:"path"`
 		TreeArgs string `yaml:"tree_args"`
 		Header   string `yaml:"header"`
+		Tail     string `yaml:"tail"`
 	} `yaml:"folders"`
 }
 
@@ -88,7 +89,7 @@ func buildIgnore() []string {
 // in the style of the tree command with the specified header name and shortlinks
 // to each directory.
 func treeStyleReadME(
-	startDir, header string,
+	startDir, header, tail string,
 	treeArgs []string,
 	submodules []gitModule,
 ) error {
@@ -122,6 +123,12 @@ func treeStyleReadME(
 			buildLinkWithParents(split[1:len(split)-3], submodules),
 		)
 	})
+
+	if tail != "" {
+		if _, err = readme.WriteString(tail + "\n"); err != nil {
+			log.Printf("error writing tail: %v", err)
+		}
+	}
 
 	return nil
 }
@@ -238,13 +245,13 @@ func main() {
 		log.Fatalf("error parsing .gitmodules: %v", err)
 	}
 
-	for _, folder := range c.Folders {
-		err = treeStyleReadME(folder.Path, folder.Header, strings.Split(folder.TreeArgs, " "), gitmodules)
+	for _, f := range c.Folders {
+		err = treeStyleReadME(f.Path, f.Header, f.Tail, strings.Split(f.TreeArgs, " "), gitmodules)
 		if err != nil {
-			log.Printf("error generating README for %s: %v", folder.Path, err)
+			log.Printf("error generating README for %s: %v", f.Path, err)
 			continue
 		}
 
-		log.Printf("generated README for %s", folder.Path)
+		log.Printf("generated README for %s", f.Path)
 	}
 }

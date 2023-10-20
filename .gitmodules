@@ -7,3 +7,12 @@
 [submodule "Computer-graphics"]
 	path = cgg
 	url = https://github.com/fadyat/itmo-cgg
+[submodule "mpp"]
+	path = mpp
+	url = https://github.com/fadyat/itmo-mpp
+[submodule "db-design"]
+	path = db-design
+	url = https://github.com/fadyat/itmo-db-design
+[submodule "modern-issues-cs"]
+	path = cs-issues
+	url = https://github.com/fadyat/speedy.git
