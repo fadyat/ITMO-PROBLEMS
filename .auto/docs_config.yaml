@@ -40,3 +40,9 @@ folders:
   - path: '../physics/term4'
   - path: '../programming/term1'
   - path: '../programming/term2'
+  - path: '../.'
+    tree_args: '-L 2'
+    header: |
+      <p align="center">
+          <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" />
+      </p>

@@ -1,32 +1,59 @@
 <p align="center">
     <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" />
 </p>
-
-| Course                           | I                                         | II                                         | III                                         | IV                                            | V                                                 | VI                                             |
-|----------------------------------|-------------------------------------------|--------------------------------------------|---------------------------------------------|-----------------------------------------------|---------------------------------------------------|------------------------------------------------|
-| Algorithms                       | [✔](algorithms/term1)                     | [✔](algorithms/term2)                      |                                             |                                               |                                                   |                                                |
-| Applied-mathematics              |                                           |                                            |                                             | [✔](applied-math/IV%20semester)        | [✔](applied-math/V%20semester)             |                                                |
-| Computer-graphics                |                                           |                                            |                                             |                                               | [✔](https://github.com/fadyat/itmo-cgg)           |                                                |
-| Databases                        |                                           |                                            |                                             | [✔](db/IV%20semester)                  |                                                   |                                                |
-| Dev-tools                        |                                           |                                            |                                             |                                               | [✔](https://github.com/fadyat/itmo-devtools)      |                                                |
-| Digital-culture                  | [✔](digital-culture/I%20semester)         |                                            |                                             |                                               |                                                   |                                                |
-| Discrete-math                    | [✔](discrete-math/I%20semester)           | [✔](discrete-math/II%20semester)           |                                             |                                               |                                                   |                                                |
-| ECM                              | [✔](ecm/I%20semester)                     |                                            |                                             |                                               |                                                   |                                                |
-| English                          | [✔](english/I%20semester)               | [✔](english/II%20semester)               | [✔](english/III%20semester)               | [✔](english/IV%20semester)                  | [✔](english/V%20semester)                       | [✔](english/VI%20semester)                   |
-| Information systems architecture |                                           |                                            |                                             |                                               |                                                   | [✔](info-sys/VI%20semester)                       |
-| Life-Safety                      |                                           |                                            | [✔](life-safety/III%20semester)           |                                               |                                                   |                                                |
-| Linear-algebra                   | [✔](linear-algebra/I%20semester)          | [✔](linear-algebra/II%20semester)          |                                             |                                               |                                                   |                                                |
-| Mathematical-analysis            | [✔](./Mathematical-analysis/I%20semester) | [✔](./Mathematical-analysis/II%20semester) | [✔](./Mathematical-analysis/III%20semester) |                                               |                                                   |                                                |
-| Mathematical-statistics          |                                           |                                            |                                             | [✔](./Mathematical-statistics/IV%20semester)  |                                                   |                                                |
-| Machine-learning                 |                                           |                                            |                                             |                                               | [✔](ml/V%20semester)                              |                                                |
-| OOP                              |                                           |                                            | [✔](oop/III%20semester)                     |                                               |                                                   |                                                |
-| Operating-systems                |                                           |                                            | [✔](os/III%20semester)                      |                                               |                                                   |                                                |
-| Philosophy                       |                                           |                                            |                                             |                                               |                                                   | [✔](./Philosophy/VI%20semester)                |
-| Physics                          |                                           | [✔](physics/II%20semester)               | [✔](physics/III%20semester)               | [✔](physics/IV%20semester)                  |                                                   |                                                |
-| Probability-theory               |                                           |                                            | [✔](./Probability-theory/III%20semester)    |                                               |                                                   |                                                |
-| Programming                      | [✔](programming/I%20semester)           | [✔](programming/II%20semester)           |                                             |                                               |                                                   |                                                |
-| Programming-technologies         |                                           |                                            |                                             | [✔](tech/IV%20semester) |                                                   |                                                |
-| Telecommunication systems        |                                           |                                            |                                             |                                               |                                                   | [✔](telecom/VI%20semester) |
-| UML analysis and design          |                                           |                                            |                                             |                                               |                                                   | [✔](uml/VI%20semester)                       |
-| Web-programming                  |                                           |                                            |                                             |                                               | [✔](https://github.com/fadyat/itmo-web)           | [✔](https://github.com/fadyat/itmo-web)        |
-| Windows-server-administration    |                                           |                                            |                                             |                                               | [✔](windows/V%20semester) |                                                |
+<pre>
+├── <a href="./algorithms">algorithms</a>
+│   ├── <a href="./algorithms/term1">term1</a>
+│   └── <a href="./algorithms/term2">term2</a>
+├── <a href="./applied-math">applied-math</a>
+│   ├── <a href="./applied-math/term4">term4</a>
+│   └── <a href="./applied-math/term5">term5</a>
+├── <a href="https://github.com/fadyat/itmo-cgg">cgg</a>
+├── <a href="./db">db</a>
+│   └── <a href="./db/term4">term4</a>
+├── <a href="https://github.com/fadyat/itmo-devtools">dev-tools</a>
+├── <a href="./digital-culture">digital-culture</a>
+│   └── <a href="./digital-culture/term1">term1</a>
+├── <a href="./discrete-math">discrete-math</a>
+│   ├── <a href="./discrete-math/term1">term1</a>
+│   └── <a href="./discrete-math/term2">term2</a>
+├── <a href="./ecm">ecm</a>
+│   └── <a href="./ecm/term1">term1</a>
+├── <a href="./english">english</a>
+│   ├── <a href="./english/term1">term1</a>
+│   ├── <a href="./english/term2">term2</a>
+│   ├── <a href="./english/term3">term3</a>
+│   ├── <a href="./english/term4">term4</a>
+│   ├── <a href="./english/term5">term5</a>
+│   └── <a href="./english/term6">term6</a>
+├── <a href="./info-sys">info-sys</a>
+│   └── <a href="./info-sys/term6">term6</a>
+├── <a href="./life-safety">life-safety</a>
+│   └── <a href="./life-safety/term3">term3</a>
+├── <a href="./linear-algebra">linear-algebra</a>
+│   ├── <a href="./linear-algebra/term1">term1</a>
+│   └── <a href="./linear-algebra/term2">term2</a>
+├── <a href="./ml">ml</a>
+│   └── <a href="./ml/term5">term5</a>
+├── <a href="./oop">oop</a>
+│   └── <a href="./oop/term3">term3</a>
+├── <a href="./os">os</a>
+│   └── <a href="./os/term3">term3</a>
+├── <a href="./physics">physics</a>
+│   ├── <a href="./physics/term2">term2</a>
+│   ├── <a href="./physics/term3">term3</a>
+│   └── <a href="./physics/term4">term4</a>
+├── <a href="./programming">programming</a>
+│   ├── <a href="./programming/term1">term1</a>
+│   └── <a href="./programming/term2">term2</a>
+├── <a href="./tech">tech</a>
+│   └── <a href="./tech/term4">term4</a>
+├── <a href="./telecom">telecom</a>
+│   └── <a href="./telecom/term6">term6</a>
+├── <a href="./uml">uml</a>
+│   └── <a href="./uml/term6">term6</a>
+├── <a href="https://github.com/fadyat/itmo-web">web</a>
+├── <a href="./windows">windows</a>
+│   └── <a href="./windows/term5">term5</a>
+└── <a href="./_config.yml">_config.yml</a>
+</pre>

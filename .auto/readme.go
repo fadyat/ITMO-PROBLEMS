@@ -34,14 +34,6 @@ func parseReadmeArgs() readmeConfig {
 	return config
 }
 
-func isDirNameStart(r rune) bool {
-	return isLetter(r) || r == '.' || r == '_'
-}
-
-func asLink(link, val string) string {
-	return fmt.Sprintf("<a href=\"%s\">%s</a>", link, val)
-}
-
 func takeWhile(
 	s string,
 	acceptable func(rune) bool,
@@ -94,7 +86,11 @@ func buildIgnore() []string {
 // treeStyleReadME generates a README.md file from the current directory
 // in the style of the tree command with the specified header name and shortlinks
 // to each directory.
-func treeStyleReadME(startDir, header string, treeArgs []string) error {
+func treeStyleReadME(
+	startDir, header string,
+	treeArgs []string,
+	submodules []gitModule,
+) error {
 	args := append([]string{startDir, "--dirsfirst"}, buildIgnore()...)
 
 	if treeArgs[0] != "" {
@@ -121,13 +117,18 @@ func treeStyleReadME(startDir, header string, treeArgs []string) error {
 
 	var split = strings.Split(string(out), "\n")
 	insideCodeBlock(readme, func() {
-		_, _ = readme.WriteString(buildLinkWithParents(split[1 : len(split)-3]))
+		_, _ = readme.WriteString(
+			buildLinkWithParents(split[1:len(split)-3], submodules),
+		)
 	})
 
 	return nil
 }
 
-func buildLinkWithParents(split []string) string {
+func buildLinkWithParents(
+	split []string,
+	submodules []gitModule,
+) string {
 	// idea: all parents are indented, so we can use the indentation to determine
 	// the parent directories.
 
@@ -149,13 +150,13 @@ func buildLinkWithParents(split []string) string {
 		return ""
 	}
 
-	asMarkdownLink := func(s string) string {
+	asMarkdownLink := func(s string, linkBuilder func() string) string {
 		return takeWhile(
 			s,
 			func(r rune) bool { return !isDirNameStart(r) },
 			func(representation string) string {
-				var link = strings.Join(parents, "/")
-				return asLink(link, representation)
+				var link = linkBuilder()
+				return fmt.Sprintf("<a href=\"%s\">%s</a>", link, representation)
 			},
 		)
 	}
@@ -173,9 +174,37 @@ func buildLinkWithParents(split []string) string {
 		return result
 	}
 
+	searchModule := func(s string) string {
+		for _, module := range submodules {
+			if module.Path == s {
+				log.Printf("found module %s", module.Name)
+				return module.URL
+			}
+		}
+
+		return ""
+	}
+
+	var (
+		isModuleSubDir bool
+		linkBuilder    = func() string { return strings.Join(parents, "/") }
+	)
 	for _, line := range split {
 		currentIndent, storedIndent := calculateIndent(line), top(indents)
 		cleaned := cleanWord(line)
+
+		if isModuleSubDir && currentIndent > storedIndent {
+			log.Printf("skipping %s, it's a submodule part", cleaned)
+			continue
+		}
+
+		isModuleSubDir = false
+		linkBuilder = func() string { return strings.Join(parents, "/") }
+		submoduleURL := searchModule(cleaned)
+		if submoduleURL != "" {
+			isModuleSubDir = true
+			linkBuilder = func() string { return submoduleURL }
+		}
 
 		if currentIndent > storedIndent {
 			parents = append(parents, cleaned)
@@ -192,42 +221,25 @@ func buildLinkWithParents(split []string) string {
 		}
 
 		indents = append(indents, currentIndent)
-		sb.WriteString(asMarkdownLink(line) + "\n")
+		sb.WriteString(asMarkdownLink(line, linkBuilder) + "\n")
 	}
 
 	return sb.String()
 }
 
-func top[T any](a []T) T {
-	if len(a) == 0 {
-		return a[0]
-	}
-
-	return a[len(a)-1]
-}
-
-func pop[T any](a []T) []T {
-	if len(a) == 0 {
-		return a
-	}
-
-	return a[:len(a)-1]
-}
-
-func replaceTop[T any](a []T, on T) []T {
-	if len(a) == 0 {
-		return append(a, on)
-	}
-
-	a[len(a)-1] = on
-	return a
-}
-
 func main() {
-	var c = parseReadmeArgs()
+	var (
+		c               = parseReadmeArgs()
+		gitmodules, err = parseGitModules("../.")
+	)
+
+	if err != nil {
+		log.Fatalf("error parsing .gitmodules: %v", err)
+	}
 
 	for _, folder := range c.Folders {
-		if err := treeStyleReadME(folder.Path, folder.Header, strings.Split(folder.TreeArgs, " ")); err != nil {
+		err = treeStyleReadME(folder.Path, folder.Header, strings.Split(folder.TreeArgs, " "), gitmodules)
+		if err != nil {
 			log.Printf("error generating README for %s: %v", folder.Path, err)
 			continue
 		}
