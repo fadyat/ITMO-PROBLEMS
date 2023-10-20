@@ -6,33 +6,33 @@
 
 1. *Приведите скриншоты групповых политик AD из части 4.*
 
-![Untitled](docs/Untitled%201.png)
+![Untitled](docs/Untitled 1.png)
 
-![Untitled](docs/Untitled%202.png)
+![Untitled](docs/Untitled 2.png)
 
-![Untitled](docs/Untitled%203.png)
+![Untitled](docs/Untitled 3.png)
 
-![Untitled](docs/Untitled%204.png)
+![Untitled](docs/Untitled 4.png)
 
-![Untitled](docs/Untitled%205.png)
+![Untitled](docs/Untitled 5.png)
 
 1.  *Приведите скрипт из части 5.*
 
-![Untitled](docs/Untitled%206.png)
+![Untitled](docs/Untitled 6.png)
 
-![Untitled](docs/Untitled%207.png)
+![Untitled](docs/Untitled 7.png)
 
 1. *Как с помощью Powershell восстановить удалённый объект AD?*
 
-![Untitled](docs/Untitled%208.png)
+![Untitled](docs/Untitled 8.png)
 
 1. *Приведите конвейер команд из ч.6 п.3.*
 
-![Untitled](docs/Untitled%209.png)
+![Untitled](docs/Untitled 9.png)
 
 1. *Приведите конвейер команд из ч.6 п.4.*
 
-![Untitled](docs/Untitled%2010.png)
+![Untitled](docs/Untitled 10.png)
 
 ## Вопросы
 
@@ -62,7 +62,7 @@
 6. *Как восстановить пароль DSRM, если он был утерян после установки?*
 В случае необходимости сброса пароля DSRM необходимо воспользоваться программой обслуживания служб Active Directory ntdsutil.exe из под учетной записи с правами администратора
 
-![Untitled](docs/Untitled%2011.png)
+![Untitled](docs/Untitled 11.png)
 
 1. *Зачем нужно имя домена NetBIOS?*
 Нужен для обнаружения компьютеров в сети, построенной на базе TCP/IP. Не обязателен — если его отключить, сеть будет работать, но в сетевом окружении пропадет список узлов. Имена в сети NetBIOS имеют ограничение в 15 символов.

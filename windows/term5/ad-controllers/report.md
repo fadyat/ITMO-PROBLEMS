@@ -6,29 +6,29 @@
 
 1. Консольные выводы по Части 3, п. 1-2
 
-![Untitled](docs/Untitled%201.png)
+![Untitled](docs/Untitled 1.png)
 
-![Untitled](docs/Untitled%202.png)
+![Untitled](docs/Untitled 2.png)
 
 1. Ответ на вопрос из Части 3., п. 3
 
-![Untitled](docs/Untitled%203.png)
+![Untitled](docs/Untitled 3.png)
 
 1. Командные строки из Части 4, п 1-2.
 
-![Untitled](docs/Untitled%204.png)
+![Untitled](docs/Untitled 4.png)
 
-![Untitled](docs/Untitled%205.png)
+![Untitled](docs/Untitled 5.png)
 
-![Untitled](docs/Untitled%206.png)
+![Untitled](docs/Untitled 6.png)
 
 1. Приведите описание процесса переноса ролей из части 5, п. 2, 5
 
-![Untitled](docs/Untitled%207.png)
+![Untitled](docs/Untitled 7.png)
 
-![Untitled](docs/Untitled%208.png)
+![Untitled](docs/Untitled 8.png)
 
-![Untitled](docs/Untitled%209.png)
+![Untitled](docs/Untitled 9.png)
 
 ## Вопросы
 
@@ -80,7 +80,7 @@ netdom join %computername% /domain:domain.ru /userd:DOMAIN\administrator /passwo
 
 1. *Как ввести компьютер в домен с помощью утилиты PowerShell?*
 
-![Untitled](docs/Untitled%2010.png)
+![Untitled](docs/Untitled 10.png)
 
 1. *Как запустить процесс от имени другого пользователя с помощью утилиты runas?*
 
@@ -90,4 +90,4 @@ runas /user:administrator “<путь до процесса>”
 
 1. *Как запустить процесс от имени другого пользователя с помощью командлета Invoke-Command?*
 
-![Untitled](docs/Untitled%2011.png)
+![Untitled](docs/Untitled 11.png)

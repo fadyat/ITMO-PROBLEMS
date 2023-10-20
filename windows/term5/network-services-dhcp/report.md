@@ -6,36 +6,36 @@
 
 1. *Приведите секцию добавления области из файла дампа конфигурации из п.8, Часть 2.*
 
-![Untitled](docs/Untitled%201.png)
+![Untitled](docs/Untitled 1.png)
 
 1. *Приведите консольный выводы и скриншоты п. 3, 7, 8, 9 части 3. Дайте пояснения, 
 объясните различия.*
     - **Пункт 3**
     
-    ![Untitled](docs/Untitled%202.png)
+    ![Untitled](docs/Untitled 2.png)
     
     - **Пункт 7**
     
-    ![Untitled](docs/Untitled%203.png)
+    ![Untitled](docs/Untitled 3.png)
     
     - **Пункт 8**
     
-    ![Untitled](docs/Untitled%204.png)
+    ![Untitled](docs/Untitled 4.png)
     
     - **Пункт 9**
     
-    ![Untitled](docs/Untitled%205.png)
+    ![Untitled](docs/Untitled 5.png)
     
 
 1. *Приведите консольный выводы и скриншоты п. 7-10 части 4. Дайте пояснения, объясните различия.*
 
-![Untitled](docs/Untitled%206.png)
+![Untitled](docs/Untitled 6.png)
 
-![Untitled](docs/Untitled%207.png)
+![Untitled](docs/Untitled 7.png)
 
-![Untitled](docs/Untitled%208.png)
+![Untitled](docs/Untitled 8.png)
 
-![Untitled](docs/Untitled%209.png)
+![Untitled](docs/Untitled 9.png)
 
 1. *Приведите PS команду экспорта конфигурации DHCP сервера в файл.*
 
@@ -45,9 +45,9 @@ netsh dhcp server dump > C:\bak-dhcp\dump.txt
 
 1. *Приведите текст скрипта Части 5.*
 
-![Untitled](docs/Untitled%2010.png)
+![Untitled](docs/Untitled 10.png)
 
-![Untitled](docs/Untitled%2011.png)
+![Untitled](docs/Untitled 11.png)
 
 ## Вопросы
 
@@ -99,4 +99,4 @@ netsh dhcp server dump > C:\bak-dhcp\dump.txt
     
 7. *Как переименовать хост с помощью PowerShell?*
 
-![Untitled](docs/Untitled%2012.png)
+![Untitled](docs/Untitled 12.png)
