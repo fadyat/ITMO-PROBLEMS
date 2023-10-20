@@ -5,5 +5,5 @@
 	path = dev-tools
 	url = https://github.com/fadyat/itmo-devtools
 [submodule "Computer-graphics"]
-	path = computer-graphics
+	path = cgg
 	url = https://github.com/fadyat/itmo-cgg
