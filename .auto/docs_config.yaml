@@ -1,8 +1,8 @@
 folders:
   - path: '../algorithms/term1'
   - path: '../algorithms/term2'
-  - path: '../applied-mathematics/term4'
-  - path: '../applied-mathematics/term5'
+  - path: '../applied-math/term4'
+  - path: '../applied-math/term5'
   - path: '../db/term4'
   - path: '../digital-culture/term1'
   - path: '../discrete-math/term1'
