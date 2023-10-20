@@ -1,24 +1,18 @@
-### Problems
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Problems/info.pdf"> All problems. </a>
-
-### Homeworks
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Homeworks/HW1"> Homework 1. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Homeworks/HW2"> Homework 2. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Homeworks/HW3"> Homework 3. </a>
-
-### Labs
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW1"> Lab 1. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW2"> Lab 2. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW3"> Lab 3. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW4"> Lab 4. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW5"> Lab 5. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Electronic-counter-machine/I%20semester/Labs/LW6"> Lab 6. </a>
+<pre>
+├── <a href="./computing-device">computing-device</a>
+│   ├── <a href="./computing-device/computing-device-hw.pdf">computing-device-hw.pdf</a>
+│   └── <a href="./computing-device/computing-device.pdf">computing-device.pdf</a>
+├── <a href="./conditions">conditions</a>
+│   └── <a href="./conditions/conditions.pdf">conditions.pdf</a>
+├── <a href="./input">input</a>
+│   └── <a href="./input/input.pdf">input.pdf</a>
+├── <a href="./linear">linear</a>
+│   ├── <a href="./linear/linear-hw.pdf">linear-hw.pdf</a>
+│   └── <a href="./linear/linear.pdf">linear.pdf</a>
+├── <a href="./loops">loops</a>
+│   ├── <a href="./loops/loops-hw.pdf">loops-hw.pdf</a>
+│   └── <a href="./loops/loops.pdf">loops.pdf</a>
+├── <a href="./subprogram">subprogram</a>
+│   └── <a href="./subprogram/subprogram.pdf">subprogram.pdf</a>
+└── <a href="./problems.pdf">problems.pdf</a>
+</pre>
