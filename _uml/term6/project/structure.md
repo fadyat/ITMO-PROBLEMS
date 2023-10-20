@@ -42,9 +42,9 @@
 
 ## Диаграмма классов
 
-![](./docs/task2/classes.png)
+![](docs/task2/classes.png)
 
 ## Диаграмма размещения
 
-![](./docs/task2/deploy.png)
+![](docs/task2/deploy.png)
 

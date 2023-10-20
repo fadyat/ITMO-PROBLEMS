@@ -4,19 +4,19 @@
 
 Ниже представлена диаграмма состояний для `Solution`:
 
-![](./docs/task3/state.png)
+![](docs/task3/state.png)
 
 ## Диаграммы последовательности
 
 ### Создание класса
 
-![](./docs/task3/class-seq.png)
+![](docs/task3/class-seq.png)
 
 ### Процесс ревью
 
-![](./docs/task3/review-seq.png)
+![](docs/task3/review-seq.png)
 
 ### Отправка решения
 
-![](./docs/task3/solution-seq.png)
+![](docs/task3/solution-seq.png)
 

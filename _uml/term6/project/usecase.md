@@ -99,7 +99,7 @@
 
 ## Диаграмма вариантов использования.
 
-![](./docs/task1/activity.png)
+![](docs/task1/activity.png)
 
 ## Выбор основных вариантов использования.
 
@@ -124,6 +124,6 @@
 
 ## Диаграммы деятельности для выбранных вариантов использования.
 
-![](./docs/task1/create-class.png)
-![](./docs/task1/review.png)
-![](./docs/task1/submit-solution.png)
+![](docs/task1/create-class.png)
+![](docs/task1/review.png)
+![](docs/task1/submit-solution.png)
