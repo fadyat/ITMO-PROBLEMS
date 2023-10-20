@@ -29,3 +29,9 @@ folders:
       - `Java server`, `Anltr parser`, `C# client`, `Roslyn API`
       - `Codeanalyzer` for inverting `if statement`, for detecting unused `private fields`
       - `Distributed file system`
+  - path: '../english/term1'
+  - path: '../english/term2'
+  - path: '../english/term3'
+  - path: '../english/term4'
+  - path: '../english/term5'
+  - path: '../english/term6'
