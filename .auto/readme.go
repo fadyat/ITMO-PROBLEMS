@@ -15,6 +15,7 @@ type readmeConfig struct {
 	Folders []struct {
 		Path     string `yaml:"path"`
 		TreeArgs string `yaml:"tree_args"`
+		Header   string `yaml:"header"`
 	} `yaml:"folders"`
 }
 
@@ -92,7 +93,7 @@ func buildIgnore() []string {
 // treeStyleReadME generates a README.md file from the current directory
 // in the style of the tree command with the specified header name and shortlinks
 // to each directory.
-func treeStyleReadME(startDir string, treeArgs []string) error {
+func treeStyleReadME(startDir, header string, treeArgs []string) error {
 	args := append([]string{startDir, "--dirsfirst"}, buildIgnore()...)
 
 	if treeArgs[0] != "" {
@@ -110,6 +111,12 @@ func treeStyleReadME(startDir string, treeArgs []string) error {
 		return err
 	}
 	defer func() { _ = readme.Close() }()
+
+	if header != "" {
+		if _, err = readme.WriteString(header + "\n"); err != nil {
+			log.Printf("error writing header: %v", err)
+		}
+	}
 
 	var split = strings.Split(string(out), "\n")
 	insideCodeBlock(readme, func() {
@@ -219,7 +226,7 @@ func main() {
 	var c = parseReadmeArgs()
 
 	for _, folder := range c.Folders {
-		if err := treeStyleReadME(folder.Path, strings.Split(folder.TreeArgs, " ")); err != nil {
+		if err := treeStyleReadME(folder.Path, folder.Header, strings.Split(folder.TreeArgs, " ")); err != nil {
 			log.Printf("error generating README for %s: %v", folder.Path, err)
 			continue
 		}

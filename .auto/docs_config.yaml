@@ -20,3 +20,12 @@ folders:
     tree_args: '-L 1'
   - path: '../os/term3'
     tree_args: '-L 1'
+  - path: '../tech/term4'
+    tree_args: '-L 1'
+    header: |
+      ### Solutions
+
+      - `Languages interop`, `FP in F#, Scala`, `Package management`, `Benchmarking`, `Code analysis` using `dotMemory`, `dotTrace`
+      - `Java server`, `Anltr parser`, `C# client`, `Roslyn API`
+      - `Codeanalyzer` for inverting `if statement`, for detecting unused `private fields`
+      - `Distributed file system`
