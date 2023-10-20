@@ -15,6 +15,7 @@ folders:
   - path: '../uml/term6'
   - path: '../telecom/term6'
   - path: '../windows/term5'
+  - path: '../info-sys/term6'
   - path: '../oop/term3'
     tree_args: '-L 1'
   - path: '../os/term3'
