@@ -1,0 +1,48 @@
+folders:
+  - path: '../algorithms/term1'
+  - path: '../algorithms/term2'
+  - path: '../applied-math/term4'
+  - path: '../applied-math/term5'
+  - path: '../db/term4'
+  - path: '../digital-culture/term1'
+  - path: '../discrete-math/term1'
+  - path: '../discrete-math/term2'
+  - path: '../ecm/term1'
+  - path: '../linear-algebra/term1'
+  - path: '../linear-algebra/term2'
+  - path: '../ml/term5'
+  - path: '../life-safety/term3'
+  - path: '../uml/term6'
+  - path: '../telecom/term6'
+  - path: '../windows/term5'
+  - path: '../info-sys/term6'
+  - path: '../oop/term3'
+    tree_args: '-L 1'
+  - path: '../os/term3'
+    tree_args: '-L 1'
+  - path: '../tech/term4'
+    tree_args: '-L 1'
+    header: |
+      ### Solutions
+
+      - `Languages interop`, `FP in F#, Scala`, `Package management`, `Benchmarking`, `Code analysis` using `dotMemory`, `dotTrace`
+      - `Java server`, `Anltr parser`, `C# client`, `Roslyn API`
+      - `Codeanalyzer` for inverting `if statement`, for detecting unused `private fields`
+      - `Distributed file system`
+  - path: '../english/term1'
+  - path: '../english/term2'
+  - path: '../english/term3'
+  - path: '../english/term4'
+  - path: '../english/term5'
+  - path: '../english/term6'
+  - path: '../physics/term2'
+  - path: '../physics/term3'
+  - path: '../physics/term4'
+  - path: '../programming/term1'
+  - path: '../programming/term2'
+  - path: '../.'
+    tree_args: '-L 2'
+    header: |
+      <p align="center">
+          <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" />
+      </p>
