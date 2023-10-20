@@ -1,44 +1,23 @@
-### Homeworks.
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw1-matrix.pdf"> Homework 1. Matrix. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw2-determinant.pdf"> Homework 2. Determinant. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw3-inverse-matrix.pdf"> Homework 3. Inverse matrix. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw4-vector.pdf"> Homework 4. Vector. </a>
-
-+ <!-- <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw4-vector.pdf"> --> Homework 5. <!-- </a> -->
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw6-straight-plane.pdf"> Homework 6. Straight plane. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw7-second-order-curves.pdf"> Homework 7. Second order curves. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw8-second-order-curves.pdf"> Homework 8. Second order curves. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hw9-complex-numbers.pdf"> Homework 9. Complex numbers.. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hww10-non-uniformSLAE.pdf"> Homework 10. Non-uniform SLAE. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Homeworks/hww11-non-uniformSLAE.pdf"> Homework 11. Non-uniform SLAE. </a>
-
-### Labs
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Problems/lab1.pdf"> 1. </a> #
-<a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Solutions/lab1.py"> Matrix operations. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Problems/lab2.pdf"> 2. </a> #
-<a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Solutions/lab2.py"> Jolly gunner. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Problems/lab3.pdf"> 3. </a> # <!-- <a href = "https://github.com/fadyat/ITMO-PUBLIC/blob/master/Linal/I%20semester/Labs/Solutions/lab3.py"> --> Tracing. <!-- </a> \[Python] -->
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Labs/Problems/lab4.pdf"> 4. </a> # <!-- <a href = "https://github.com/fadyat/ITMO-PUBLIC/blob/master/Linal/I%20semester/Labs/Solutions/lab4.py"> --> Platon affairs. <!-- </a> \[Python] -->
-
-### Tests.
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Tests/test1.pdf"> Test 1. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Tests/test2.pdf"> Test 2. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Tests/test2.pdf"> Test 3. </a>
-
-+ <a href = "https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Linal/I%20semester/Tests/rubezhka.pdf"> Midterm. </a>
+<pre>
+├── <a href="./curves">curves</a>
+│   ├── <a href="./curves/hw6-straight-plane.pdf">hw6-straight-plane.pdf</a>
+│   ├── <a href="./curves/hw7-second-order-curves.pdf">hw7-second-order-curves.pdf</a>
+│   ├── <a href="./curves/hw8-second-order-curves.pdf">hw8-second-order-curves.pdf</a>
+│   └── <a href="./curves/test.pdf">test.pdf</a>
+├── <a href="./matrix">matrix</a>
+│   ├── <a href="./matrix/cheerful-gunner.pdf">cheerful-gunner.pdf</a>
+│   ├── <a href="./matrix/cheerful-gunner.py">cheerful-gunner.py</a>
+│   ├── <a href="./matrix/determinant.pdf">determinant.pdf</a>
+│   ├── <a href="./matrix/inverse-matrix.pdf">inverse-matrix.pdf</a>
+│   ├── <a href="./matrix/matrix-impl.pdf">matrix-impl.pdf</a>
+│   ├── <a href="./matrix/matrix.pdf">matrix.pdf</a>
+│   ├── <a href="./matrix/matrix.py">matrix.py</a>
+│   ├── <a href="./matrix/test.pdf">test.pdf</a>
+│   └── <a href="./matrix/vector.pdf">vector.pdf</a>
+└── <a href="./non-uniform-sole">non-uniform-sole</a>
+    ├── <a href="./non-uniform-sole/complex-numbers.pdf">complex-numbers.pdf</a>
+    ├── <a href="./non-uniform-sole/midterm.pdf">midterm.pdf</a>
+    ├── <a href="./non-uniform-sole/non-uniform-sole-v1.pdf">non-uniform-sole-v1.pdf</a>
+    ├── <a href="./non-uniform-sole/non-uniform-sole-v2.pdf">non-uniform-sole-v2.pdf</a>
+    └── <a href="./non-uniform-sole/test.pdf">test.pdf</a>
+</pre>
