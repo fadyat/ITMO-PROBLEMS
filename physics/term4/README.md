@@ -1,13 +1,19 @@
-## Modeling
-
-- [Black body](modeling/black-body/solution.ipynb)
-- [Case in reserve](modeling/case-in-reserve/solution.ipynb) 
-
-## Solutions
-
-- [5.04](rydberg-constant /task.pdf) # [Определение постоянной Ридберга для атомного водорода](rydberg-constant /rydberg-constant.pdf)
-- [5.06](quantum-cryptography/task.pdf) # [Изучение принципов работы квантовой криптографии](quantum-cryptography/quantum-cryptography.pdf)
-- [5.07](planck-constant/task.pdf) # [Определение постоянной Планка методом задерживающего потенциала](./Solutions/5.07)
-- [Basic](ibm-quantum/basic.pdf) quantum computer theory in `IBM Quantum`
-- [Grover's algorithm](ibm-quantum/grover-algo.pdf) using `IBM Quantum` 
-
+<pre>
+├── <a href="./ibm-quantum">ibm-quantum</a>
+│   ├── <a href="./ibm-quantum/basic.pdf">basic.pdf</a>
+│   └── <a href="./ibm-quantum/grover-algo.pdf">grover-algo.pdf</a>
+├── <a href="./modeling">modeling</a>
+│   ├── <a href="./modeling/black-body">black-body</a>
+│   │   └── <a href="./modeling/black-body/solution.ipynb">solution.ipynb</a>
+│   └── <a href="./modeling/case-in-reserve">case-in-reserve</a>
+│       └── <a href="./modeling/case-in-reserve/solution.ipynb">solution.ipynb</a>
+├── <a href="./planck-constant">planck-constant</a>
+│   ├── <a href="./planck-constant/planck-constant.pdf">planck-constant.pdf</a>
+│   └── <a href="./planck-constant/task.pdf">task.pdf</a>
+├── <a href="./quantum-cryptography">quantum-cryptography</a>
+│   ├── <a href="./quantum-cryptography/quantum-cryptography.pdf">quantum-cryptography.pdf</a>
+│   └── <a href="./quantum-cryptography/task.pdf">task.pdf</a>
+└── <a href="./rydberg-constant ">rydberg-constant </a>
+    ├── <a href="./rydberg-constant /rydberg-constant.pdf">rydberg-constant.pdf</a>
+    └── <a href="./rydberg-constant /task.pdf">task.pdf</a>
+</pre>

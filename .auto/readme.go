@@ -72,6 +72,7 @@ func insideCodeBlock(f *os.File, fn func()) {
 var (
 	ignoreFiles = []string{
 		"docs",
+		"data",
 		"README.md",
 		"pdf",
 		"latex",

@@ -35,3 +35,6 @@ folders:
   - path: '../english/term4'
   - path: '../english/term5'
   - path: '../english/term6'
+  - path: '../physics/term2'
+  - path: '../physics/term3'
+  - path: '../physics/term4'

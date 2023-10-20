@@ -1,14 +1,24 @@
-### Laboratory works:
-- [1.24v](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Problems/lab1-24v.pdf) # [Оборотный маятник Картера](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Solutions/1.24v/1.24.pdf)
-- [3.10](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Problems/lab3-10.pdf) &nbsp; # [Изучение свободных затухающих электромагнитных колебаний](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Solutions/3.10/3-10.pdf)
-- [3.11](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Problems/lab3-11.pdf) &nbsp;&nbsp; # [Вынужденные электромагнитные колебания в последовательном колебательном контуре](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Solutions/3.11/3-11.pdf)
-- [4.03](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Problems/lab4-03.pdf) &nbsp; # [Определение радиуса кривизны линзы по интерференционной картине колец Ньютона](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Solutions/4.03/4-03.pdf)
-- [4.09](https://github.com/fadyat/ITMO-PROBLEMS/tree/master/Physics/III%20semester/Problems/lab4-09.pdf) &nbsp; # [Исследование поляризации света (стопа Столетова)](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Solutions/4.09/4-09.pdf)
-
-### Modeling:
-- [Маятник Фуко](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Modeling/mod1/mod1.pdf)
-- [Гомография](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Modeling/mod1/mod2.pdf)
-
-### Tests:
-- [1.](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Test/test1-task.pdf) &nbsp;# [Test 1](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Test/test1-solution.pdf)
-- [2.](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Test/test2-task.pdf) # [Test 2](https://github.com/fadyat/ITMO-PROBLEMS/blob/master/Physics/III%20semester/Test/test2-solution.pdf)
+<pre>
+├── <a href="./carter-reversible-pendulum">carter-reversible-pendulum</a>
+│   ├── <a href="./carter-reversible-pendulum/carter-reversible-pendulum.pdf">carter-reversible-pendulum.pdf</a>
+│   └── <a href="./carter-reversible-pendulum/task.pdf">task.pdf</a>
+├── <a href="./forced-em-oscillations">forced-em-oscillations</a>
+│   ├── <a href="./forced-em-oscillations/forced-em-oscillations.pdf">forced-em-oscillations.pdf</a>
+│   └── <a href="./forced-em-oscillations/task.pdf">task.pdf</a>
+├── <a href="./free-damped-em-oscillations">free-damped-em-oscillations</a>
+│   ├── <a href="./free-damped-em-oscillations/free-damped-em-oscillations.pdf">free-damped-em-oscillations.pdf</a>
+│   └── <a href="./free-damped-em-oscillations/task.pdf">task.pdf</a>
+├── <a href="./lens-radius-curvature">lens-radius-curvature</a>
+│   ├── <a href="./lens-radius-curvature/lens-radius-curvature.pdf">lens-radius-curvature.pdf</a>
+│   └── <a href="./lens-radius-curvature/task.pdf">task.pdf</a>
+├── <a href="./light-polarization">light-polarization</a>
+│   └── <a href="./light-polarization/task.pdf">task.pdf</a>
+└── <a href="./modeling">modeling</a>
+    ├── <a href="./modeling/foucault-pendulum">foucault-pendulum</a>
+    │   ├── <a href="./modeling/foucault-pendulum/foucault-pendulum.pdf">foucault-pendulum.pdf</a>
+    │   └── <a href="./modeling/foucault-pendulum/foucault-pendulum.py">foucault-pendulum.py</a>
+    ├── <a href="./modeling/homography">homography</a>
+    │   ├── <a href="./modeling/homography/homography.ipynb">homography.ipynb</a>
+    │   └── <a href="./modeling/homography/homography.pdf">homography.pdf</a>
+    └── <a href="./modeling/tasks.pdf">tasks.pdf</a>
+</pre>
