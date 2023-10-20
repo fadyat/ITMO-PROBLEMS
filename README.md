@@ -11,7 +11,7 @@
 ├── <a href="https://github.com/fadyat/itmo-cgg">cgg</a>
 ├── <a href="./db">db</a>
 │   └── <a href="./db/term4">term4</a>
-├── <a href="https://github.com/fadyat/itmo-devtools">dev-tools</a>
+├── <a href="https://github.com/fadyat/itmo-devtools">devtools</a>
 ├── <a href="./digital-culture">digital-culture</a>
 │   └── <a href="./digital-culture/term1">term1</a>
 ├── <a href="./discrete-math">discrete-math</a>

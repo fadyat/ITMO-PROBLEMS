@@ -2,7 +2,7 @@
 	path = web
 	url = https://github.com/fadyat/itmo-web
 [submodule "Dev-Tools"]
-	path = dev-tools
+	path = devtools
 	url = https://github.com/fadyat/itmo-devtools
 [submodule "Computer-graphics"]
 	path = cgg
