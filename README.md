@@ -53,7 +53,6 @@
 ├── <a href="./uml">uml</a>
 │   └── <a href="./uml/term6">term6</a>
 ├── <a href="https://github.com/fadyat/itmo-web">web</a>
-├── <a href="./windows">windows</a>
-│   └── <a href="./windows/term5">term5</a>
-└── <a href="./_config.yml">_config.yml</a>
+└── <a href="./windows">windows</a>
+    └── <a href="./windows/term5">term5</a>
 </pre>

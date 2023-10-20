@@ -71,6 +71,7 @@ var (
 		"README.txt",
 		"readme.txt",
 		"OopLabs.sln",
+		"_config.yml",
 	}
 )
 
