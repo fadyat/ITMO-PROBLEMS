@@ -38,3 +38,5 @@ folders:
   - path: '../physics/term2'
   - path: '../physics/term3'
   - path: '../physics/term4'
+  - path: '../programming/term1'
+  - path: '../programming/term2'
