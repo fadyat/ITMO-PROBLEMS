@@ -15,4 +15,4 @@
 	url = https://github.com/fadyat/itmo-db-design
 [submodule "modern-issues-cs"]
 	path = cs-issues
-	url = https://github.com/fadyat/speedy.git
+	url = https://github.com/fadyat/speedy
