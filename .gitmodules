@@ -16,3 +16,6 @@
 [submodule "modern-issues-cs"]
 	path = cs-issues
 	url = https://github.com/fadyat/speedy
+[submodule "software-design"]
+	path = software-design
+    url = https://github.com/fadyat/itmo-software-design

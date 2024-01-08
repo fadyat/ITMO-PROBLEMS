@@ -1,6 +1,10 @@
 <p align="center">
-    <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" />
+    <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" width="300px"/>
 </p>
+
+Housing all the latest courses in Information Systems and Technologies at ITMO University 📚✨
+
+Your support makes a difference! Don't hesitate to click the star ⭐️
 
 <pre>
 ├── <a href="./algorithms">algorithms</a>
@@ -10,7 +14,7 @@
 │   ├── <a href="./applied-math/term4">term4</a>
 │   └── <a href="./applied-math/term5">term5</a>
 ├── <a href="https://github.com/fadyat/itmo-cgg">cgg</a>
-├── <a href="https://github.com/fadyat/speedy.git">cs-issues</a>
+├── <a href="https://github.com/fadyat/speedy">cs-issues</a>
 ├── <a href="./db">db</a>
 │   └── <a href="./db/term4">term4</a>
 ├── <a href="https://github.com/fadyat/itmo-db-design">db-design</a>
@@ -50,6 +54,7 @@
 ├── <a href="./programming">programming</a>
 │   ├── <a href="./programming/term1">term1</a>
 │   └── <a href="./programming/term2">term2</a>
+├── <a href="https://github.com/fadyat/itmo-software-design">software-design</a>
 ├── <a href="./tech">tech</a>
 │   └── <a href="./tech/term4">term4</a>
 ├── <a href="./telecom">telecom</a>

@@ -51,6 +51,7 @@ func parseGitModules(path string) ([]gitModule, error) {
 	}
 
 	var lines = strings.Split(string(content), "\n")
+	fmt.Println(len(lines))
 	if len(lines)%3 != 0 {
 		return nil, fmt.Errorf("fix .gitmodules file, it's not a multiple of 3")
 	}

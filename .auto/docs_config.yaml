@@ -44,8 +44,12 @@ folders:
     tree_args: '-L 2'
     header: |
       <p align="center">
-          <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" />
+          <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" width="300px"/>
       </p>
+
+      Housing all the latest courses in Information Systems and Technologies at ITMO University 📚✨
+
+      Your support makes a difference! Don't hesitate to click the star ⭐️
     tail: |
       <a href="https://star-history.com/#fadyat/ITMO-PROBLEMS&Date">
         <picture>
