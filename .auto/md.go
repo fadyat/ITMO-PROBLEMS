@@ -67,12 +67,14 @@ var (
 		"docs",
 		"data",
 		"README.md",
+		"README_RU.md",
 		"pdf",
 		"latex",
 		"README.txt",
 		"readme.txt",
 		"OopLabs.sln",
 		"_config.yml",
+		"LICENSE",
 	}
 )
 
@@ -85,6 +87,22 @@ func buildIgnore() []string {
 	return result
 }
 
+func getDirName(s string) string {
+	if strings.HasSuffix(s, ".md") {
+		return filepath.Dir(s)
+	}
+
+	return s
+}
+
+func getReadmePath(path string) string {
+	if strings.HasSuffix(path, ".md") {
+		return filepath.Join(path)
+	}
+
+	return filepath.Join(path, "README.md")
+}
+
 // treeStyleReadME generates a README.md file from the current directory
 // in the style of the tree command with the specified header name and shortlinks
 // to each directory.
@@ -93,7 +111,7 @@ func treeStyleReadME(
 	treeArgs []string,
 	submodules []gitModule,
 ) error {
-	args := append([]string{startDir, "--dirsfirst"}, buildIgnore()...)
+	args := append([]string{getDirName(startDir), "--dirsfirst"}, buildIgnore()...)
 
 	if treeArgs[0] != "" {
 		args = append(args, treeArgs...)
@@ -105,7 +123,7 @@ func treeStyleReadME(
 		return err
 	}
 
-	readme, err := os.Create(filepath.Join(startDir, "README.md"))
+	readme, err := os.Create(getReadmePath(startDir))
 	if err != nil {
 		return err
 	}
@@ -185,7 +203,6 @@ func buildLinkWithParents(
 	searchModule := func(s string) string {
 		for _, module := range submodules {
 			if module.Path == s {
-				log.Printf("found module %s", module.Name)
 				return module.URL
 			}
 		}
@@ -209,7 +226,12 @@ func buildLinkWithParents(
 		isModuleSubDir = false
 		linkBuilder = func() string { return strings.Join(parents, "/") }
 		submoduleURL := searchModule(cleaned)
+
+		// submodules are only on top level of the project
+		// need not to include directories that are named the
+		// same as the submodule
 		if submoduleURL != "" {
+			log.Printf("found module %s", cleaned)
 			isModuleSubDir = true
 			linkBuilder = func() string { return submoduleURL }
 		}
@@ -246,7 +268,16 @@ func main() {
 	}
 
 	for _, f := range c.Folders {
-		err = treeStyleReadME(f.Path, f.Header, f.Tail, strings.Split(f.TreeArgs, " "), gitmodules)
+		var modules []gitModule
+
+		// todo: fix this, done for not to include subfolders in RU
+		//  version of the README
+		if f.Path == "../." || strings.HasSuffix(f.Path, ".md") {
+			fmt.Println("asodasodoasodoad", f.Path)
+			modules = gitmodules
+		}
+
+		err = treeStyleReadME(f.Path, f.Header, f.Tail, strings.Split(f.TreeArgs, " "), modules)
 		if err != nil {
 			log.Printf("error generating README for %s: %v", f.Path, err)
 			continue

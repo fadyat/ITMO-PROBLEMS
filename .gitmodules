@@ -19,3 +19,15 @@
 [submodule "software-design"]
 	path = software-design
     url = https://github.com/fadyat/itmo-software-design
+[submodule "information-security"]
+	path = information-security
+	url = https://github.com/fadyat/itmo-information-security
+[submodule "linux"]
+	path = linux
+	url = https://github.com/fadyat/itmo-linux
+[submodule "data-analysis"]
+	path = data-analysis
+	url = https://github.com/fadyat/itmo-data-analysis
+[submodule "software-testing"]
+	path = software-testing
+	url = https://github.com/fadyat/itmo-software-testing

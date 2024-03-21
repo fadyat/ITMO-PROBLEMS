@@ -2,12 +2,12 @@
     <img src="https://count.getloli.com/get/@fadyat?theme=gelbooru" alt="fadyat" width="300px"/>
 </p>
 
-Repository contains solutions to all the laboratory works for each subject of each semester
-of the "Information Systems and Technologies" program at ITMO University 📚✨
+Репозиторий содержит решения лабораторных работ по всем предметам каждого семестра
+программы "Информационные системы и технологии" в Университете ИТМО 📚✨
 
-Your support makes a difference! Don't hesitate to click the star ⭐️
+Не стесняйтесь нажимать на звездочку, если я вам действительно помог! ⭐️
 
-It would be great to see that my efforts are not in vain 🥺
+Было бы здорово увидеть, что мои труды не проходят зря 🥺
 
 <pre>
 ├── <a href="./algorithms">algorithms</a>
