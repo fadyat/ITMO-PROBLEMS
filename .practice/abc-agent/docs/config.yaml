@@ -1,0 +1,29 @@
+datasource_name: dbaas-postgresql
+metadata:
+  version: 1
+recovery_tool:
+  environment:
+    AWS_REGION: "us-east-1"
+    AWS_S3_FORCE_PATH_STYLE: "true"
+    AWS_ACCESS_KEY: "{{ .CEPH_ACCESS_KEY }}"
+    AWS_SECRET_KEY: "{{ .CEPH_SECRET_KEY }}"
+    AWS_ENDPOINT: "{{ .CEPH_ENDPOINT }}"
+    WALG_S3_PREFIX: "s3://{{ .BUCKET_NAME }}"
+  checks:
+    - name: _base
+      command:
+        - /etc/abc-agent/perform_checks.sh
+        - /etc/abc-agent/verify_results.sh
+    - name: have_user_table
+      command:
+        - |
+          have_user_table() {
+            psql -U postgres -d dbaas -c "SELECT 1 FROM pg_tables WHERE tablename = 'users';" | grep -q 1
+          }
+          
+          [ "$(have_user_table)" = "1" ] || exit 1
+      max_retries: 3
+    - name: disabled_check
+      command:
+        - exit 1
+      disabled: true
