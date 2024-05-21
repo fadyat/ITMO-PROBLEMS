@@ -18,7 +18,7 @@
 	url = https://github.com/fadyat/speedy
 [submodule "software-design"]
 	path = software-design
-    url = https://github.com/fadyat/itmo-software-design
+	url = https://github.com/fadyat/itmo-software-design
 [submodule "information-security"]
 	path = information-security
 	url = https://github.com/fadyat/itmo-information-security
